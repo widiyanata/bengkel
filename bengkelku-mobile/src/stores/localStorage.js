@@ -283,7 +283,7 @@ export function addItem(itemData) {
   // Expects itemData: { nama: string, kode?: string, satuan: string, stokAwal: number, hargaBeli?: number, hargaJual: number }
   const items = getAllItems();
   const newItem = {
-    id: Date.now() + 3, // Simple unique ID
+    id: `${Date.now()}-${Math.random().toString(36).substring(2, 9)}`, // Combines timestamp with a random string
     ...itemData,
     stokSaatIni: Number(itemData.stokAwal) || 0, // Initialize current stock
     hargaBeli: Number(itemData.hargaBeli) || 0,
@@ -297,14 +297,14 @@ export function addItem(itemData) {
 
 export function getItemById(id) {
   const items = getAllItems();
-  const itemIdNumber = Number(id);
-  return items.find((i) => i.id === itemIdNumber);
+  // const itemIdNumber = Number(id); // No longer needed, id is a string
+  return items.find((i) => i.id === id); // Compare directly
 }
 
 export function updateItem(id, updatedData) {
   const items = getAllItems();
-  const itemIdNumber = Number(id);
-  const itemIndex = items.findIndex((i) => i.id === itemIdNumber);
+  // const itemIdNumber = Number(id); // No longer needed, id is a string
+  const itemIndex = items.findIndex((i) => i.id === id); // Compare directly
 
   if (itemIndex === -1) {
     console.error(`Item with ID ${id} not found for update.`);
@@ -327,9 +327,9 @@ export function updateItem(id, updatedData) {
 
 export function deleteItem(id) {
   let items = getAllItems();
-  const itemIdNumber = Number(id);
+  // const itemIdNumber = Number(id); // No longer needed, id is a string
   const initialLength = items.length;
-  items = items.filter((i) => i.id !== itemIdNumber);
+  items = items.filter((i) => i.id !== id); // Compare directly
 
   if (items.length < initialLength) {
     saveData(ITEMS_KEY, items);
@@ -358,8 +358,8 @@ export function doesItemCodeExist(code, excludeItemId = null) {
 // Used internally by recordPurchase or when items are used in services
 export function updateItemStock(itemId, quantityChange) {
   const items = getAllItems();
-  const itemIdNumber = Number(itemId);
-  const itemIndex = items.findIndex((i) => i.id === itemIdNumber);
+  // const itemIdNumber = Number(itemId); // No longer needed, itemId is a string
+  const itemIndex = items.findIndex((i) => i.id === itemId); // Compare directly
 
   if (itemIndex === -1) {
     console.error(`Item with ID ${itemId} not found for stock update.`);

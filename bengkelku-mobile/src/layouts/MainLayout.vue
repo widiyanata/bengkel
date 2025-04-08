@@ -1,12 +1,42 @@
 <template>
   <v-app>
+    <!-- Add App Bar -->
+    <v-app-bar app color="primary" density="compact">
+      <v-app-bar-title>Bengkelku</v-app-bar-title>
+      <v-spacer></v-spacer>
+
+      <!-- Profile Menu -->
+      <v-menu offset-y>
+        <template v-slot:activator="{ props }">
+          <v-btn icon="mdi-account-circle" v-bind="props"></v-btn>
+        </template>
+        <v-list density="compact">
+          <v-list-item to="/pengaturan/profil" prepend-icon="mdi-account">
+            <v-list-item-title>Profil</v-list-item-title>
+          </v-list-item>
+          <v-list-item to="/pengaturan" prepend-icon="mdi-cog">
+            <v-list-item-title>Pengaturan Lainnya</v-list-item-title>
+          </v-list-item>
+          <!-- Add other items like Logout here later if needed -->
+        </v-list>
+      </v-menu>
+
+      <!-- PWA Install Button -->
+      <v-btn
+        v-if="installPrompt"
+        icon="mdi-download"
+        title="Install Aplikasi"
+        @click="triggerInstallPromptAction"
+      ></v-btn>
+    </v-app-bar>
+
     <v-main>
       <!-- The main content for each page will be rendered here -->
       <router-view />
     </v-main>
 
     <!-- Added style for compactness -->
-    <v-bottom-navigation grow style="height: 48px;">
+    <v-bottom-navigation style="height: 56px;"  mode="shift" color="primary">
       <v-btn value="home" to="/">
         <v-icon>mdi-home</v-icon>
         <span>Beranda</span>
@@ -27,15 +57,10 @@
         <span>Pelanggan</span>
       </v-btn>
 
-      <!-- Add Reporting Button -->
+      <!-- Re-add Reporting Button -->
       <v-btn value="laporan" to="/laporan">
         <v-icon>mdi-chart-bar</v-icon>
         <span>Laporan</span>
-      </v-btn>
-
-      <v-btn value="pengaturan" to="/pengaturan">
-        <v-icon>mdi-cog-outline</v-icon> <!-- Changed icon for Pengaturan -->
-        <span>Pengaturan</span>
       </v-btn>
     </v-bottom-navigation>
 
@@ -56,9 +81,25 @@
 import { ref, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { getPurchaseCart } from '../stores/localStorage.js';
+import { usePwaInstall } from '../composables/usePwaInstall.js'; // Import the composable
 
 const cartItemCount = ref(0);
 const route = useRoute();
+
+// --- PWA Install ---
+const { installPrompt, triggerInstallPrompt } = usePwaInstall(); // Use the composable
+
+async function triggerInstallPromptAction() {
+  const { outcome } = await triggerInstallPrompt();
+  if (outcome === 'accepted') {
+    // Optionally show a global message/snackbar if needed
+    console.log('PWA installation accepted from layout.');
+  } else {
+    console.log('PWA installation dismissed from layout.');
+  }
+}
+// --- End PWA Install ---
+
 
 function updateCartCount() {
   try {

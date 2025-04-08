@@ -1,14 +1,14 @@
 <template>
   <v-container>
     <div class="d-flex justify-space-between align-center mb-4">
-      <h1>Manajemen Stok</h1>
+      <h1>Stok</h1>
       <div>
-        <v-btn color="secondary" class="mr-2" prepend-icon="mdi-plus-box-outline" @click="goToAddItem">
-          Barang Baru
+        <v-btn color="primary" class="mr-2" prepend-icon="mdi-plus-box-outline" @click="goToAddItem">
+          Baru
         </v-btn>
         <!-- Add Purchase History Button -->
         <v-btn color="info" variant="outlined" prepend-icon="mdi-history" to="/stok/riwayat-pembelian">
-          Riwayat Beli
+          
         </v-btn>
       </div>
     </div>
@@ -17,58 +17,68 @@
     <v-text-field v-model="searchQuery" label="Cari Barang (Nama/Kode)" prepend-inner-icon="mdi-magnify"
       variant="outlined" density="compact" clearable class="mb-4"></v-text-field>
 
-    <!-- Stock List Cards -->
-    <v-row dense>
-      <!-- Loading Indicator -->
-      <v-col v-if="loading" cols="12" class="text-center">
-        <v-progress-circular indeterminate color="primary"></v-progress-circular>
-        <p>Memuat data stok...</p>
-      </v-col>
+    <!-- Loading Indicator -->
+    <div v-if="loading" class="text-center pa-4">
+      <v-progress-circular indeterminate color="primary"></v-progress-circular>
+      <p class="mt-2">Memuat data stok...</p>
+    </div>
 
-      <!-- Item Cards -->
-      <v-col v-else-if="filteredStock.length > 0" v-for="item in filteredStock" :key="item.id" cols="12" sm="6" md="4">
-        <v-card class="mb-3" variant="tonal">
-          <!-- Card Content -->
-          <div> <!-- Removed clickable wrapper for now -->
-            <v-card-title class="d-flex justify-space-between">
-              <span>{{ item.nama }}</span>
-              <v-chip size="small" label>
-                Stok: {{ item.stokSaatIni }} {{ item.satuan }}
-              </v-chip>
-            </v-card-title>
-            <v-card-subtitle v-if="item.kode">Kode: {{ item.kode }}</v-card-subtitle>
-            <v-card-text>
-              <div v-if="item.hargaJual">Harga Jual: {{ formatCurrency(item.hargaJual) }}</div>
-              <div v-if="item.hargaBeli">Harga Beli: {{ formatCurrency(item.hargaBeli) }}</div>
-              <!-- Enable Stok Minimal Alert -->
-              <div v-if="item.stokMinimal > 0">Stok Minimal: {{ item.stokMinimal }} {{ item.satuan }}</div>
-              <v-alert v-if="item.stokMinimal > 0 && item.stokSaatIni <= item.stokMinimal" type="warning"
-                density="compact" class="mt-2" variant="tonal">
-                Stok menipis!
-              </v-alert>
-            </v-card-text>
-          </div>
-          <!-- Action Buttons -->
-          <v-card-actions>
-            <!-- Add Purchase Button -->
-            <v-btn prepend-icon="mdi-cart-plus" color="primary" variant="tonal" size="small"
-              @click="goToRecordPurchaseForItem(item)">
-              Beli
-            </v-btn>
-            <v-spacer></v-spacer>
-            <v-btn icon="mdi-pencil-outline" color="info" variant="text" size="small"
-              @click="openEditItemDialog(item)"></v-btn>
-            <v-btn icon="mdi-delete-outline" color="error" variant="text" size="small"
-              @click="openDeleteItemDialog(item)"></v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-col>
+    <!-- Stock List -->
+    <v-list v-else-if="filteredStock.length > 0" lines="two" density="compact">
+      <v-list-item v-for="item in filteredStock" :key="item.id" :value="item.id">
+        <!-- Optional: Add an icon -->
+        <!-- <template v-slot:prepend>
+          <v-icon>mdi-package-variant-closed</v-icon>
+        </template> -->
 
-      <!-- No Data Message -->
-      <v-col v-else cols="12">
-        <v-alert type="info" variant="tonal">Tidak ada data stok atau barang tidak ditemukan.</v-alert>
-      </v-col>
-    </v-row>
+        <v-list-item-title>{{ item.nama }}</v-list-item-title>
+        <v-list-item-subtitle>
+          <!-- <span v-if="item.kode">Kode: {{ item.kode }} | </span> -->
+          <span>Stok: {{ item.stokSaatIni }} {{ item.satuan }}</span>
+          <!-- Low Stock Chip -->
+          <v-chip v-if="item.stokMinimal > 0 && item.stokSaatIni <= item.stokMinimal"
+                  color="warning"
+                  size="x-small"
+                  variant="tonal"
+                  class="ml-2">
+            Stok Menipis
+          </v-chip>
+        </v-list-item-subtitle>
+
+        <template v-slot:append>
+          <!-- Add Purchase Button -->
+          <v-btn icon="mdi-cart-plus"
+                 variant="tonal"
+                 color="primary"
+                 size="small"
+                 class="ml-1"
+                 title="Beli Stok"
+                 @click.stop="goToRecordPurchaseForItem(item)">
+          </v-btn>
+          <!-- Edit Button -->
+          <v-btn icon="mdi-pencil-outline"
+                 variant="tonal"
+                 color="info"
+                 size="small"
+                 class="ml-1"
+                 title="Edit Barang"
+                 @click.stop="openEditItemDialog(item)">
+          </v-btn>
+          <!-- Delete Button -->
+          <v-btn icon="mdi-delete-outline"
+                 variant="tonal"
+                 color="error"
+                 size="small"
+                 class="ml-1"
+                 title="Hapus Barang"
+                 @click.stop="openDeleteItemDialog(item)">
+          </v-btn>
+        </template>
+      </v-list-item>
+    </v-list>
+
+    <!-- No Data Message -->
+    <v-alert v-else type="info" variant="tonal">Tidak ada data stok atau barang tidak ditemukan.</v-alert>
 
     <!-- Edit Item Dialog -->
     <v-dialog v-model="showEditItemDialog" persistent max-width="500px">
@@ -243,7 +253,7 @@ function goToRecordPurchaseForItem(item) {
       nama: item.nama,
       satuan: item.satuan,
       jumlahBeli: 1, // Default quantity to add
-      hargaBeli: fullItemData?.hargaBeli || 0 // Use last known purchase price or 0
+      hargaBeli: fullItemData?.hargaBeli || null // Use last known purchase price or null
     };
     addItemToCart(itemToAdd);
     showSnackbar(`${item.nama} ditambahkan ke keranjang pembelian.`, 'success');

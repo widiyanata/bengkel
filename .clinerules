@@ -3,16 +3,55 @@
 *This file stores project-specific patterns, preferences, and intelligence discovered during development.*
 
 ## General
-- (No rules defined yet)
+- **Project Type:** Mobile-first Single Page Application (SPA) built with Vue.js and Vuetify, intended to function as a Progressive Web App (PWA).
+- **Core Goal:** Digitize and streamline daily operations for an auto repair workshop ("bengkel").
+- **Target Users:** Workshop staff; prioritize ease of use and clarity.
+- **Key Principles:** Simplicity, Mobile-First, Visual/Tappable, PWA/Offline.
 
-## Code Style
-- (No specific style rules defined yet beyond default Vue/Vuetify practices)
+## Code Style & Conventions
+- **Framework:** Vue.js 3 (currently ^3.5.13) using the Composition API where appropriate (e.g., composables).
+- **UI Library:** Vuetify (currently ^3.8.0-beta.0). Utilize its components and styling conventions.
+- **Routing:** Vue Router (^4.5.0) for client-side navigation. Use lazy loading for views.
+- **Build Tool:** Vite (^6.2.0).
+- **Language:** JavaScript (ES6+).
+- **Notifications:** Use Vuetify's `v-snackbar` for user feedback instead of native `alert()`.
+- **Validation:** Implement form validation using Vuetify's `rules` prop directly within components. Leverage helper functions in `localStorage.js` for checks requiring data access (e.g., unique codes).
 
 ## Component Patterns
-- (No specific component patterns defined yet)
+- **Architecture:** SPA with a main layout (`src/layouts/MainLayout.vue`) providing consistent structure (app bar, navigation).
+- **Views:** Page-level components reside in `src/views/`.
+- **Composables:** Use `src/composables/` for reusable stateful logic (e.g., `usePwaInstall.js`).
+- **Modals/Dialogs:** Use `v-dialog` for forms like adding/editing data.
 
 ## Data Management
-- (Data persistence strategy TBD)
+- **Primary Persistence:** All application data (services, stock, customers, vehicles, purchases, settings) is managed exclusively through functions within `src/stores/localStorage.js`, interacting directly with the browser's Local Storage.
+- **State Management:** No dedicated library (Pinia/Vuex). Manage state locally within components or via props/events/composables.
+- **Data Structure:** Data is stored under distinct keys in Local Storage (e.g., `bengkelku_services`, `bengkelku_items`). Data is generally stored as arrays of objects.
+- **Unique IDs:** Generate unique string-based IDs for new records using `\`${Date.now()}-${Math.random().toString(36).substring(2, 9)}\``. Ensure functions handle these string IDs correctly (avoid `Number()` conversions).
+- **Stock Logic:**
+    - Stock is deducted when parts are added to a service.
+    - Stock is added when a purchase is finalized.
+    - Stock changes **must be reverted** when a service or purchase record is deleted.
+- **Validation Helpers:** Create helper functions in `localStorage.js` for complex validation checks that require accessing stored data (e.g., `doesItemCodeExist`).
 
-## User Preferences
-- (No specific user preferences noted yet)
+## PWA (Progressive Web App)
+- **Configuration:** Use `vite-plugin-pwa` configured in `vite.config.js`.
+- **Manifest:** Define app name, icons, display, orientation, screenshots (narrow & wide), categories, and protocol handlers in the PWA plugin options.
+- **Install Prompt:** Manage the `beforeinstallprompt` event and trigger logic using the `src/composables/usePwaInstall.js` composable. Provide install buttons in `MainLayout.vue` and `PwaSettingsPage.vue`.
+- **Dependencies:** Requires user to provide actual icon and screenshot files referenced in the manifest. Requires HTTPS for install prompt testing.
+
+## User Preferences & Workflow
+- **Mobile-First:** Design and test with mobile screen sizes in mind.
+- **Offline Capability:** Leverage PWA features for basic offline access (data stored locally).
+- **Data Safety:** Include clear confirmation dialogs for destructive actions (delete, clear all data).
+
+## Known Challenges & Considerations
+- **Local Storage Limits:** Be mindful of potential storage size limitations and the synchronous nature of Local Storage. It's not suitable for complex relational data or large datasets.
+- **Vuetify Beta:** The current Vuetify version is a beta; be aware of potential bugs or breaking changes in future updates.
+- **No Backend:** Functionality requiring server-side logic (e.g., secure user authentication, multi-user access, robust data backups) is not currently possible.
+
+## Cline Behavior & Constraints
+- **Cline AI Model Usage:** Cline (the AI assistant) must not access external AI models or services beyond its core capabilities to complete tasks for this project. If a task seems to require such access, notify the user.
+
+## Development Patterns (To be refined)
+- **Commits:** Aim for atomic commits related to specific features or fixes.

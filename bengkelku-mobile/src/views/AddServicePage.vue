@@ -252,7 +252,7 @@ function cancelAddCustomer() {
 }
 
 async function saveNewCustomer() {
-  // TODO: Add proper validation
+  // Basic validation
   if (!newCustomer.nama || !newCustomer.noHp || !newCustomer.kendaraan) {
     showSnackbar("Harap isi semua field pelanggan yang wajib diisi.", "warning");
     return;
@@ -295,11 +295,7 @@ async function saveNewCustomer() {
 
 
 function saveService() {
-  // TODO: Add more robust validation (e.g., check if vehicle is selected)
-  if (!serviceData.pelangganId || !serviceData.kendaraanId) {
-    showSnackbar("Harap pilih atau tambahkan kendaraan terlebih dahulu.", "warning");
-    return;
-  }
+  // Validation for service type and description
   if (serviceData.jenisServis.length === 0) {
     showSnackbar("Harap pilih setidaknya satu jenis servis.", "warning");
     return;
@@ -311,18 +307,32 @@ function saveService() {
 
   isSaving.value = true;
   try {
-    // Prepare data for saving (only essential fields)
+    // Prepare data for saving
+    // Handle walk-in customer (no selected vehicle/customer)
     const dataToSave = {
-      pelangganId: serviceData.pelangganId,
-      kendaraanId: serviceData.kendaraanId,
-      nomorPolisi: serviceData.selectedVehicleInfo.nomorPolisi, // Get from selected info
+      pelangganId: serviceData.selectedVehicleInfo ? serviceData.pelangganId : null,
+      kendaraanId: serviceData.selectedVehicleInfo ? serviceData.kendaraanId : null,
+      // Use entered nomorPolisi if no vehicle selected, otherwise use selected vehicle's plate
+      nomorPolisi: serviceData.selectedVehicleInfo ? serviceData.selectedVehicleInfo.nomorPolisi : serviceData.nomorPolisi || null,
       jenisServis: serviceData.jenisServis,
       keterangan: serviceData.keterangan,
       // timestamp and status will be added by addService function
     };
+
+    // Add a check: If no vehicle is selected AND no nomorPolisi is entered, maybe warn?
+    // For now, we allow saving without any customer/vehicle info.
+    if (!serviceData.selectedVehicleInfo && !serviceData.nomorPolisi) {
+        console.warn("Saving service without customer/vehicle identification.");
+        // Optionally show a confirmation snackbar/dialog here
+    }
+
+
     const savedService = saveServiceToStorage(dataToSave); // Use the imported function
     console.log("Service saved:", savedService);
-    showSnackbar("Servis berhasil disimpan!", "success"); // Provide feedback
+    const message = serviceData.selectedVehicleInfo || serviceData.nomorPolisi
+        ? "Servis berhasil disimpan!"
+        : "Servis untuk walk-in customer berhasil disimpan!";
+    showSnackbar(message, "success"); // Provide feedback
     router.push("/servis"); // Navigate to service list after saving
   } catch (error) {
     console.error("Error saving service:", error);

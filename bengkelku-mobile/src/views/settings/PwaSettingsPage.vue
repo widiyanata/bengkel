@@ -58,12 +58,15 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from 'vue';
+import { ref } from 'vue'; // Removed onMounted, onBeforeUnmount
 import { useRouter } from 'vue-router';
+import { usePwaInstall } from '../../composables/usePwaInstall'; // Import the composable
 
 const router = useRouter();
-const isInstalling = ref(false);
-const installPrompt = ref(null); // To store the install prompt event
+const isInstalling = ref(false); // Keep for button loading state
+
+// --- Use PWA Composable ---
+const { installPrompt, triggerInstallPrompt } = usePwaInstall(); // Get shared state and function
 
 // Snackbar State
 const snackbar = ref(false);
@@ -77,42 +80,21 @@ function showSnackbar(text, color = "info") {
   snackbar.value = true;
 }
 
-// --- PWA Install Logic ---
-const handleBeforeInstallPrompt = (e) => {
-  // Prevent the mini-infobar from appearing on mobile
-  e.preventDefault();
-  // Stash the event so it can be triggered later.
-  installPrompt.value = e;
-  console.log("'beforeinstallprompt' event captured.");
-  // Optionally, update UI notify the user they can install the PWA
-};
-
-async function triggerInstallPrompt() {
-  if (!installPrompt.value) {
-    showSnackbar("Prompt instalasi tidak tersedia.", "warning");
-    return;
-  }
+// --- PWA Install Action (using composable) ---
+async function triggerInstallPromptAction() {
   isInstalling.value = true;
-  try {
-    // Show the install prompt
-    installPrompt.value.prompt();
-    // Wait for the user to respond to the prompt
-    const { outcome } = await installPrompt.value.userChoice;
-    console.log(`User response to the install prompt: ${outcome}`);
-    if (outcome === 'accepted') {
-      showSnackbar("Instalasi aplikasi dimulai...", "success");
-    } else {
-      showSnackbar("Instalasi dibatalkan.", "info");
-    }
-  } catch (error) {
-     console.error("Error triggering install prompt:", error);
-     showSnackbar("Gagal menampilkan prompt instalasi.", "error");
-  } finally {
-     // We've used the prompt, and can't use it again, discard it
-     installPrompt.value = null;
-     isInstalling.value = false;
+  const { outcome, error } = await triggerInstallPrompt(); // Call composable function
+
+  if (error) {
+    showSnackbar("Gagal menampilkan prompt instalasi.", "error");
+  } else if (outcome === 'accepted') {
+    showSnackbar("Instalasi aplikasi dimulai...", "success");
+  } else {
+    showSnackbar("Instalasi dibatalkan atau prompt tidak tersedia.", "info"); // Handle dismissed or unavailable
   }
+  isInstalling.value = false;
 }
+
 
 // --- Cache Logic (Placeholder) ---
 function clearCachePlaceholder() {
@@ -122,14 +104,8 @@ function clearCachePlaceholder() {
 }
 
 
-// --- Lifecycle Hooks ---
-onMounted(() => {
-  window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-});
+// --- Lifecycle Hooks Removed (Handled by composable/MainLayout) ---
 
-onBeforeUnmount(() => {
-  window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
-});
 
 function goBack() {
   router.push('/pengaturan');

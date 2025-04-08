@@ -5,14 +5,14 @@
       <v-btn variant="text" @click="goBackToStock">Kembali ke Stok</v-btn>
     </div>
 
-    <v-card variant="outlined" class="mb-4">
+    <v-card variant="outlined" class="mb-4" density="compact"> <!-- Added density -->
       <v-card-title>Item di Keranjang</v-card-title>
       <v-card-text>
-        <v-list lines="two" v-if="cartItems.length > 0">
+        <v-list lines="two" v-if="cartItems.length > 0" density="compact"> <!-- Added density -->
           <!-- Removed unused 'index' from v-for -->
           <v-list-item v-for="item in cartItems" :key="item.itemId">
-            <v-list-item-title>{{ item.nama }}</v-list-item-title>
-            <v-list-item-subtitle>
+            <v-list-item-title class="font-weight-bold text-subtitle-1 mb-1">{{ item.nama }}</v-list-item-title>
+            <v-list-item-subtitle class="mt-1">
               <v-row dense align="center">
                 <v-col cols="4" sm="3">
                   <v-text-field v-model.number="item.jumlahBeli" label="Jumlah" type="number" min="1" density="compact"
@@ -42,15 +42,15 @@
     </v-card>
 
     <!-- Purchase Details Form (Supplier, Nota, Date) -->
-    <v-card variant="outlined" class="mb-4" v-if="cartItems.length > 0">
+    <v-card variant=""  class="mb-4" v-if="cartItems.length > 0" density="compact"> <!-- Added density -->
       <v-card-title>Detail Pembelian Final</v-card-title>
       <v-card-text>
         <v-text-field v-model="purchaseDetails.tanggal" label="Tanggal Pembelian*" type="date" required
-          variant="outlined" class="mb-3"></v-text-field>
+          variant="outlined" density="compact" class="mb-1"></v-text-field> <!-- Added density -->
         <v-text-field v-model="purchaseDetails.supplier" label="Supplier (Opsional)" variant="outlined"
-          class="mb-3"></v-text-field>
+          density="compact" class="mb-1"></v-text-field> <!-- Added density -->
         <v-text-field v-model="purchaseDetails.noNota" label="Nomor Nota/Invoice (Opsional)" variant="outlined"
-          class="mb-3"></v-text-field>
+          density="compact" class="mb-1"></v-text-field> <!-- Added density -->
         <div class="text-h6 mt-3"><strong>Total Pembelian: {{ formatCurrency(cartSubtotal) }}</strong></div>
       </v-card-text>
     </v-card>
