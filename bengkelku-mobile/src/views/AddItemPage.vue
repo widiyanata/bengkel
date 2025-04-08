@@ -1,30 +1,30 @@
 <template>
   <v-container>
-    <h1 class="text-h6 mb-3">Tambah Barang Baru</h1> <!-- Smaller heading, reduced margin -->
-    <v-form ref="form" @submit.prevent="saveItem">
+    <h1 class="mb-4">Tambah Barang Baru</h1>
+    <v-form ref="form" @submit.prevent="saveItem"> <!-- Added submit prevention -->
       <v-text-field v-model="itemData.nama" label="Nama Barang*" :rules="requiredRule" required variant="outlined"
-        density="compact" class="mb-3"></v-text-field> <!-- Added density -->
+        class="mb-3"></v-text-field>
 
       <v-text-field v-model="itemData.kode" label="Kode Barang (Opsional)" :rules="itemCodeRule" variant="outlined"
-        density="compact" class="mb-3"></v-text-field> <!-- Added density -->
+        class="mb-3"></v-text-field> <!-- Apply itemCodeRule -->
 
       <v-text-field v-model="itemData.satuan" label="Satuan*" :rules="requiredRule" required
-        placeholder="Contoh: Pcs, Ltr, Set, Box" variant="outlined" density="compact" class="mb-3"></v-text-field> <!-- Added density -->
+        placeholder="Contoh: Pcs, Ltr, Set, Box" variant="outlined" class="mb-3"></v-text-field>
 
       <v-text-field v-model.number="itemData.stokMinimal" label="Stok Minimal (Opsional)" type="number"
-        :rules="numberRule" variant="outlined" density="compact" class="mb-3"></v-text-field> <!-- Added density -->
+        :rules="numberRule" variant="outlined" class="mb-3"></v-text-field>
 
       <!-- Added Harga Beli field -->
       <v-text-field v-model.number="itemData.hargaBeli" label="Harga Beli (Opsional)" type="number" prefix="Rp"
-        :rules="numberRule" variant="outlined" density="compact" class="mb-3"></v-text-field> <!-- Added density -->
+        :rules="numberRule" variant="outlined" class="mb-3"></v-text-field>
 
       <v-text-field v-model.number="itemData.hargaJual" label="Harga Jual (Opsional)" type="number" prefix="Rp"
-        :rules="hargaJualRule" variant="outlined" density="compact" class="mb-3"></v-text-field> <!-- Added density -->
+        :rules="hargaJualRule" variant="outlined" class="mb-3"></v-text-field> <!-- Apply new rule -->
 
-      <v-btn color="primary" size="default" block type="submit" :loading="isSaving" class="mt-3"> <!-- Default size, added margin -->
+      <v-btn color="primary" size="large" block type="submit" :loading="isSaving"> <!-- Changed click to type=submit -->
         Simpan Barang Baru
       </v-btn>
-      <v-btn variant="text" block class="mt-1" @click="goBack" size="small"> <!-- Smaller button, reduced margin -->
+      <v-btn variant="text" block class="mt-2" @click="goBack">
         Batal
       </v-btn>
     </v-form>

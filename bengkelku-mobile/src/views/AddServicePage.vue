@@ -1,14 +1,14 @@
 <template>
   <v-container>
-    <h1 class="text-h6 mb-3">Tambah Servis Baru</h1> <!-- Smaller heading, reduced margin -->
+    <h1 class="mb-4">Tambah Servis Baru</h1>
 
     <v-form ref="form">
       <!-- Identifikasi Kendaraan -->
-      <v-card variant="outlined" class="mb-3" density="compact"> <!-- Reduced margin, added density -->
-        <v-card-title prepend-icon="mdi-car-search">Kendaraan</v-card-title> <!-- Added icon -->
+      <v-card variant="outlined" class="mb-4">
+        <v-card-title>Kendaraan</v-card-title>
         <v-card-text>
           <v-text-field v-model="serviceData.nomorPolisi" label="Nomor Polisi*" required variant="outlined"
-            density="compact" @input="searchVehicle" class="mb-2" :readonly="!!serviceData.selectedVehicleInfo"
+            @input="searchVehicle" class="mb-2" :readonly="!!serviceData.selectedVehicleInfo"
             :disabled="!!serviceData.selectedVehicleInfo" :clearable="!serviceData.selectedVehicleInfo"
             @click:clear="clearSelectedVehicle"></v-text-field>
 
@@ -22,15 +22,15 @@
 
           <!-- Search Results / Add New Button (only show if no vehicle selected) -->
           <div v-if="!serviceData.selectedVehicleInfo">
-            <div v-if="searchResult" class="text-caption mb-2"> <!-- Smaller text -->
+            <div v-if="searchResult">
               {{ searchResult.customerName }} - {{ searchResult.vehicleInfo }}
-              <v-btn size="x-small" color="success" @click="selectVehicle" class="ml-2">Pilih</v-btn> <!-- Smaller button -->
+              <v-btn size="small" color="success" @click="selectVehicle">Pilih</v-btn>
             </div>
             <div v-else-if="!vehicleFound && serviceData.nomorPolisi.length > 3">
               <v-alert type="info" density="compact" class="mb-2">
                 Kendaraan tidak ditemukan.
               </v-alert>
-              <v-btn size="small" color="primary" @click="showAddCustomer = true"> <!-- Keep size small -->
+              <v-btn size="small" color="primary" @click="showAddCustomer = true">
                 + Tambah Pelanggan Baru
               </v-btn>
             </div>
@@ -39,45 +39,45 @@
       </v-card>
 
       <!-- Keluhan/Jenis Servis -->
-      <v-card variant="outlined" class="mb-3" density="compact"> <!-- Reduced margin, added density -->
-        <v-card-title prepend-icon="mdi-comment-text-multiple-outline">Keluhan / Jenis Servis*</v-card-title> <!-- Added icon -->
+      <v-card variant="outlined" class="mb-4">
+        <v-card-title>Keluhan / Jenis Servis*</v-card-title>
         <v-card-text>
-          <v-chip-group v-model="serviceData.jenisServis" column multiple density="compact"> <!-- Added density -->
-            <v-chip filter variant="outlined" size="small">Ganti Oli</v-chip> <!-- Smaller chips -->
-            <v-chip filter variant="outlined" size="small">Servis Rutin</v-chip> <!-- Smaller chips -->
-            <v-chip filter variant="outlined" size="small">Cek Rem</v-chip> <!-- Smaller chips -->
-            <v-chip filter variant="outlined" size="small">Ban Bocor</v-chip> <!-- Smaller chips -->
-            <v-chip filter variant="outlined" size="small">Aki</v-chip> <!-- Smaller chips -->
-            <v-chip filter variant="outlined" size="small">Lainnya...</v-chip> <!-- Smaller chips -->
+          <v-chip-group v-model="serviceData.jenisServis" column multiple>
+            <v-chip filter variant="outlined">Ganti Oli</v-chip>
+            <v-chip filter variant="outlined">Servis Rutin</v-chip>
+            <v-chip filter variant="outlined">Cek Rem</v-chip>
+            <v-chip filter variant="outlined">Ban Bocor</v-chip>
+            <v-chip filter variant="outlined">Aki</v-chip>
+            <v-chip filter variant="outlined">Lainnya...</v-chip>
           </v-chip-group>
           <v-textarea v-model="serviceData.keterangan" label="Keterangan Tambahan"
-            placeholder="Jelaskan keluhan lebih detail jika perlu..." variant="outlined" density="compact" rows="3" class="mt-2"
-            :required="isLainnyaSelected"></v-textarea> <!-- Added density -->
+            placeholder="Jelaskan keluhan lebih detail jika perlu..." variant="outlined" rows="3" class="mt-2"
+            :required="isLainnyaSelected"></v-textarea>
         </v-card-text>
       </v-card>
 
       <!-- Tombol Aksi -->
-      <v-btn color="primary" size="default" block @click="saveService" :loading="isSaving" class="mt-3"> <!-- Default size, added margin -->
+      <v-btn color="primary" size="large" block @click="saveService" :loading="isSaving">
         Simpan Servis
       </v-btn>
     </v-form>
 
     <!-- Dialog Tambah Pelanggan Baru -->
     <v-dialog v-model="showAddCustomer" persistent max-width="500px">
-      <v-card density="compact"> <!-- Added density -->
+      <v-card>
         <v-card-title>
-          <span class="text-h6">Tambah Pelanggan Baru</span> <!-- Smaller title -->
+          <span class="text-h5">Tambah Pelanggan Baru</span>
         </v-card-title>
-        <v-card-text class="pt-3"> <!-- Added padding top -->
-          <v-container class="pa-0"> <!-- Remove padding -->
-            <v-row dense> <!-- Dense row -->
+        <v-card-text>
+          <v-container>
+            <v-row>
               <v-col cols="12">
                 <v-text-field v-model="newCustomer.nama" label="Nama Pelanggan*" required variant="outlined"
                   density="compact"></v-text-field>
               </v-col>
               <v-col cols="12">
                 <v-text-field v-model="newCustomer.noHp" label="Nomor HP*" required :rules="phoneRule" variant="outlined" density="compact"
-                  type="tel"></v-text-field>
+                  type="tel"></v-text-field> <!-- Apply phoneRule -->
               </v-col>
               <v-col cols="12">
                 <v-text-field v-model="newCustomer.kendaraan" label="Merk / Tipe Kendaraan*" required variant="outlined"

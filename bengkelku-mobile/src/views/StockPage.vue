@@ -1,13 +1,13 @@
 <template>
   <v-container>
-    <div class="d-flex justify-space-between align-center mb-3"> <!-- Reduced margin -->
-      <h1 class="text-h6">Manajemen Stok</h1> <!-- Smaller heading -->
+    <div class="d-flex justify-space-between align-center mb-4">
+      <h1>Manajemen Stok</h1>
       <div>
-        <v-btn color="secondary" class="mr-2" prepend-icon="mdi-plus-box-outline" @click="goToAddItem" size="small"> <!-- Smaller button -->
+        <v-btn color="secondary" class="mr-2" prepend-icon="mdi-plus-box-outline" @click="goToAddItem">
           Barang Baru
         </v-btn>
         <!-- Add Purchase History Button -->
-        <v-btn color="info" variant="outlined" prepend-icon="mdi-history" to="/stok/riwayat-pembelian" size="small"> <!-- Smaller button -->
+        <v-btn color="info" variant="outlined" prepend-icon="mdi-history" to="/stok/riwayat-pembelian">
           Riwayat Beli
         </v-btn>
       </div>
@@ -18,30 +18,30 @@
       variant="outlined" density="compact" clearable class="mb-4"></v-text-field>
 
     <!-- Stock List Cards -->
-    <v-row dense class="mt-2"> <!-- Added margin top -->
+    <v-row dense>
       <!-- Loading Indicator -->
-      <v-col v-if="loading" cols="12" class="text-center py-4"> <!-- Added padding -->
-        <v-progress-circular indeterminate color="primary" size="small"></v-progress-circular> <!-- Smaller spinner -->
+      <v-col v-if="loading" cols="12" class="text-center">
+        <v-progress-circular indeterminate color="primary"></v-progress-circular>
         <p>Memuat data stok...</p>
       </v-col>
 
       <!-- Item Cards -->
       <v-col v-else-if="filteredStock.length > 0" v-for="item in filteredStock" :key="item.id" cols="12" sm="6" md="4">
-        <v-card class="mb-2" variant="tonal" density="compact"> <!-- Reduced margin, added density -->
+        <v-card class="mb-3" variant="tonal">
           <!-- Card Content -->
-          <div>
-            <v-card-title class="d-flex justify-space-between text-body-1" prepend-icon="mdi-package-variant"> <!-- Smaller title, added icon -->
+          <div> <!-- Removed clickable wrapper for now -->
+            <v-card-title class="d-flex justify-space-between">
               <span>{{ item.nama }}</span>
-              <v-chip size="x-small" label> <!-- Smaller chip -->
+              <v-chip size="small" label>
                 Stok: {{ item.stokSaatIni }} {{ item.satuan }}
               </v-chip>
             </v-card-title>
-            <v-card-subtitle v-if="item.kode" class="text-caption">Kode: {{ item.kode }}</v-card-subtitle> <!-- Smaller subtitle -->
-            <v-card-text class="py-1"> <!-- Reduced padding -->
-              <div v-if="item.hargaJual" class="text-caption">Harga Jual: {{ formatCurrency(item.hargaJual) }}</div> <!-- Smaller text -->
-              <div v-if="item.hargaBeli" class="text-caption">Harga Beli: {{ formatCurrency(item.hargaBeli) }}</div> <!-- Smaller text -->
+            <v-card-subtitle v-if="item.kode">Kode: {{ item.kode }}</v-card-subtitle>
+            <v-card-text>
+              <div v-if="item.hargaJual">Harga Jual: {{ formatCurrency(item.hargaJual) }}</div>
+              <div v-if="item.hargaBeli">Harga Beli: {{ formatCurrency(item.hargaBeli) }}</div>
               <!-- Enable Stok Minimal Alert -->
-              <div v-if="item.stokMinimal > 0" class="text-caption">Stok Minimal: {{ item.stokMinimal }} {{ item.satuan }}</div> <!-- Smaller text -->
+              <div v-if="item.stokMinimal > 0">Stok Minimal: {{ item.stokMinimal }} {{ item.satuan }}</div>
               <v-alert v-if="item.stokMinimal > 0 && item.stokSaatIni <= item.stokMinimal" type="warning"
                 density="compact" class="mt-2" variant="tonal">
                 Stok menipis!
@@ -72,10 +72,10 @@
 
     <!-- Edit Item Dialog -->
     <v-dialog v-model="showEditItemDialog" persistent max-width="500px">
-      <v-card density="compact"> <!-- Added density -->
-        <v-card-title class="text-h6">Edit Barang Stok</v-card-title> <!-- Smaller title -->
-        <v-card-text class="pt-3"> <!-- Added padding top -->
-          <v-form ref="editForm">
+      <v-card>
+        <v-card-title>Edit Barang Stok</v-card-title>
+        <v-card-text>
+          <v-form ref="editForm"> <!-- Wrap in v-form -->
             <v-text-field v-model="editableItem.nama" label="Nama Barang*" :rules="requiredRule" required variant="outlined" density="compact"
               class="mb-3"></v-text-field>
             <v-text-field v-model="editableItem.kode" label="Kode Barang (Opsional)" :rules="editItemCodeRule" variant="outlined" density="compact"
@@ -101,10 +101,10 @@
 
     <!-- Delete Item Confirmation Dialog -->
     <v-dialog v-model="showDeleteItemDialog" persistent max-width="400px">
-      <v-card density="compact"> <!-- Added density -->
-        <v-card-title class="text-h6 error--text">Konfirmasi Hapus</v-card-title> <!-- Smaller title -->
-        <v-card-text class="pt-3"> <!-- Added padding top -->
-          Apakah Anda yakin ingin menghapus barang <strong class="font-weight-medium">{{ itemToDelete?.nama }}</strong>? <!-- Adjusted weight -->
+      <v-card>
+        <v-card-title class="text-h5 error--text">Konfirmasi Hapus</v-card-title>
+        <v-card-text>
+          Apakah Anda yakin ingin menghapus barang <strong>{{ itemToDelete?.nama }}</strong>?
           <br><br>
           Tindakan ini tidak dapat dibatalkan. Riwayat pembelian atau penggunaan dalam servis TIDAK akan terhapus.
         </v-card-text>

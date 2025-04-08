@@ -1,34 +1,34 @@
 <template>
   <v-container>
-    <div class="d-flex justify-space-between align-center mb-3"> <!-- Reduced margin -->
-      <h1 class="text-h6">Riwayat Pembelian Stok</h1> <!-- Smaller heading -->
-      <v-btn variant="text" @click="goBackToStock" size="small">Kembali ke Stok</v-btn> <!-- Smaller button -->
+    <div class="d-flex justify-space-between align-center mb-4">
+      <h1>Riwayat Pembelian Stok</h1>
+      <v-btn variant="text" @click="goBackToStock">Kembali ke Stok</v-btn>
     </div>
 
     <!-- TODO: Add Date Range Filter -->
 
-    <v-row dense class="mt-2"> <!-- Added margin top -->
+    <v-row dense>
       <!-- Loading Indicator -->
-      <v-col v-if="loading" cols="12" class="text-center py-4"> <!-- Added padding -->
-        <v-progress-circular indeterminate color="primary" size="small"></v-progress-circular> <!-- Smaller spinner -->
+      <v-col v-if="loading" cols="12" class="text-center">
+        <v-progress-circular indeterminate color="primary"></v-progress-circular>
         <p>Memuat riwayat pembelian...</p>
       </v-col>
 
       <!-- Purchase History List -->
       <v-col v-else-if="purchases.length > 0" v-for="purchase in purchases" :key="purchase.id" cols="12">
-        <v-card class="mb-2" variant="tonal" density="compact"> <!-- Reduced margin, added density, variant -->
-          <v-card-title class="d-flex justify-space-between text-body-1" prepend-icon="mdi-receipt-text-outline"> <!-- Smaller title, added icon -->
+        <v-card class="mb-3" variant="outlined">
+          <v-card-title class="d-flex justify-space-between">
             <span>Nota: {{ purchase.noNota || '-' }}</span>
             <span class="text-caption">{{ formatDate(purchase.tanggal) }}</span>
           </v-card-title>
-          <v-card-subtitle v-if="purchase.supplier" class="text-caption">Supplier: {{ purchase.supplier }}</v-card-subtitle> <!-- Smaller subtitle -->
-          <v-divider class="my-1"></v-divider> <!-- Reduced margin -->
-          <v-card-text class="py-1"> <!-- Reduced padding -->
-            <v-list density="compact" lines="one" class="py-0 bg-transparent"> <!-- Reduced padding, transparent bg -->
-              <v-list-subheader class="text-caption">Item Dibeli:</v-list-subheader> <!-- Smaller subheader -->
-              <v-list-item v-for="item in purchase.items" :key="item.itemId" class="px-1"> <!-- Reduced padding -->
-                <v-list-item-title class="text-caption">{{ getItemName(item.itemId) }}</v-list-item-title> <!-- Smaller title -->
-                <v-list-item-subtitle class="text-caption"> <!-- Already caption -->
+          <v-card-subtitle v-if="purchase.supplier">Supplier: {{ purchase.supplier }}</v-card-subtitle>
+          <v-divider></v-divider>
+          <v-card-text>
+            <v-list density="compact" lines="one">
+              <v-list-subheader>Item Dibeli:</v-list-subheader>
+              <v-list-item v-for="item in purchase.items" :key="item.itemId">
+                <v-list-item-title>{{ getItemName(item.itemId) }}</v-list-item-title>
+                <v-list-item-subtitle>
                   {{ item.quantity }} {{ getItemUnit(item.itemId) }} @ {{ formatCurrency(item.purchasePrice) }}
                 </v-list-item-subtitle>
               </v-list-item>
@@ -51,9 +51,9 @@
 
     <!-- Delete Purchase Confirmation Dialog -->
     <v-dialog v-model="deleteDialogVisible" persistent max-width="400px">
-      <v-card density="compact"> <!-- Added density -->
-        <v-card-title class="text-h6 error--text">Konfirmasi Hapus</v-card-title> <!-- Smaller title -->
-        <v-card-text class="pt-3"> <!-- Added padding top -->
+      <v-card>
+        <v-card-title class="text-h5 error--text">Konfirmasi Hapus</v-card-title>
+        <v-card-text>
           Apakah Anda yakin ingin menghapus riwayat pembelian ini?
           <br><br>
           <strong class="info--text">Perhatian:</strong> Stok barang yang terkait dengan pembelian ini akan dikurangi

@@ -1,38 +1,37 @@
 <template>
   <v-container>
-    <div class="d-flex justify-space-between align-center mb-3"> <!-- Reduced margin -->
-      <h1 class="text-h6">Daftar Pelanggan</h1> <!-- Smaller heading -->
+    <div class="d-flex justify-space-between align-center mb-4">
+      <h1>Daftar Pelanggan</h1>
       <!-- Optional: Add button if direct customer addition is desired -->
-      <!-- <v-btn color="primary" prepend-icon="mdi-account-plus-outline" @click="goToAddCustomer" size="small">Tambah Pelanggan</v-btn> -->
+      <!-- <v-btn color="primary" prepend-icon="mdi-account-plus-outline" @click="goToAddCustomer">Tambah Pelanggan</v-btn> -->
     </div>
 
     <v-text-field v-model="searchQuery" label="Cari Pelanggan (Nama/No. HP/No. Pol)" prepend-inner-icon="mdi-magnify"
       variant="outlined" density="compact" clearable class="mb-4"></v-text-field>
 
     <!-- Customer List Cards -->
-    <v-row dense class="mt-2"> <!-- Added margin top -->
+    <v-row dense>
       <!-- Loading Indicator -->
-      <v-col v-if="loading" cols="12" class="text-center py-4"> <!-- Added padding -->
-        <v-progress-circular indeterminate color="primary" size="small"></v-progress-circular> <!-- Smaller spinner -->
+      <v-col v-if="loading" cols="12" class="text-center">
+        <v-progress-circular indeterminate color="primary"></v-progress-circular>
         <p>Memuat data pelanggan...</p>
       </v-col>
 
       <!-- Customer Cards -->
       <v-col v-else-if="filteredCustomers.length > 0" v-for="customer in filteredCustomers" :key="customer.id"
         cols="12">
-        <v-card class="mb-2" density="compact" variant="tonal"> <!-- Reduced margin, added density, variant -->
-          <!-- Make card content clickable for detail view -->
+        <v-card class="mb-3">
+          <!-- Make card content clickable for detail view (if implemented) -->
           <div @click="goToCustomerDetail(customer.id)" style="cursor: pointer;">
-            <v-card-title class="text-body-1" prepend-icon="mdi-account"> <!-- Smaller title, added icon -->
-              {{ customer.nama }}
-            </v-card-title>
-            <v-card-subtitle class="text-caption">{{ customer.noHp }}</v-card-subtitle> <!-- Smaller subtitle -->
-            <v-card-text class="py-1"> <!-- Reduced padding -->
-              <div v-if="customer.kendaraanTerakhir" class="text-caption"> <!-- Smaller text -->
-                <strong>Kendaraan Terakhir:</strong> {{ customer.kendaraanTerakhir.merk }} ({{ customer.kendaraanTerakhir.noPol }})
+            <v-card-title>{{ customer.nama }}</v-card-title>
+            <v-card-subtitle>{{ customer.noHp }}</v-card-subtitle>
+            <v-card-text>
+              <div v-if="customer.kendaraanTerakhir">
+                <strong>Kendaraan Terakhir:</strong> {{ customer.kendaraanTerakhir.merk }}
+                ({{ customer.kendaraanTerakhir.noPol }})
               </div>
-              <div v-else class="text-caption"> <!-- Smaller text -->
-                <em >Belum ada data kendaraan</em>
+              <div v-else>
+                <em>Belum ada data kendaraan</em>
               </div>
             </v-card-text>
           </div>
@@ -55,9 +54,9 @@
 
     <!-- Edit Customer Dialog -->
     <v-dialog v-model="showEditDialog" persistent max-width="500px">
-      <v-card density="compact"> <!-- Added density -->
-        <v-card-title class="text-h6">Edit Pelanggan</v-card-title> <!-- Smaller title -->
-        <v-card-text class="pt-3"> <!-- Added padding top -->
+      <v-card>
+        <v-card-title>Edit Pelanggan</v-card-title>
+        <v-card-text>
           <v-text-field v-model="editableCustomer.nama" label="Nama Pelanggan*" :rules="requiredRule" required variant="outlined"
             density="compact" class="mb-3"></v-text-field>
           <v-text-field v-model="editableCustomer.noHp" label="Nomor HP*" :rules="phoneRule" required variant="outlined" density="compact"
@@ -74,10 +73,10 @@
 
     <!-- Delete Customer Confirmation Dialog -->
     <v-dialog v-model="showDeleteDialog" persistent max-width="400px">
-      <v-card density="compact"> <!-- Added density -->
-        <v-card-title class="text-h6 error--text">Konfirmasi Hapus</v-card-title> <!-- Smaller title -->
-        <v-card-text class="pt-3"> <!-- Added padding top -->
-          Apakah Anda yakin ingin menghapus pelanggan <strong class="font-weight-medium">{{ customerToDelete?.nama }}</strong>? <!-- Adjusted weight -->
+      <v-card>
+        <v-card-title class="text-h5 error--text">Konfirmasi Hapus</v-card-title>
+        <v-card-text>
+          Apakah Anda yakin ingin menghapus pelanggan <strong>{{ customerToDelete?.nama }}</strong>?
           <br><br>
           Tindakan ini tidak dapat dibatalkan. Data kendaraan dan servis terkait mungkin menjadi yatim piatu (tidak
           terhapus otomatis).

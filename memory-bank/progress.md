@@ -29,11 +29,11 @@
 - **Workshop Info Settings:** Implemented functionality to save and load workshop name, address, and phone number in `WorkshopInfoPage.vue` using Local Storage.
 - **User Profile Settings:** Implemented basic functionality to save and load user display name (`namaTampilan`) in `UserProfilePage.vue` using Local Storage.
 - **PWA Settings:** Implemented basic PWA install prompt logic in `PwaSettingsPage.vue`. Added placeholder for cache management.
-- **Reporting Page:** Created `ReportingPage.vue` with basic service summary, stock summary (total items, low stock count, list of low stock items), and **purchase summary (last 7/30 days)**. Added navigation link in `MainLayout.vue`.
+- **Reporting Page:** Created `ReportingPage.vue` with basic service summary and **stock summary (total items, low stock count)**. Added navigation link in `MainLayout.vue`.
 
 ## 2. What's Left to Build / Verify
 - **Functionality Implementation:** Potential future enhancements:
-    - **Reporting:** Add more detailed reports (e.g., detailed purchase history list, service frequency).
+    - **Reporting:** Add more detailed reports (e.g., list low stock items, purchase history summary).
     - **Settings:** Implement actual functionality within the remaining placeholder settings pages (Logout - requires secure backend for proper implementation). Implement password change (requires secure backend). Implement PWA cache clearing (requires Service Worker).
 - **Data Persistence:** Consider data relationships on delete (e.g., orphan handling for customers/vehicles).
 - **UI Completeness & Polish:** Refine UI/UX. Add missing loading/error states.
@@ -47,4 +47,4 @@
 ## 4. Known Issues / Blockers
 - **Filtering/Status Logic:** Filtering in lists could be enhanced.
 
-*This document reflects the current state after adding the purchase summary to the Reporting page.*
+*This document reflects the current state after adding unique item code validation.*

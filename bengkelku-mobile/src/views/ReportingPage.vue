@@ -2,26 +2,26 @@
   <v-container>
     <h1 class="mb-4">Laporan Bengkel</h1>
 
-    <v-row dense> <!-- Add dense to the row for tighter spacing -->
+    <v-row>
       <!-- Service Summary Card -->
       <v-col cols="12" md="6">
-        <v-card variant="outlined" density="compact"> <!-- Add density -->
-          <v-card-title prepend-icon="mdi-wrench-clock">Ringkasan Servis</v-card-title> <!-- Add icon -->
+        <v-card variant="outlined">
+          <v-card-title>Ringkasan Servis</v-card-title>
           <v-card-text v-if="!loading">
-            <p class="mb-1">Total Servis Tercatat: <strong>{{ totalServices }}</strong></p> <!-- Reduce margin -->
-            <v-list density="compact" class="py-0"> <!-- Reduce padding -->
+            <p>Total Servis Tercatat: <strong>{{ totalServices }}</strong></p>
+            <v-list density="compact">
               <v-list-subheader>Status Servis:</v-list-subheader>
-              <v-list-item v-for="(count, status) in serviceStatusCounts" :key="status" class="px-1"> <!-- Reduce padding -->
-                <v-list-item-title class="text-body-2">{{ status }}</v-list-item-title> <!-- Smaller font -->
+              <v-list-item v-for="(count, status) in serviceStatusCounts" :key="status">
+                <v-list-item-title>{{ status }}</v-list-item-title>
                 <template v-slot:append>
                   <v-chip size="small" :color="getStatusColor(status)" label>{{ count }}</v-chip>
                 </template>
               </v-list-item>
             </v-list>
-            <v-divider class="my-1"></v-divider> <!-- Reduce margin -->
-            <p class="mt-1">Total Estimasi Pendapatan (Selesai): <strong>{{ formatCurrency(totalRevenueCompleted) }}</strong></p> <!-- Reduce margin -->
+            <v-divider class="my-2"></v-divider>
+            <p>Total Estimasi Pendapatan (Selesai): <strong>{{ formatCurrency(totalRevenueCompleted) }}</strong></p>
           </v-card-text>
-          <v-card-text v-else class="text-center py-4"> <!-- Adjust padding -->
+          <v-card-text v-else class="text-center">
             <v-progress-circular indeterminate color="primary"></v-progress-circular>
             <p>Memuat data servis...</p>
           </v-card-text>
@@ -30,52 +30,25 @@
 
       <!-- Stock Summary Card -->
        <v-col cols="12" md="6">
-         <v-card variant="outlined" class="fill-height" density="compact"> <!-- Add density -->
-           <v-card-title prepend-icon="mdi-package-variant-closed">Ringkasan Stok</v-card-title> <!-- Add icon -->
+         <v-card variant="outlined" class="fill-height">
+           <v-card-title>Ringkasan Stok</v-card-title>
            <v-card-text v-if="!loading">
-             <p class="mb-1">Total Jenis Barang: <strong>{{ totalStockItems }}</strong></p> <!-- Reduce margin -->
-             <p class="mb-1">Barang Stok Menipis: <!-- Reduce margin -->
+             <p>Total Jenis Barang: <strong>{{ totalStockItems }}</strong></p>
+             <p>Barang Stok Menipis:
                 <v-chip size="small" :color="lowStockItemsCount > 0 ? 'error' : 'success'" label>
                    <strong>{{ lowStockItemsCount }}</strong>
                  </v-chip>
-                 <span class="text-caption ml-1">(Stok <= Stok Minimal)</span>
+                 <span class="text-caption ml-1">(Stok &lt;= Stok Minimal)</span> <!-- Corrected Entity -->
               </p>
-
-              <!-- List of Low Stock Items -->
-              <v-list v-if="lowStockItemsCount > 0" density="compact" class="mt-1 py-0"> <!-- Reduce margin/padding -->
-                <v-list-subheader>Daftar Barang Stok Menipis:</v-list-subheader>
-                <v-list-item v-for="item in lowStockItemsList" :key="item.id" class="px-1"> <!-- Reduce padding -->
-                  <v-list-item-title class="text-body-2">{{ item.nama }} ({{ item.kode }})</v-list-item-title> <!-- Smaller font -->
-                  <v-list-item-subtitle class="text-caption"> <!-- Smaller font -->
-                    Stok: {{ item.stokSaatIni }} / Minimal: {{ item.stokMinimal }}
-                  </v-list-item-subtitle>
-                </v-list-item>
-              </v-list>
-              <!-- End List -->
-
+             <!-- Add more stock details later if needed -->
+             <!-- e.g., list low stock items -->
            </v-card-text>
-            <v-card-text v-else class="text-center py-4"> <!-- Adjust padding -->
-              <v-progress-circular indeterminate color="primary" size="small"></v-progress-circular> <!-- Smaller spinner -->
+            <v-card-text v-else class="text-center">
+              <v-progress-circular indeterminate color="primary"></v-progress-circular>
               <p>Memuat data stok...</p>
             </v-card-text>
          </v-card>
        </v-col>
-
-      <!-- Purchase Summary Card -->
-      <v-col cols="12" md="6">
-        <v-card variant="outlined" class="fill-height" density="compact"> <!-- Add density -->
-          <v-card-title prepend-icon="mdi-cart-arrow-down">Ringkasan Pembelian Stok</v-card-title> <!-- Add icon -->
-          <v-card-text v-if="!loading">
-            <p class="mb-1">Total Pembelian (7 Hari Terakhir): <strong>{{ formatCurrency(purchaseTotalLast7Days) }}</strong></p> <!-- Reduce margin -->
-            <p class="mb-1">Total Pembelian (30 Hari Terakhir): <strong>{{ formatCurrency(purchaseTotalLast30Days) }}</strong></p> <!-- Reduce margin -->
-            <!-- Add more purchase details later if needed -->
-          </v-card-text>
-          <v-card-text v-else class="text-center py-4"> <!-- Adjust padding -->
-            <v-progress-circular indeterminate color="primary" size="small"></v-progress-circular> <!-- Smaller spinner -->
-            <p>Memuat data pembelian...</p>
-          </v-card-text>
-        </v-card>
-      </v-col>
 
     </v-row>
 
@@ -84,12 +57,11 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-import { getAllServices, getAllItems, getAllPurchases } from '../stores/localStorage.js'; // Import functions
+import { getAllServices, getAllItems } from '../stores/localStorage.js'; // Import functions
 
 const loading = ref(true);
 const services = ref([]);
 const stockItems = ref([]); // Add ref for stock items
-const purchases = ref([]); // Add ref for purchase records
 
 // Computed properties for reporting
 const totalServices = computed(() => services.value.length);
@@ -118,30 +90,6 @@ const lowStockItemsCount = computed(() => {
   ).length;
 });
 
-// New computed property for the list of low stock items
-const lowStockItemsList = computed(() => {
-  return stockItems.value.filter(item =>
-    item.stokMinimal > 0 && (Number(item.stokSaatIni) || 0) <= Number(item.stokMinimal)
-  );
-});
-
-// Computed properties for purchase report
-const purchaseTotalLast7Days = computed(() => {
-  const sevenDaysAgo = new Date();
-  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
-  return purchases.value
-    .filter(p => new Date(p.timestamp) >= sevenDaysAgo)
-    .reduce((sum, p) => sum + (Number(p.totalCost) || 0), 0);
-});
-
-const purchaseTotalLast30Days = computed(() => {
-  const thirtyDaysAgo = new Date();
-  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-  return purchases.value
-    .filter(p => new Date(p.timestamp) >= thirtyDaysAgo)
-    .reduce((sum, p) => sum + (Number(p.totalCost) || 0), 0);
-});
-
 
 // Fetch data on mount
 onMounted(() => {
@@ -153,7 +101,6 @@ function loadReportData() {
   try {
     services.value = getAllServices();
     stockItems.value = getAllItems(); // Load stock items
-    purchases.value = getAllPurchases(); // Load purchase records
     // Load other data if needed for more reports
   } catch (error) {
     console.error("Error loading report data:", error);

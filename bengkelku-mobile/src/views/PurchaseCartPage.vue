@@ -1,32 +1,33 @@
 <template>
   <v-container>
-    <div class="d-flex justify-space-between align-center mb-3"> <!-- Reduced margin -->
-      <h1 class="text-h6">Keranjang Pembelian</h1> <!-- Smaller heading -->
-      <v-btn variant="text" @click="goBackToStock" size="small">Kembali ke Stok</v-btn> <!-- Smaller button -->
+    <div class="d-flex justify-space-between align-center mb-4">
+      <h1>Keranjang Pembelian</h1>
+      <v-btn variant="text" @click="goBackToStock">Kembali ke Stok</v-btn>
     </div>
 
-    <v-card variant="outlined" class="mb-3" density="compact"> <!-- Reduced margin, added density -->
-      <v-card-title prepend-icon="mdi-cart-outline">Item di Keranjang</v-card-title> <!-- Added icon -->
-      <v-card-text class="pa-0"> <!-- Remove padding -->
-        <v-list lines="two" v-if="cartItems.length > 0" density="compact" class="py-0"> <!-- Compact list, remove padding -->
-          <v-list-item v-for="item in cartItems" :key="item.itemId" class="px-2"> <!-- Reduced padding -->
-            <v-list-item-title class="text-caption">{{ item.nama }}</v-list-item-title> <!-- Smaller text -->
+    <v-card variant="outlined" class="mb-4">
+      <v-card-title>Item di Keranjang</v-card-title>
+      <v-card-text>
+        <v-list lines="two" v-if="cartItems.length > 0">
+          <!-- Removed unused 'index' from v-for -->
+          <v-list-item v-for="item in cartItems" :key="item.itemId">
+            <v-list-item-title>{{ item.nama }}</v-list-item-title>
             <v-list-item-subtitle>
               <v-row dense align="center">
                 <v-col cols="4" sm="3">
                   <v-text-field v-model.number="item.jumlahBeli" label="Jumlah" type="number" min="1" density="compact"
-                    variant="outlined" hide-details class="text-caption"
-                    @change="updateCartItemQuantity(item.itemId, $event.target.value)"></v-text-field> <!-- Smaller text -->
+                    variant="outlined" hide-details
+                    @change="updateCartItemQuantity(item.itemId, $event.target.value)"></v-text-field>
                 </v-col>
-                <v-col cols="1" class="text-center text-caption">{{ item.satuan }}</v-col> <!-- Smaller text -->
+                <v-col cols="1" class="text-center">{{ item.satuan }}</v-col>
                 <v-col cols="5" sm="4">
                   <v-text-field v-model.number="item.hargaBeli" label="Harga Beli" type="number" min="0" prefix="Rp"
-                    density="compact" variant="outlined" hide-details class="text-caption"
-                    @change="updateCartItemPrice(item.itemId, $event.target.value)"></v-text-field> <!-- Smaller text -->
+                    density="compact" variant="outlined" hide-details
+                    @change="updateCartItemPrice(item.itemId, $event.target.value)"></v-text-field>
                 </v-col>
                 <v-col cols="2" sm="1" class="text-right">
-                  <v-btn icon="mdi-delete-outline" variant="text" color="error" size="x-small"
-                    @click="removeItemFromCart(item.itemId)"></v-btn> <!-- Smaller button -->
+                  <v-btn icon="mdi-delete-outline" variant="text" color="error" size="small"
+                    @click="removeItemFromCart(item.itemId)"></v-btn>
                 </v-col>
               </v-row>
             </v-list-item-subtitle>
@@ -34,41 +35,41 @@
         </v-list>
         <v-alert v-else type="info" variant="tonal">Keranjang pembelian kosong.</v-alert>
       </v-card-text>
-      <v-divider v-if="cartItems.length > 0" class="my-1"></v-divider> <!-- Reduced margin -->
-      <v-card-text v-if="cartItems.length > 0" class="text-right text-body-2 py-1"> <!-- Smaller text, reduced padding -->
+      <v-divider v-if="cartItems.length > 0"></v-divider>
+      <v-card-text v-if="cartItems.length > 0" class="text-right">
         <strong>Subtotal: {{ formatCurrency(cartSubtotal) }}</strong>
       </v-card-text>
     </v-card>
 
     <!-- Purchase Details Form (Supplier, Nota, Date) -->
-    <v-card variant="outlined" class="mb-3" v-if="cartItems.length > 0" density="compact"> <!-- Reduced margin, added density -->
-      <v-card-title prepend-icon="mdi-clipboard-text-outline">Detail Pembelian Final</v-card-title> <!-- Added icon -->
+    <v-card variant="outlined" class="mb-4" v-if="cartItems.length > 0">
+      <v-card-title>Detail Pembelian Final</v-card-title>
       <v-card-text>
         <v-text-field v-model="purchaseDetails.tanggal" label="Tanggal Pembelian*" type="date" required
-          variant="outlined" density="compact" class="mb-3"></v-text-field> <!-- Added density -->
+          variant="outlined" class="mb-3"></v-text-field>
         <v-text-field v-model="purchaseDetails.supplier" label="Supplier (Opsional)" variant="outlined"
-          density="compact" class="mb-3"></v-text-field> <!-- Added density -->
+          class="mb-3"></v-text-field>
         <v-text-field v-model="purchaseDetails.noNota" label="Nomor Nota/Invoice (Opsional)" variant="outlined"
-          density="compact" class="mb-3"></v-text-field> <!-- Added density -->
-        <div class="text-body-1 font-weight-medium mt-2"><strong>Total Pembelian: {{ formatCurrency(cartSubtotal) }}</strong></div> <!-- Adjusted size/weight -->
+          class="mb-3"></v-text-field>
+        <div class="text-h6 mt-3"><strong>Total Pembelian: {{ formatCurrency(cartSubtotal) }}</strong></div>
       </v-card-text>
     </v-card>
 
     <!-- Action Buttons -->
-    <v-btn color="primary" size="default" block @click="finalizePurchase" :disabled="cartItems.length === 0"
-      :loading="isSaving" class="mt-3"> <!-- Default size, added margin -->
+    <v-btn color="primary" size="large" block @click="finalizePurchase" :disabled="cartItems.length === 0"
+      :loading="isSaving">
       Simpan Pembelian & Update Stok
     </v-btn>
-    <v-btn color="error" variant="outlined" block class="mt-2" @click="confirmClearCart"
-      :disabled="cartItems.length === 0" size="small"> <!-- Smaller button -->
+    <v-btn color="error" variant="outlined" block class="mt-4" @click="confirmClearCart"
+      :disabled="cartItems.length === 0">
       Kosongkan Keranjang
     </v-btn>
 
     <!-- Clear Cart Confirmation Dialog -->
     <v-dialog v-model="showClearCartConfirmDialog" persistent max-width="400px">
-      <v-card density="compact"> <!-- Added density -->
-        <v-card-title class="text-h6 warning--text">Konfirmasi Kosongkan</v-card-title> <!-- Smaller title -->
-        <v-card-text class="pt-3"> <!-- Added padding top -->
+      <v-card>
+        <v-card-title class="text-h5 warning--text">Konfirmasi Kosongkan</v-card-title>
+        <v-card-text>
           Apakah Anda yakin ingin menghapus semua item dari keranjang pembelian?
         </v-card-text>
         <v-card-actions>
