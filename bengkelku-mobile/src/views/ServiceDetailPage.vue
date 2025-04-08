@@ -2,17 +2,17 @@
   <v-container>
     <div v-if="service && !loading">
       <!-- Header -->
-      <div class="d-flex justify-space-between align-center mb-4">
-        <h1>Detail Servis</h1>
-        <v-chip :color="getStatusColor(service.status)" label>
+      <div class="d-flex justify-space-between align-center mb-3"> <!-- Reduced margin -->
+        <h1 class="text-h6">Detail Servis</h1> <!-- Smaller heading -->
+        <v-chip :color="getStatusColor(service.status)" label size="small"> <!-- Smaller chip -->
           {{ service.status }}
         </v-chip>
       </div>
 
       <!-- Customer & Vehicle Info -->
-      <v-card variant="outlined" class="mb-4">
-        <v-card-title>Informasi Kendaraan & Pelanggan</v-card-title>
-        <v-card-text>
+      <v-card variant="outlined" class="mb-3" density="compact"> <!-- Reduced margin, added density -->
+        <v-card-title prepend-icon="mdi-account-details">Informasi Kendaraan & Pelanggan</v-card-title> <!-- Added icon -->
+        <v-card-text class="text-caption"> <!-- Smaller text -->
           <div><strong>No. Polisi:</strong> {{ service.nomorPolisi }}</div>
           <div><strong>Pelanggan:</strong> {{ service.customerName || 'Tidak Ditemukan' }}</div>
           <div><strong>Kendaraan:</strong> {{ service.vehicleInfo || 'Tidak Ditemukan' }}</div>
@@ -21,28 +21,28 @@
       </v-card>
 
       <!-- Initial Complaint -->
-      <v-card variant="outlined" class="mb-4">
-        <v-card-title>Keluhan Awal & Jenis Servis</v-card-title>
-        <v-card-text>
+      <v-card variant="outlined" class="mb-3" density="compact"> <!-- Reduced margin, added density -->
+        <v-card-title prepend-icon="mdi-comment-question-outline">Keluhan Awal & Jenis Servis</v-card-title> <!-- Added icon -->
+        <v-card-text class="text-caption"> <!-- Smaller text -->
           <div><strong>Jenis Servis Diminta:</strong> {{ service.jenisServisNames?.join(', ') || 'N/A' }}</div>
           <div v-if="service.keterangan"><strong>Keluhan Awal:</strong> {{ service.keterangan }}</div>
-          <div class="text-caption text-grey mt-1">Tanggal Masuk: {{ formatTimestamp(service.timestamp) }}</div>
+          <div class="text-caption text-grey mt-1">Tanggal Masuk: {{ formatTimestamp(service.timestamp) }}</div> <!-- Already caption -->
         </v-card-text>
       </v-card>
 
       <!-- Jasa / Service Fees -->
-      <v-card variant="outlined" class="mb-4">
-        <v-card-title class="d-flex justify-space-between align-center">
+      <v-card variant="outlined" class="mb-3" density="compact"> <!-- Reduced margin, added density -->
+        <v-card-title class="d-flex justify-space-between align-center" prepend-icon="mdi-room-service-outline"> <!-- Added icon -->
           <span>Jasa / Biaya Servis</span>
-          <v-btn color="secondary" size="small" @click="openAddJasaDialog" prepend-icon="mdi-plus-box-outline">
+          <v-btn color="secondary" size="x-small" @click="openAddJasaDialog" prepend-icon="mdi-plus-box-outline"> <!-- Smaller button -->
             Tambah Jasa
           </v-btn>
         </v-card-title>
-        <v-card-text>
-          <v-list lines="one" v-if="service.jasa && service.jasa.length > 0">
-            <v-list-item v-for="(j, index) in service.jasa" :key="`jasa-${index}`">
-              <v-list-item-title>{{ j.deskripsi }}</v-list-item-title>
-              <v-list-item-subtitle>{{ formatCurrency(j.biaya) }}</v-list-item-subtitle>
+        <v-card-text class="pa-0"> <!-- Remove padding -->
+          <v-list lines="one" v-if="service.jasa && service.jasa.length > 0" density="compact" class="py-0"> <!-- Compact list, remove padding -->
+            <v-list-item v-for="(j, index) in service.jasa" :key="`jasa-${index}`" class="px-2"> <!-- Reduced padding -->
+              <v-list-item-title class="text-caption">{{ j.deskripsi }}</v-list-item-title> <!-- Smaller text -->
+              <v-list-item-subtitle class="text-caption">{{ formatCurrency(j.biaya) }}</v-list-item-subtitle> <!-- Smaller text -->
               <template v-slot:append>
                 <v-btn icon="mdi-delete-outline" variant="text" color="error" size="x-small"
                   @click="removeJasa(index)"></v-btn>
@@ -54,20 +54,19 @@
       </v-card>
 
       <!-- Spare Parts Used -->
-      <v-card variant="outlined" class="mb-4">
-        <v-card-title class="d-flex justify-space-between align-center">
+      <v-card variant="outlined" class="mb-3" density="compact"> <!-- Reduced margin, added density -->
+        <v-card-title class="d-flex justify-space-between align-center" prepend-icon="mdi-cog-outline"> <!-- Added icon -->
           <span>Spare Part Digunakan</span>
-          <v-btn color="secondary" size="small" @click="showAddPartDialog = true" prepend-icon="mdi-plus-box-outline">
+          <v-btn color="secondary" size="x-small" @click="showAddPartDialog = true" prepend-icon="mdi-plus-box-outline"> <!-- Smaller button -->
             Tambah Part
           </v-btn>
         </v-card-title>
-        <v-card-text>
-          <v-list lines="two" v-if="service.parts && service.parts.length > 0">
-            <v-list-item v-for="(p, index) in service.parts" :key="`part-${p.itemId}`">
-              <v-list-item-title>{{ p.nama }} ({{ p.kode || 'N/A' }})</v-list-item-title>
-              <v-list-item-subtitle>
-                {{ p.jumlah }} {{ p.satuan }} @ {{ formatCurrency(p.hargaJual) }} =
-                {{ formatCurrency(p.jumlah * p.hargaJual) }}
+        <v-card-text class="pa-0"> <!-- Remove padding -->
+          <v-list lines="two" v-if="service.parts && service.parts.length > 0" density="compact" class="py-0"> <!-- Compact list, remove padding -->
+            <v-list-item v-for="(p, index) in service.parts" :key="`part-${p.itemId}`" class="px-2"> <!-- Reduced padding -->
+              <v-list-item-title class="text-caption">{{ p.nama }} ({{ p.kode || 'N/A' }})</v-list-item-title> <!-- Smaller text -->
+              <v-list-item-subtitle class="text-caption"> <!-- Smaller text -->
+                {{ p.jumlah }} {{ p.satuan }} @ {{ formatCurrency(p.hargaJual) }} = {{ formatCurrency(p.jumlah * p.hargaJual) }}
               </v-list-item-subtitle>
               <template v-slot:append>
                 <v-btn icon="mdi-delete-outline" variant="text" color="error" size="x-small"
@@ -80,40 +79,40 @@
       </v-card>
 
       <!-- Cost Summary & Status -->
-      <v-card variant="outlined" class="mb-4">
-        <v-card-title>Biaya & Status</v-card-title>
-        <v-card-text>
+      <v-card variant="outlined" class="mb-3" density="compact"> <!-- Reduced margin, added density -->
+        <v-card-title prepend-icon="mdi-cash-multiple">Biaya & Status</v-card-title> <!-- Added icon -->
+        <v-card-text class="text-caption"> <!-- Smaller text -->
           <div><strong>Total Jasa:</strong> {{ formatCurrency(totalBiayaJasa) }}</div>
           <div><strong>Total Spare Part:</strong> {{ formatCurrency(totalBiayaParts) }}</div>
-          <v-divider class="my-2"></v-divider>
-          <div class="text-h6"><strong>Total Biaya Keseluruhan:</strong> {{ formatCurrency(totalBiayaKeseluruhan) }}
+          <v-divider class="my-1"></v-divider> <!-- Reduced margin -->
+          <div class="text-body-1 font-weight-medium mt-1"><strong>Total Biaya Keseluruhan:</strong> {{ formatCurrency(totalBiayaKeseluruhan) }} <!-- Adjusted size/weight -->
           </div>
-          <v-divider class="my-3"></v-divider>
-          <p><strong>Update Status:</strong></p>
-          <v-chip-group v-model="editableStatus" mandatory>
-            <v-chip filter value="Antri" color="blue">Antri</v-chip>
-            <v-chip filter value="Dikerjakan" color="orange">Dikerjakan</v-chip>
-            <v-chip filter value="Tunggu Part" color="purple">Tunggu Part</v-chip>
-            <v-chip filter value="Selesai" color="green">Selesai</v-chip>
+          <v-divider class="my-2"></v-divider> <!-- Adjusted margin -->
+          <p class="mb-1"><strong>Update Status:</strong></p> <!-- Reduced margin -->
+          <v-chip-group v-model="editableStatus" mandatory density="compact"> <!-- Compact chips -->
+            <v-chip filter value="Antri" color="blue" size="small">Antri</v-chip> <!-- Smaller chips -->
+            <v-chip filter value="Dikerjakan" color="orange" size="small">Dikerjakan</v-chip> <!-- Smaller chips -->
+            <v-chip filter value="Tunggu Part" color="purple" size="small">Tunggu Part</v-chip> <!-- Smaller chips -->
+            <v-chip filter value="Selesai" color="green" size="small">Selesai</v-chip> <!-- Smaller chips -->
           </v-chip-group>
         </v-card-text>
       </v-card>
 
       <!-- Save Button -->
-      <v-btn color="success" block size="large" @click="saveChanges" :loading="isSaving" :disabled="isSaving">
+      <v-btn color="success" block size="default" @click="saveChanges" :loading="isSaving" :disabled="isSaving" class="mt-3"> <!-- Default size, added margin -->
         Simpan Perubahan
       </v-btn>
       <!-- Delete Button -->
-      <v-btn color="error" variant="outlined" block class="mt-4" @click="showDeleteConfirmDialog = true"
-        prepend-icon="mdi-delete-outline">
+      <v-btn color="error" variant="outlined" block class="mt-2" @click="showDeleteConfirmDialog = true"
+        prepend-icon="mdi-delete-outline" size="small"> <!-- Smaller button -->
         Hapus Servis Ini
       </v-btn>
-      <v-btn variant="text" block class="mt-2" @click="goBack">Kembali ke Daftar</v-btn>
+      <v-btn variant="text" block class="mt-1" @click="goBack" size="small">Kembali ke Daftar</v-btn> <!-- Smaller button -->
 
     </div>
     <!-- Loading / Not Found States -->
-    <div v-else-if="loading" class="text-center">
-      <v-progress-circular indeterminate color="primary"></v-progress-circular>
+    <div v-else-if="loading" class="text-center py-4"> <!-- Added padding -->
+      <v-progress-circular indeterminate color="primary" size="small"></v-progress-circular> <!-- Smaller spinner -->
       <p>Memuat data servis...</p>
     </div>
     <div v-else>
@@ -125,16 +124,16 @@
 
     <!-- Dialog Add Jasa -->
     <v-dialog v-model="showAddJasaDialog" persistent max-width="500px">
-      <v-card>
-        <v-card-title>Tambah Jasa</v-card-title>
-        <v-card-text>
+      <v-card density="compact"> <!-- Added density -->
+        <v-card-title class="text-h6">Tambah Jasa</v-card-title> <!-- Smaller title -->
+        <v-card-text class="pt-3"> <!-- Added padding top -->
           <v-autocomplete v-model="selectedPredefinedJasa" :items="predefinedJasaItems" item-title="title"
-            item-value="deskripsi" label="Pilih Jasa (Opsional)" return-object clearable variant="outlined" class="mb-3"
-            @update:modelValue="onJasaSelectionChange"></v-autocomplete>
-          <v-text-field v-model="newJasa.deskripsi" label="Deskripsi Jasa*" required variant="outlined"
+            item-value="deskripsi" label="Pilih Jasa (Opsional)" return-object clearable variant="outlined" density="compact" class="mb-3"
+            @update:modelValue="onJasaSelectionChange"></v-autocomplete> <!-- Removed duplicate density -->
+          <v-text-field v-model="newJasa.deskripsi" label="Deskripsi Jasa*" required variant="outlined" density="compact"
             class="mb-3"></v-text-field>
           <v-text-field v-model.number="newJasa.biaya" label="Biaya Jasa*" type="number" prefix="Rp" required
-            variant="outlined" class="mb-1"></v-text-field> <!-- Reduced bottom margin -->
+            variant="outlined" density="compact" class="mb-1"></v-text-field> <!-- Added density -->
           <!-- Quick Price Buttons -->
           <div class="mb-3">
             <span class="text-caption">Input Cepat:</span>
@@ -157,18 +156,18 @@
 
     <!-- Dialog Add Spare Part -->
     <v-dialog v-model="showAddPartDialog" persistent max-width="600px">
-      <v-card>
-        <v-card-title>Tambah Spare Part</v-card-title>
-        <v-card-text>
+      <v-card density="compact"> <!-- Added density -->
+        <v-card-title class="text-h6">Tambah Spare Part</v-card-title> <!-- Smaller title -->
+        <v-card-text class="pt-3"> <!-- Added padding top -->
           <v-autocomplete v-model="selectedPart" :items="availableStockItems" item-title="nama" item-value="id"
-            label="Pilih Spare Part*" return-object required variant="outlined" class="mb-3" clearable
+            label="Pilih Spare Part*" return-object required variant="outlined" density="compact" class="mb-3" clearable
             :loading="loadingItems" placeholder="Ketik nama atau kode barang..."
-            @update:modelValue="onPartSelectionChange"></v-autocomplete>
+            @update:modelValue="onPartSelectionChange"></v-autocomplete> <!-- Removed duplicate density -->
           <div v-if="selectedPart">
             <p class="text-caption">Stok Tersedia: {{ selectedPart.stokSaatIni || 0 }} {{ selectedPart.satuan }}</p>
             <p class="text-caption mb-2">Harga Jual: {{ formatCurrency(selectedPart.hargaJual) }}</p>
             <v-text-field v-model.number="newPart.jumlah" label="Jumlah Digunakan*" type="number" min="1"
-              :max="selectedPart.stokSaatIni || 0" required variant="outlined" class="mb-3"
+              :max="selectedPart.stokSaatIni || 0" required variant="outlined" density="compact" class="mb-3"
               :error-messages="partJumlahError"></v-text-field>
           </div>
         </v-card-text>
@@ -183,10 +182,10 @@
 
     <!-- Dialog Confirm Delete -->
     <v-dialog v-model="showDeleteConfirmDialog" persistent max-width="400px">
-      <v-card>
-        <v-card-title class="text-h5 error--text">Konfirmasi Hapus</v-card-title>
-        <v-card-text>
-          Apakah Anda yakin ingin menghapus data servis untuk <strong>{{ service?.nomorPolisi }}</strong>?
+      <v-card density="compact"> <!-- Added density -->
+        <v-card-title class="text-h6 error--text">Konfirmasi Hapus</v-card-title> <!-- Smaller title -->
+        <v-card-text class="pt-3"> <!-- Added padding top -->
+          Apakah Anda yakin ingin menghapus data servis untuk <strong class="font-weight-medium">{{ service?.nomorPolisi }}</strong>? <!-- Adjusted weight -->
           <br>
           Tindakan ini tidak dapat dibatalkan. Stok part yang digunakan TIDAK akan dikembalikan secara otomatis.
         </v-card-text>

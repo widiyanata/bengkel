@@ -1,36 +1,36 @@
 <template>
   <v-container>
-    <div class="d-flex justify-space-between align-center mb-4">
-      <h1>Daftar Servis</h1>
-      <v-btn color="primary" prepend-icon="mdi-plus" to="/servis/baru">
+    <div class="d-flex justify-space-between align-center mb-3"> <!-- Reduced margin -->
+      <h1 class="text-h6">Daftar Servis</h1> <!-- Smaller heading -->
+      <v-btn color="primary" prepend-icon="mdi-plus" to="/servis/baru" size="small"> <!-- Smaller button -->
         Servis Baru
       </v-btn>
     </div>
 
     <!-- Filter Chips -->
-    <v-chip-group v-model="selectedFilter" mandatory class="mb-4">
-      <v-chip filter value="semua">Semua</v-chip>
-      <v-chip filter value="dikerjakan">Dikerjakan</v-chip>
-      <v-chip filter value="selesai_hari_ini">Selesai Hari Ini</v-chip>
-      <v-chip filter value="antri">Antri</v-chip>
+    <v-chip-group v-model="selectedFilter" mandatory class="mb-3" density="compact"> <!-- Reduced margin, added density -->
+      <v-chip filter value="semua" size="small">Semua</v-chip> <!-- Smaller chips -->
+      <v-chip filter value="dikerjakan" size="small">Dikerjakan</v-chip> <!-- Smaller chips -->
+      <v-chip filter value="selesai_hari_ini" size="small">Selesai Hari Ini</v-chip> <!-- Smaller chips -->
+      <v-chip filter value="antri" size="small">Antri</v-chip> <!-- Smaller chips -->
     </v-chip-group>
 
     <!-- Service List Cards -->
-    <v-row dense>
+    <v-row dense class="mt-2"> <!-- Added margin top -->
       <v-col v-for="service in filteredServices" :key="service.id" cols="12">
-        <v-card @click="goToServiceDetail(service.id)" class="mb-3">
-          <v-card-title class="d-flex justify-space-between">
+        <v-card @click="goToServiceDetail(service.id)" class="mb-2" density="compact" variant="tonal"> <!-- Reduced margin, added density, variant -->
+          <v-card-title class="d-flex justify-space-between text-body-1" prepend-icon="mdi-car-wrench"> <!-- Smaller title, added icon -->
             <span>{{ service.nomorPolisi }}</span>
-            <v-chip :color="getStatusColor(service.status)" size="small" label>
+            <v-chip :color="getStatusColor(service.status)" size="x-small" label> <!-- Smaller chip -->
               {{ service.status }}
             </v-chip>
           </v-card-title>
-          <v-card-subtitle>{{ service.namaPelanggan }}</v-card-subtitle> <!-- Use fetched customer name -->
-          <v-card-text>
+          <v-card-subtitle class="text-caption">{{ service.namaPelanggan }}</v-card-subtitle> <!-- Smaller subtitle -->
+          <v-card-text class="py-1"> <!-- Reduced padding -->
             <!-- Use mapped service names -->
-            <div><strong>Jenis:</strong> {{ service.jenisServisNames.join(', ') }}</div>
-            <div v-if="service.keterangan"><strong>Ket:</strong> {{ service.keterangan }}</div>
-            <div class="text-caption text-grey">{{ formatTimestamp(service.timestamp) }}</div>
+            <div class="text-caption"><strong>Jenis:</strong> {{ service.jenisServisNames.join(', ') }}</div> <!-- Smaller text -->
+            <div v-if="service.keterangan" class="text-caption"><strong>Ket:</strong> {{ service.keterangan }}</div> <!-- Smaller text -->
+            <div class="text-caption text-grey">{{ formatTimestamp(service.timestamp) }}</div> <!-- Already caption -->
             <!-- Display timestamp -->
           </v-card-text>
         </v-card>

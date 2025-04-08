@@ -2,8 +2,8 @@
   <v-container>
     <div v-if="customer && !loading">
       <!-- Header with Edit/Delete Customer -->
-      <div class="d-flex justify-space-between align-center mb-4">
-        <h1>Detail Pelanggan</h1>
+      <div class="d-flex justify-space-between align-center mb-3"> <!-- Reduced margin -->
+        <h1 class="text-h6">Detail Pelanggan</h1> <!-- Smaller heading -->
         <div>
           <v-btn icon="mdi-pencil-outline" color="info" variant="text" size="small" @click="openEditDialog(customer)"
             class="mr-1"></v-btn>
@@ -13,26 +13,25 @@
       </div>
 
       <!-- Customer Info Card -->
-      <v-card variant="outlined" class="mb-4">
-        <v-card-title>Informasi Kontak</v-card-title>
-        <v-card-text>
+      <v-card variant="outlined" class="mb-3" density="compact"> <!-- Reduced margin, added density -->
+        <v-card-title prepend-icon="mdi-card-account-details-outline">Informasi Kontak</v-card-title> <!-- Added icon -->
+        <v-card-text class="text-caption"> <!-- Smaller text -->
           <div><strong>Nama:</strong> {{ customer.nama }}</div>
           <div><strong>No. HP:</strong> {{ customer.noHp }}</div>
         </v-card-text>
       </v-card>
 
       <!-- Vehicle List Card -->
-      <v-card variant="outlined" class="mb-4">
-        <v-card-title class="d-flex justify-space-between align-center">
+      <v-card variant="outlined" class="mb-3" density="compact"> <!-- Reduced margin, added density -->
+        <v-card-title class="d-flex justify-space-between align-center" prepend-icon="mdi-car-multiple"> <!-- Added icon -->
           <span>Kendaraan Terdaftar</span>
-          <v-btn color="secondary" size="small" @click="openAddVehicleDialog" prepend-icon="mdi-plus-box-outline">Tambah
-            Kendaraan</v-btn>
+          <v-btn color="secondary" size="x-small" @click="openAddVehicleDialog" prepend-icon="mdi-plus-box-outline">Tambah Kendaraan</v-btn> <!-- Smaller button -->
         </v-card-title>
-        <v-card-text>
-          <v-list lines="one" v-if="vehicles.length > 0">
-            <v-list-item v-for="vehicle in vehicles" :key="vehicle.id">
-              <v-list-item-title>{{ vehicle.merkTipe }}</v-list-item-title>
-              <v-list-item-subtitle>{{ vehicle.nomorPolisi }}</v-list-item-subtitle>
+        <v-card-text class="pa-0"> <!-- Remove padding -->
+          <v-list lines="one" v-if="vehicles.length > 0" density="compact" class="py-0"> <!-- Compact list, remove padding -->
+            <v-list-item v-for="vehicle in vehicles" :key="vehicle.id" class="px-2"> <!-- Reduced padding -->
+              <v-list-item-title class="text-caption">{{ vehicle.merkTipe }}</v-list-item-title> <!-- Smaller text -->
+              <v-list-item-subtitle class="text-caption">{{ vehicle.nomorPolisi }}</v-list-item-subtitle> <!-- Smaller text -->
               <!-- Vehicle Actions -->
               <template v-slot:append>
                 <v-btn icon="mdi-pencil-outline" color="info" variant="text" size="x-small"
@@ -48,14 +47,13 @@
       </v-card>
 
       <!-- Service History Card -->
-      <v-card variant="outlined" class="mb-4">
-        <v-card-title>Riwayat Servis</v-card-title>
-        <v-card-text>
-          <v-list lines="two" v-if="serviceHistory.length > 0">
-            <v-list-item v-for="service in serviceHistory" :key="service.id" @click="goToServiceDetail(service.id)">
-              <v-list-item-title>{{ service.nomorPolisi }} -
-                {{ formatTimestamp(service.timestamp) }}</v-list-item-title>
-              <v-list-item-subtitle>
+      <v-card variant="outlined" class="mb-3" density="compact"> <!-- Reduced margin, added density -->
+        <v-card-title prepend-icon="mdi-history">Riwayat Servis</v-card-title> <!-- Added icon -->
+        <v-card-text class="pa-0"> <!-- Remove padding -->
+          <v-list lines="two" v-if="serviceHistory.length > 0" density="compact" class="py-0"> <!-- Compact list, remove padding -->
+            <v-list-item v-for="service in serviceHistory" :key="service.id" @click="goToServiceDetail(service.id)" class="px-2"> <!-- Reduced padding -->
+              <v-list-item-title class="text-caption">{{ service.nomorPolisi }} - {{ formatTimestamp(service.timestamp) }}</v-list-item-title> <!-- Smaller text -->
+              <v-list-item-subtitle class="text-caption"> <!-- Smaller text -->
                 Status: {{ service.status }} | Jenis: {{ service.jenisServisNames?.join(', ') || 'N/A' }}
               </v-list-item-subtitle>
               <template v-slot:append>
@@ -68,12 +66,12 @@
         </v-card-text>
       </v-card>
 
-      <v-btn variant="text" block class="mt-2" @click="goBack">Kembali ke Daftar Pelanggan</v-btn>
+      <v-btn variant="text" block class="mt-1" @click="goBack" size="small">Kembali ke Daftar Pelanggan</v-btn> <!-- Smaller button -->
 
     </div>
     <!-- Loading / Not Found States -->
-    <div v-else-if="loading" class="text-center">
-      <v-progress-circular indeterminate color="primary"></v-progress-circular>
+    <div v-else-if="loading" class="text-center py-4"> <!-- Added padding -->
+      <v-progress-circular indeterminate color="primary" size="small"></v-progress-circular> <!-- Smaller spinner -->
       <p>Memuat data pelanggan...</p>
     </div>
     <div v-else>
@@ -85,9 +83,9 @@
 
     <!-- Edit Customer Dialog -->
     <v-dialog v-model="showEditDialog" persistent max-width="500px">
-      <v-card>
-        <v-card-title>Edit Pelanggan</v-card-title>
-        <v-card-text>
+      <v-card density="compact"> <!-- Added density -->
+        <v-card-title class="text-h6">Edit Pelanggan</v-card-title> <!-- Smaller title -->
+        <v-card-text class="pt-3"> <!-- Added padding top -->
           <v-text-field v-model="editableCustomer.nama" label="Nama Pelanggan*" :rules="requiredRule" required variant="outlined"
             density="compact" class="mb-3"></v-text-field>
           <v-text-field v-model="editableCustomer.noHp" label="Nomor HP*" :rules="phoneRule" required variant="outlined" density="compact"
@@ -103,10 +101,10 @@
 
     <!-- Delete Customer Confirmation Dialog -->
     <v-dialog v-model="showDeleteDialog" persistent max-width="400px">
-      <v-card>
-        <v-card-title class="text-h5 error--text">Konfirmasi Hapus</v-card-title>
-        <v-card-text>
-          Apakah Anda yakin ingin menghapus pelanggan <strong>{{ customerToDelete?.nama }}</strong>?
+      <v-card density="compact"> <!-- Added density -->
+        <v-card-title class="text-h6 error--text">Konfirmasi Hapus</v-card-title> <!-- Smaller title -->
+        <v-card-text class="pt-3"> <!-- Added padding top -->
+          Apakah Anda yakin ingin menghapus pelanggan <strong class="font-weight-medium">{{ customerToDelete?.nama }}</strong>? <!-- Adjusted weight -->
           <br><br>
           Tindakan ini tidak dapat dibatalkan. Data kendaraan dan servis terkait mungkin menjadi yatim piatu.
         </v-card-text>
@@ -120,9 +118,9 @@
 
     <!-- Add/Edit Vehicle Dialog -->
     <v-dialog v-model="showVehicleDialog" persistent max-width="500px">
-      <v-card>
-        <v-card-title>{{ isEditingVehicle ? 'Edit' : 'Tambah' }} Kendaraan</v-card-title>
-        <v-card-text>
+      <v-card density="compact"> <!-- Added density -->
+        <v-card-title class="text-h6">{{ isEditingVehicle ? 'Edit' : 'Tambah' }} Kendaraan</v-card-title> <!-- Smaller title -->
+        <v-card-text class="pt-3"> <!-- Added padding top -->
           <v-text-field v-model="editableVehicle.nomorPolisi" label="Nomor Polisi*" required variant="outlined"
             density="compact" class="mb-3"></v-text-field>
           <v-text-field v-model="editableVehicle.merkTipe" label="Merk / Tipe Kendaraan*" required variant="outlined"
@@ -138,11 +136,10 @@
 
     <!-- Delete Vehicle Confirmation Dialog -->
     <v-dialog v-model="showDeleteVehicleDialog" persistent max-width="400px">
-      <v-card>
-        <v-card-title class="text-h5 error--text">Konfirmasi Hapus Kendaraan</v-card-title>
-        <v-card-text>
-          Apakah Anda yakin ingin menghapus kendaraan <strong>{{ vehicleToDelete?.nomorPolisi }}</strong>
-          ({{ vehicleToDelete?.merkTipe }})?
+      <v-card density="compact"> <!-- Added density -->
+        <v-card-title class="text-h6 error--text">Konfirmasi Hapus Kendaraan</v-card-title> <!-- Smaller title -->
+        <v-card-text class="pt-3"> <!-- Added padding top -->
+          Apakah Anda yakin ingin menghapus kendaraan <strong class="font-weight-medium">{{ vehicleToDelete?.nomorPolisi }}</strong> ({{ vehicleToDelete?.merkTipe }})? <!-- Adjusted weight -->
           <br><br>
           Tindakan ini tidak dapat dibatalkan. Riwayat servis terkait mungkin menjadi yatim piatu.
         </v-card-text>
