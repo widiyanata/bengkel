@@ -1,0 +1,18 @@
+# Cline Rules for Bengkelku Mobile
+
+*This file stores project-specific patterns, preferences, and intelligence discovered during development.*
+
+## General
+- (No rules defined yet)
+
+## Code Style
+- (No specific style rules defined yet beyond default Vue/Vuetify practices)
+
+## Component Patterns
+- (No specific component patterns defined yet)
+
+## Data Management
+- (Data persistence strategy TBD)
+
+## User Preferences
+- (No specific user preferences noted yet)
