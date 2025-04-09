@@ -119,6 +119,16 @@
 - Tombol aksi cepat di homepage menggunakan layout ikon dengan teks di bawahnya untuk mencegah overlap teks
 - Komponen dashboard menggunakan padding yang lebih kecil dan font yang lebih compact untuk tampilan mobile
 - Daftar servis aktif dan stok menipis menggunakan tampilan yang lebih compact dengan density="compact"
+- Halaman stok menggunakan tampilan grid kartu yang lebih visual dengan indikator stok menipis dan progress bar
+- Dialog edit dan hapus item stok menggunakan toolbar berwarna dan layout yang lebih terorganisir
+- Halaman stok memiliki fitur filter dan pengurutan untuk memudahkan pengelolaan inventaris
+- Tombol aksi pada halaman stok menggunakan teks dan ikon untuk meningkatkan kejelasan dan area sentuh pada perangkat mobile
+- Filter dan pengurutan pada halaman stok dapat disembunyikan/ditampilkan pada tampilan mobile untuk menghemat ruang
+- Tombol header pada halaman stok menggunakan ikon saja pada tampilan mobile untuk menghemat ruang
+- Filter dan pengurutan pada halaman stok memiliki handler khusus untuk memastikan berfungsi dengan baik
+- Menu dropdown pada halaman stok memiliki perbaikan CSS untuk mencegah terpotong pada tampilan mobile
+- Semua fungsi pada halaman stok memiliki penanganan error untuk mencegah crash aplikasi
+- Atribut pada komponen v-select diperbaiki untuk menghindari warning dan error
 
 ## Peningkatan AppBar dan Bottom Navigation
 - AppBar ditingkatkan dengan fitur pencarian global untuk mencari servis, pelanggan, dan part
