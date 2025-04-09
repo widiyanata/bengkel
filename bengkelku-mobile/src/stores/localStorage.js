@@ -9,6 +9,7 @@ const PURCHASES_KEY = "bengkelku_purchases"; // For stock purchases
 const PURCHASE_CART_KEY = "bengkelku_purchase_cart"; // Key for the cart
 const WORKSHOP_INFO_KEY = "bengkelku_workshop_info"; // Key for workshop details
 const USER_PROFILE_KEY = "bengkelku_user_profile"; // Key for user profile
+const INVOICES_KEY = "bengkelku_invoices"; // Key for invoices
 
 // Helper function to get data from Local Storage
 function getData(key, defaultValue = []) { // Allow default value override
@@ -129,13 +130,23 @@ export function findVehicleByNomorPolisi(nomorPolisi) {
   if (!nomorPolisi) return null;
   const normalizedNomor = nomorPolisi.trim().toUpperCase();
   const vehicles = getAllVehicles();
-  const foundVehicle = vehicles.find((v) => v.nomorPolisi.trim().toUpperCase() === normalizedNomor);
 
-  if (foundVehicle) {
+  // Use flexible search (LIKE) instead of exact match
+  const matchingVehicles = vehicles.filter((v) => {
+    const vehicleNomor = v.nomorPolisi.trim().toUpperCase();
+    return vehicleNomor.includes(normalizedNomor) || normalizedNomor.includes(vehicleNomor);
+  });
+
+  // If we have matches, return the first one
+  if (matchingVehicles.length > 0) {
+    const foundVehicle = matchingVehicles[0]; // Get the first match
     const customer = getCustomerById(foundVehicle.customerId);
     return {
       ...foundVehicle,
       customerName: customer ? customer.nama : "Unknown Customer", // Add customer name for convenience
+      // Add a flag to indicate if there are multiple matches
+      multipleMatches: matchingVehicles.length > 1,
+      matchCount: matchingVehicles.length
     };
   }
   return null;
@@ -513,7 +524,8 @@ export function clearAllData() {
     PURCHASES_KEY,
     PURCHASE_CART_KEY,
     WORKSHOP_INFO_KEY,
-    USER_PROFILE_KEY, // Add user profile key
+    USER_PROFILE_KEY,
+    INVOICES_KEY,
   ];
   try {
     appKeys.forEach((key) => {
@@ -528,6 +540,101 @@ export function clearAllData() {
 }
 
 // --- TODO: Add functions for deleting specific data (customers, items etc.) ---
+
+// --- Invoice Management ---
+export function getAllInvoices() {
+  return getData(INVOICES_KEY);
+}
+
+export function getInvoiceById(id) {
+  const invoices = getAllInvoices();
+  return invoices.find(invoice => invoice.id === id);
+}
+
+export function getInvoicesByServiceId(serviceId) {
+  const invoices = getAllInvoices();
+  return invoices.filter(invoice => invoice.serviceId === serviceId);
+}
+
+export function createInvoice(invoiceData) {
+  // Expects invoiceData to include serviceId, customerId, items, etc.
+  const invoices = getAllInvoices();
+  const newInvoice = {
+    id: `INV-${Date.now()}`, // Generate invoice number with timestamp
+    timestamp: new Date().toISOString(),
+    status: "Belum Dibayar", // Default status
+    ...invoiceData,
+  };
+  invoices.push(newInvoice);
+  saveData(INVOICES_KEY, invoices);
+  return newInvoice;
+}
+
+// --- Walk-in Customer Management ---
+// Special ID for walk-in customers
+export const WALK_IN_CUSTOMER_ID = "walk-in";
+
+// Check if a customer is a walk-in customer
+export function isWalkInCustomer(customerId) {
+  return customerId === WALK_IN_CUSTOMER_ID;
+}
+
+// Create a direct invoice without a service record (for walk-in customers)
+export function createDirectInvoice(invoiceData) {
+  // Generate a unique ID for the invoice
+  const invoiceId = `INV-${Date.now()}`;
+
+  // Create the invoice
+  const newInvoice = {
+    id: invoiceId,
+    timestamp: new Date().toISOString(),
+    status: "Belum Dibayar",
+    isWalkIn: true, // Flag to indicate this is a walk-in invoice
+    serviceId: null, // No associated service
+    ...invoiceData,
+  };
+
+  // Save the invoice
+  const invoices = getAllInvoices();
+  invoices.push(newInvoice);
+  saveData(INVOICES_KEY, invoices);
+
+  return newInvoice;
+}
+
+export function updateInvoice(id, updatedData) {
+  const invoices = getAllInvoices();
+  const invoiceIndex = invoices.findIndex(invoice => invoice.id === id);
+
+  if (invoiceIndex === -1) {
+    console.error(`Invoice with ID ${id} not found for update.`);
+    return null;
+  }
+
+  // Update the invoice
+  invoices[invoiceIndex] = {
+    ...invoices[invoiceIndex],
+    ...updatedData,
+  };
+
+  saveData(INVOICES_KEY, invoices);
+  return invoices[invoiceIndex];
+}
+
+export function deleteInvoice(id) {
+  let invoices = getAllInvoices();
+  const initialLength = invoices.length;
+  invoices = invoices.filter(invoice => invoice.id !== id);
+
+  if (invoices.length < initialLength) {
+    saveData(INVOICES_KEY, invoices);
+    console.log(`Invoice with ID ${id} deleted.`);
+    return true;
+  } else {
+    console.warn(`Invoice with ID ${id} not found for deletion.`);
+    return false;
+  }
+}
 
 // --- Workshop Info Management ---
 export function getWorkshopInfo() {

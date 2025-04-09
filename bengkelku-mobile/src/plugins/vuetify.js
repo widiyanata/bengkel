@@ -10,8 +10,9 @@ import "@mdi/font/css/materialdesignicons.css"; // Ensure you are using css-load
 const myCustomLightTheme = {
   dark: false,
   colors: {
-    background: '#FFFFFF', // Default light background
-    surface: '#FFFFFF',    // Default light surface
+    background: '#F5F5F5', // Light grey background
+    surface: '#FFFFFF',    // Keep surface white for cards
+    'surface-variant': '#EEEEEE', // Slightly darker for variant surfaces
     primary: '#37474F',    // Sleek Grey/Charcoal
     secondary: '#00695C',  // Blue accent
     error: '#B00020',      // Default error

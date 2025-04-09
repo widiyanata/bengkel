@@ -16,8 +16,8 @@ export default defineConfig({
         name: 'Bengkelku Mobile',
         short_name: 'Bengkelku',
         description: 'Aplikasi Manajemen Bengkel Sederhana',
-        theme_color: '#ffffff', // White theme color
-        background_color: '#ffffff', // White background
+        theme_color: '#37474F', // Primary color as theme color
+        background_color: '#F5F5F5', // Light grey background
         display: 'standalone',
         scope: '/',
         start_url: '/',

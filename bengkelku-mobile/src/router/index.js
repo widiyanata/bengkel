@@ -12,8 +12,12 @@ const ServiceDetailPage = () => import("../views/ServiceDetailPage.vue");
 const AddItemPage = () => import("../views/AddItemPage.vue");
 // const RecordPurchasePage = () => import("../views/RecordPurchasePage.vue"); // Removed old page import
 const CustomerDetailPage = () => import("../views/CustomerDetailPage.vue");
+const AddCustomerPage = () => import("../views/AddCustomerPage.vue");
 const PurchaseHistoryPage = () => import("../views/PurchaseHistoryPage.vue");
 const PurchaseCartPage = () => import("../views/PurchaseCartPage.vue");
+const InvoiceListPage = () => import("../views/InvoiceListPage.vue");
+const InvoiceDetailPage = () => import("../views/InvoiceDetailPage.vue");
+const WalkInInvoicePage = () => import("../views/WalkInInvoicePage.vue");
 
 // Placeholder Settings Views
 const UserProfilePage = () => import("../views/settings/UserProfilePage.vue");
@@ -53,6 +57,7 @@ const routes = [
       { path: "/servis/baru", name: "AddService", component: AddServicePage },
       { path: "/servis/:id", name: "ServiceDetail", component: ServiceDetailPage, props: true },
       { path: "/stok/barang-baru", name: "AddItem", component: AddItemPage },
+      { path: "/pelanggan/baru", name: "AddCustomer", component: AddCustomerPage },
       // { path: "/stok/pembelian-baru", name: "RecordPurchase", component: RecordPurchasePage }, // Removed old route
       {
         path: "/pelanggan/:id",
@@ -62,6 +67,9 @@ const routes = [
       },
       { path: "/stok/riwayat-pembelian", name: "PurchaseHistory", component: PurchaseHistoryPage },
       { path: "/keranjang-pembelian", name: "PurchaseCart", component: PurchaseCartPage }, // Add route for purchase cart
+      { path: "/invoice", name: "InvoiceList", component: InvoiceListPage },
+      { path: "/invoice/walk-in", name: "WalkInInvoice", component: WalkInInvoicePage },
+      { path: "/invoice/:id", name: "InvoiceDetail", component: InvoiceDetailPage, props: true }
     ],
   },
   // Add other routes or layouts here if needed later
