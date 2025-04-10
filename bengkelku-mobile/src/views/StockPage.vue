@@ -233,7 +233,7 @@
                   label="Nama Barang*"
                   :rules="requiredRule"
                   required
-                  variant="flat"
+                  variant="outlined"
                   density="compact"
                   prepend-inner-icon="mdi-package-variant"
                 ></v-text-field>
@@ -244,7 +244,7 @@
                   v-model="editableItem.kode"
                   label="Kode Barang (Opsional)"
                   :rules="editItemCodeRule"
-                  variant="flat"
+                  variant="outlined"
                   density="compact"
                   prepend-inner-icon="mdi-barcode"
                 ></v-text-field>
@@ -256,7 +256,7 @@
                   label="Satuan*"
                   :rules="requiredRule"
                   required
-                  variant="flat"
+                  variant="outlined"
                   density="compact"
                   prepend-inner-icon="mdi-ruler"
                 ></v-text-field>
@@ -269,7 +269,7 @@
                   type="number"
                   prefix="Rp"
                   :rules="numberRule"
-                  variant="flat"
+                  variant="outlined"
                   density="compact"
                   prepend-inner-icon="mdi-cash-register"
                 ></v-text-field>
@@ -282,7 +282,7 @@
                   type="number"
                   prefix="Rp"
                   :rules="hargaJualRule"
-                  variant="flat"
+                  variant="outlined"
                   density="compact"
                   prepend-inner-icon="mdi-tag-outline"
                 ></v-text-field>
@@ -294,7 +294,7 @@
                   label="Stok Minimal (Opsional)"
                   type="number"
                   :rules="numberRule"
-                  variant="flat"
+                  variant="outlined"
                   density="compact"
                   prepend-inner-icon="mdi-alert-circle-outline"
                   hint="Jumlah stok minimum sebelum peringatan stok menipis"
