@@ -5,7 +5,7 @@
       <v-btn variant="text" @click="goBackToStock">Kembali ke Stok</v-btn>
     </div>
 
-    <v-card variant="outlined" class="mb-4" density="compact"> <!-- Added density -->
+    <v-card variant="flat" class="mb-4" density="compact"> <!-- Added density -->
       <v-card-title>Item di Keranjang</v-card-title>
       <v-card-text>
         <v-list lines="two" v-if="cartItems.length > 0" density="compact"> <!-- Added density -->
@@ -16,13 +16,13 @@
               <v-row dense align="center">
                 <v-col cols="4" sm="3">
                   <v-text-field v-model.number="item.jumlahBeli" label="Jumlah" type="number" min="1" density="compact"
-                    variant="outlined" hide-details
+                    variant="flat" hide-details
                     @change="updateCartItemQuantity(item.itemId, $event.target.value)"></v-text-field>
                 </v-col>
                 <v-col cols="1" class="text-center">{{ item.satuan }}</v-col>
                 <v-col cols="5" sm="4">
                   <v-text-field v-model.number="item.hargaBeli" label="Harga Beli" type="number" min="0" prefix="Rp"
-                    density="compact" variant="outlined" hide-details
+                    density="compact" variant="flat" hide-details
                     @change="updateCartItemPrice(item.itemId, $event.target.value)"></v-text-field>
                 </v-col>
                 <v-col cols="2" sm="1" class="text-right">
@@ -46,10 +46,10 @@
       <v-card-title>Detail Pembelian Final</v-card-title>
       <v-card-text>
         <v-text-field v-model="purchaseDetails.tanggal" label="Tanggal Pembelian*" type="date" required
-          variant="outlined" density="compact" class="mb-1"></v-text-field> <!-- Added density -->
-        <v-text-field v-model="purchaseDetails.supplier" label="Supplier (Opsional)" variant="outlined"
+          variant="flat" density="compact" class="mb-1"></v-text-field> <!-- Added density -->
+        <v-text-field v-model="purchaseDetails.supplier" label="Supplier (Opsional)" variant="flat"
           density="compact" class="mb-1"></v-text-field> <!-- Added density -->
-        <v-text-field v-model="purchaseDetails.noNota" label="Nomor Nota/Invoice (Opsional)" variant="outlined"
+        <v-text-field v-model="purchaseDetails.noNota" label="Nomor Nota/Invoice (Opsional)" variant="flat"
           density="compact" class="mb-1"></v-text-field> <!-- Added density -->
         <div class="text-h6 mt-3"><strong>Total Pembelian: {{ formatCurrency(cartSubtotal) }}</strong></div>
       </v-card-text>
@@ -60,7 +60,7 @@
       :loading="isSaving">
       Simpan Pembelian & Update Stok
     </v-btn>
-    <v-btn color="error" variant="outlined" block class="mt-4" @click="confirmClearCart"
+    <v-btn color="error" variant="flat" block class="mt-4" @click="confirmClearCart"
       :disabled="cartItems.length === 0">
       Kosongkan Keranjang
     </v-btn>

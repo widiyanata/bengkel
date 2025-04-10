@@ -2,24 +2,24 @@
   <v-container>
     <h1 class="mb-4">Tambah Barang Baru</h1>
     <v-form ref="form" @submit.prevent="saveItem"> <!-- Added submit prevention -->
-      <v-text-field v-model="itemData.nama" label="Nama Barang*" :rules="requiredRule" required variant="outlined"
+      <v-text-field v-model="itemData.nama" label="Nama Barang*" :rules="requiredRule" required variant="flat"
         class="mb-3"></v-text-field>
 
-      <v-text-field v-model="itemData.kode" label="Kode Barang (Opsional)" :rules="itemCodeRule" variant="outlined"
+      <v-text-field v-model="itemData.kode" label="Kode Barang (Opsional)" :rules="itemCodeRule" variant="flat"
         class="mb-3"></v-text-field> <!-- Apply itemCodeRule -->
 
       <v-text-field v-model="itemData.satuan" label="Satuan*" :rules="requiredRule" required
-        placeholder="Contoh: Pcs, Ltr, Set, Box" variant="outlined" class="mb-3"></v-text-field>
+        placeholder="Contoh: Pcs, Ltr, Set, Box" variant="flat" class="mb-3"></v-text-field>
 
       <v-text-field v-model.number="itemData.stokMinimal" label="Stok Minimal (Opsional)" type="number"
-        :rules="numberRule" variant="outlined" class="mb-3"></v-text-field>
+        :rules="numberRule" variant="flat" class="mb-3"></v-text-field>
 
       <!-- Added Harga Beli field -->
       <v-text-field v-model.number="itemData.hargaBeli" label="Harga Beli (Opsional)" type="number" prefix="Rp"
-        :rules="numberRule" variant="outlined" class="mb-3"></v-text-field>
+        :rules="numberRule" variant="flat" class="mb-3"></v-text-field>
 
       <v-text-field v-model.number="itemData.hargaJual" label="Harga Jual (Opsional)" type="number" prefix="Rp"
-        :rules="hargaJualRule" variant="outlined" class="mb-3"></v-text-field> <!-- Apply new rule -->
+        :rules="hargaJualRule" variant="flat" class="mb-3"></v-text-field> <!-- Apply new rule -->
 
       <v-btn color="primary" size="large" block type="submit" :loading="isSaving"> <!-- Changed click to type=submit -->
         Simpan Barang Baru

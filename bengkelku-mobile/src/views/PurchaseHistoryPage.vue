@@ -16,7 +16,7 @@
 
       <!-- Purchase History List -->
       <v-col v-else-if="purchases.length > 0" v-for="purchase in purchases" :key="purchase.id" cols="12">
-        <v-card class="mb-3" variant="outlined">
+        <v-card class="mb-3" variant="flat">
           <v-card-title class="d-flex justify-space-between">
             <span>Nota: {{ purchase.noNota || '-' }}</span>
             <span class="text-caption">{{ formatDate(purchase.tanggal) }}</span>

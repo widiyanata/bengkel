@@ -4,7 +4,7 @@
     <!-- Removed placeholder alert -->
 
     <!-- PWA Settings Card -->
-    <v-card variant="outlined">
+    <v-card variant="flat">
        <v-card-text>
         <p class="mb-4">Kelola instalasi Progressive Web App (PWA) untuk pengalaman seperti aplikasi asli.</p>
 
@@ -33,7 +33,7 @@
             disabled
             prepend-icon="mdi-cached"
             color="secondary"
-            variant="outlined"
+            variant="flat"
             @click="clearCachePlaceholder">
             Hapus Cache Aplikasi (Segera Hadir)
           </v-btn>

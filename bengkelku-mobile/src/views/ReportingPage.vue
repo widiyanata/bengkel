@@ -57,6 +57,8 @@
               icon="mdi-cash"
               icon-color="success"
               :loading="reportData.loading.value"
+              color="success"
+              variant="tonal"
             >
               <v-card-text class="text-center">
                 <div class="text-h4 font-weight-bold">
@@ -73,6 +75,8 @@
               icon="mdi-wrench"
               icon-color="primary"
               :loading="reportData.loading.value"
+              color=""
+              variant="flat"
             >
               <v-card-text class="text-center">
                 <div class="text-h4 font-weight-bold">{{ reportData.totalServices }}</div>
@@ -88,6 +92,8 @@
               icon="mdi-check-circle"
               icon-color="success"
               :loading="reportData.loading.value"
+              color=""
+              variant="flat"
             >
               <v-card-text class="text-center">
                 <div class="text-h4 font-weight-bold">
@@ -98,8 +104,6 @@
             </report-card>
           </v-col>
           
-          
-          
           <!-- Low Stock Card -->
           <v-col cols="6" sm="6" md="3">
             <report-card
@@ -107,6 +111,8 @@
               icon="mdi-alert-circle"
               icon-color="error"
               :loading="reportData.loading.value"
+              color=""
+              variant="flat"
             >
               <v-card-text class="text-center">
                 <div class="text-h4 font-weight-bold">
@@ -342,18 +348,18 @@
                 
                 <div class="d-flex justify-space-between align-center mb-2">
                   <div>Total Invoice:</div>
-                  <div class="font-weight-bold">{{ reportData.invoiceStats.total }}</div>
+                  <div class="font-weight-bold">{{ reportData.invoiceStats.value.total }}</div>
                 </div>
                 <div class="d-flex justify-space-between align-center mb-2">
                   <div>Invoice Dibayar:</div>
                   <v-chip size="small" color="success" label>
-                    {{ reportData.invoiceStats.paid }}
+                    {{ reportData.invoiceStats.value.paid }}
                   </v-chip>
                 </div>
                 <div class="d-flex justify-space-between align-center mb-2">
                   <div>Invoice Belum Dibayar:</div>
                   <v-chip size="small" color="warning" label>
-                    {{ reportData.invoiceStats.unpaid }}
+                    {{ reportData.invoiceStats.value.unpaid }}
                   </v-chip>
                 </div>
                 
@@ -361,15 +367,15 @@
                 
                 <div class="d-flex justify-space-between align-center mb-2">
                   <div>Total Nilai Invoice:</div>
-                  <div class="font-weight-bold">{{ formatCurrency(reportData.invoiceStats.totalAmount) }}</div>
+                  <div class="font-weight-bold">{{ formatCurrency(reportData.invoiceStats.value.totalAmount) }}</div>
                 </div>
                 <div class="d-flex justify-space-between align-center mb-2">
                   <div>Nilai Invoice Dibayar:</div>
-                  <div class="text-success font-weight-bold">{{ formatCurrency(reportData.invoiceStats.paidAmount) }}</div>
+                  <div class="text-success font-weight-bold">{{ formatCurrency(reportData.invoiceStats.value.paidAmount) }}</div>
                 </div>
                 <div class="d-flex justify-space-between align-center">
                   <div>Nilai Invoice Belum Dibayar:</div>
-                  <div class="text-warning font-weight-bold">{{ formatCurrency(reportData.invoiceStats.unpaidAmount) }}</div>
+                  <div class="text-warning font-weight-bold">{{ formatCurrency(reportData.invoiceStats.value.unpaidAmount) }}</div>
                 </div>
               </v-card-text>
             </report-card>
@@ -425,9 +431,9 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="item in reportData.dailyRevenueData" :key="item.date">
-                      <td>{{ formatDate(item.date) }}</td>
-                      <td class="text-right">{{ formatCurrency(item.revenue) }}</td>
+                    <tr v-for="item in reportData.dailyRevenueData.value || []" :key="item?.date || index">
+                      <td>{{ formatDate(item?.date) }}</td>
+                      <td class="text-right">{{ formatCurrency(item?.revenue) }}</td>
                     </tr>
                     <tr class="bg-grey-lighten-4">
                       <td class="font-weight-bold">Total</td>
@@ -529,4 +535,29 @@ const safePartsUsageData = computed(() => {
 
 <style scoped>
 /* Add any additional styles here */
+@media (max-width: 600px) {
+  .v-card-title {
+    font-size: 1rem !important;
+  }
+  
+  .v-card-subtitle {
+    font-size: 0.75rem !important;
+  }
+  
+  .text-h3 {
+    font-size: 1.5rem !important;
+  }
+  
+  .v-table {
+    font-size: 0.75rem !important;
+  }
+  
+  .v-card-text {
+    padding: 8px !important;
+  }
+  
+  .v-card-item {
+    padding: 12px !important;
+  }
+}
 </style>

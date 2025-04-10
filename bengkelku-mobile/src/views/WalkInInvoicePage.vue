@@ -15,7 +15,7 @@
               <v-text-field
                 v-model="customer.nama"
                 label="Nama Pelanggan"
-                variant="outlined"
+                variant="flat"
                 density="comfortable"
                 class="mb-3"
                 placeholder="Pelanggan Langsung"
@@ -25,7 +25,7 @@
               <v-text-field
                 v-model="customer.noHp"
                 label="Nomor HP"
-                variant="outlined"
+                variant="flat"
                 density="comfortable"
                 class="mb-3"
                 type="tel"
@@ -44,7 +44,7 @@
               <v-text-field
                 v-model="vehicle.nomorPolisi"
                 label="Nomor Polisi"
-                variant="outlined"
+                variant="flat"
                 density="comfortable"
                 class="mb-3"
                 placeholder="B 1234 ABC"
@@ -54,7 +54,7 @@
               <v-text-field
                 v-model="vehicle.merkTipe"
                 label="Merk / Tipe Kendaraan"
-                variant="outlined"
+                variant="flat"
                 density="comfortable"
                 class="mb-3"
                 placeholder="Honda Vario 125 2020"
@@ -104,7 +104,7 @@
           <v-textarea
             v-model="notes"
             label="Catatan Invoice"
-            variant="outlined"
+            variant="flat"
             density="comfortable"
             rows="3"
           ></v-textarea>
@@ -137,7 +137,7 @@
           <v-text-field
             v-model="newItem.deskripsi"
             label="Deskripsi*"
-            variant="outlined"
+            variant="flat"
             density="comfortable"
             class="mb-3"
             :rules="[v => !!v || 'Deskripsi wajib diisi']"
@@ -147,7 +147,7 @@
             v-model.number="newItem.jumlah"
             label="Jumlah*"
             type="number"
-            variant="outlined"
+            variant="flat"
             density="comfortable"
             class="mb-3"
             :rules="[
@@ -161,7 +161,7 @@
             v-model.number="newItem.biaya"
             label="Harga Satuan*"
             type="number"
-            variant="outlined"
+            variant="flat"
             density="comfortable"
             class="mb-3"
             :rules="[

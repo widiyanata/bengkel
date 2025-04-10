@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <!-- Enhanced Header with Card -->
-    <v-card class="mb-4 header-card" variant="outlined">
+    <v-card class="mb-4 header-card" variant="flat">
       <v-card-item>
         <template v-slot:prepend>
           <v-icon size="large" icon="mdi-package-variant" color="primary" class="me-3"></v-icon>
@@ -15,7 +15,7 @@
             <v-btn color="primary" prepend-icon="mdi-plus-box-outline" @click="goToAddItem">
               Tambah Barang
             </v-btn>
-            <v-btn color="info" variant="outlined" prepend-icon="mdi-history" to="/stok/riwayat-pembelian">
+            <v-btn color="info" variant="flat" prepend-icon="mdi-history" to="/stok/riwayat-pembelian">
               Riwayat Pembelian
             </v-btn>
           </div>
@@ -30,7 +30,7 @@
     </v-card>
 
     <!-- Enhanced Search and Filter Section -->
-    <v-card class="mb-4" variant="outlined">
+    <v-card class="mb-4" variant="flat">
       <v-card-text class="pa-2 pa-sm-4">
         <!-- Search Field (Always visible) -->
         <v-text-field
@@ -176,7 +176,6 @@
 
               <!-- Edit Button -->
               <v-btn
-                variant=""
                 color="info"
                 density="comfortable"
                 class="flex-grow-1 action-button"
@@ -188,7 +187,6 @@
 
               <!-- Delete Button -->
               <v-btn
-                variant=""
                 color="error"
                 density="comfortable"
                 class="flex-grow-1 action-button"
@@ -204,7 +202,7 @@
     </div>
 
     <!-- Enhanced No Data Message -->
-    <v-card v-else class="pa-4 text-center" variant="outlined">
+    <v-card v-else class="pa-4 text-center" variant="flat">
       <div class="d-flex flex-column align-center py-4">
         <v-icon icon="mdi-package-variant-remove" size="64" color="grey-lighten-1" class="mb-4"></v-icon>
         <h3 class="text-h6 mb-2">Tidak ada data stok</h3>
@@ -235,7 +233,7 @@
                   label="Nama Barang*"
                   :rules="requiredRule"
                   required
-                  variant="outlined"
+                  variant="flat"
                   density="compact"
                   prepend-inner-icon="mdi-package-variant"
                 ></v-text-field>
@@ -246,7 +244,7 @@
                   v-model="editableItem.kode"
                   label="Kode Barang (Opsional)"
                   :rules="editItemCodeRule"
-                  variant="outlined"
+                  variant="flat"
                   density="compact"
                   prepend-inner-icon="mdi-barcode"
                 ></v-text-field>
@@ -258,7 +256,7 @@
                   label="Satuan*"
                   :rules="requiredRule"
                   required
-                  variant="outlined"
+                  variant="flat"
                   density="compact"
                   prepend-inner-icon="mdi-ruler"
                 ></v-text-field>
@@ -271,7 +269,7 @@
                   type="number"
                   prefix="Rp"
                   :rules="numberRule"
-                  variant="outlined"
+                  variant="flat"
                   density="compact"
                   prepend-inner-icon="mdi-cash-register"
                 ></v-text-field>
@@ -284,7 +282,7 @@
                   type="number"
                   prefix="Rp"
                   :rules="hargaJualRule"
-                  variant="outlined"
+                  variant="flat"
                   density="compact"
                   prepend-inner-icon="mdi-tag-outline"
                 ></v-text-field>
@@ -296,7 +294,7 @@
                   label="Stok Minimal (Opsional)"
                   type="number"
                   :rules="numberRule"
-                  variant="outlined"
+                  variant="flat"
                   density="compact"
                   prepend-inner-icon="mdi-alert-circle-outline"
                   hint="Jumlah stok minimum sebelum peringatan stok menipis"
@@ -310,7 +308,7 @@
         <v-divider></v-divider>
 
         <v-card-actions class="pa-4">
-          <v-btn color="grey" variant="outlined" @click="cancelEditItem" :disabled="isUpdatingItem">
+          <v-btn color="grey" variant="flat" @click="cancelEditItem" :disabled="isUpdatingItem">
             <v-icon start>mdi-cancel</v-icon>
             Batal
           </v-btn>
@@ -354,7 +352,7 @@
         <v-divider></v-divider>
 
         <v-card-actions class="pa-4">
-          <v-btn color="grey" variant="outlined" @click="cancelDeleteItem" :disabled="isDeletingItem">
+          <v-btn color="grey" variant="flat" @click="cancelDeleteItem" :disabled="isDeletingItem">
             <v-icon start>mdi-cancel</v-icon>
             Batal
           </v-btn>

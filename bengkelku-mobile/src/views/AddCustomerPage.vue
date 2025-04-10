@@ -12,7 +12,7 @@
             v-model="customer.nama"
             label="Nama Pelanggan*"
             :rules="requiredRule"
-            variant="outlined"
+            variant="flat"
             density="comfortable"
             class="mb-3"
           ></v-text-field>
@@ -21,7 +21,7 @@
             v-model="customer.noHp"
             label="Nomor HP*"
             :rules="phoneRule"
-            variant="outlined"
+            variant="flat"
             density="comfortable"
             class="mb-3"
             type="tel"
@@ -35,7 +35,7 @@
           <v-text-field
             v-model="vehicle.nomorPolisi"
             label="Nomor Polisi"
-            variant="outlined"
+            variant="flat"
             density="comfortable"
             class="mb-3"
             placeholder="Contoh: B 1234 ABC"
@@ -44,7 +44,7 @@
           <v-text-field
             v-model="vehicle.merkTipe"
             label="Merk / Tipe Kendaraan"
-            variant="outlined"
+            variant="flat"
             density="comfortable"
             class="mb-3"
             placeholder="Contoh: Honda Vario 125 2020"

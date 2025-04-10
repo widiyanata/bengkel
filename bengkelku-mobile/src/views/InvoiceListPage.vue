@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <!-- Enhanced Header with Card -->
-    <v-card class="mb-4 header-card" variant="outlined">
+    <v-card class="mb-4 header-card" variant="flat">
       <v-card-item>
         <template v-slot:prepend>
           <v-icon size="large" icon="mdi-file-document-multiple" color="primary" class="me-3"></v-icon>
@@ -45,7 +45,7 @@
     <!-- Invoice List -->
     <div v-else>
       <!-- Enhanced Filter Controls -->
-      <v-card class="mb-4" variant="outlined">
+      <v-card class="mb-4" variant="flat">
         <v-card-item>
           <template v-slot:prepend>
             <v-icon icon="mdi-filter-variant" color="primary"></v-icon>
@@ -141,7 +141,7 @@
               'paid-invoice': invoice.status === 'Dibayar',
               'unpaid-invoice': invoice.status !== 'Dibayar'
             }"
-            variant="outlined"
+            variant="flat"
             elevation="2"
             @click="viewInvoice(invoice.id)"
             class="position-relative transition-swing"
@@ -175,15 +175,15 @@
             </v-card-item>
 
             <v-card-text>
-              <div class="d-flex align-center mb-2">
+              <div class="d-flex align-center">
                 <v-icon size="small" color="grey" class="me-2">mdi-account</v-icon>
                 <div class="text-truncate">{{ invoice.pelangganNama }}</div>
               </div>
-              <div class="d-flex align-center mb-2">
+              <div class="d-flex align-center">
                 <v-icon size="small" color="grey" class="me-2">mdi-car</v-icon>
                 <div class="text-truncate">{{ invoice.nomorPolisi || 'Tidak ada' }}</div>
               </div>
-              <div class="d-flex align-center mb-2">
+              <div class="d-flex align-center">
                 <v-icon size="small" color="grey" class="me-2">mdi-tag-multiple</v-icon>
                 <div class="text-truncate">{{ invoice.items?.length || 0 }} item</div>
               </div>

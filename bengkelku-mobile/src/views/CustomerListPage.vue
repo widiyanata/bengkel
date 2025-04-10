@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <!-- Enhanced Header with Card -->
-    <v-card class="mb-4 header-card" variant="outlined">
+    <v-card class="mb-4 header-card" variant="flat">
       <v-card-item>
         <template v-slot:prepend>
           <v-icon size="large" icon="mdi-account-group" color="primary" class="me-3"></v-icon>
@@ -15,7 +15,7 @@
             <v-btn color="primary" prepend-icon="mdi-account-plus" @click="goToAddCustomer">
               Tambah Pelanggan
             </v-btn>
-            <v-btn color="primary" variant="outlined" prepend-icon="mdi-refresh" @click="loadCustomers" :loading="loading">
+            <v-btn color="primary" variant="flat" prepend-icon="mdi-refresh" @click="loadCustomers" :loading="loading">
               Refresh
             </v-btn>
           </div>
@@ -30,7 +30,7 @@
     </v-card>
 
     <!-- Enhanced Search and Filter -->
-    <v-card class="mb-4" variant="outlined">
+    <v-card class="mb-4" variant="flat">
       <v-card-item>
         <template v-slot:prepend>
           <v-icon icon="mdi-filter-variant" color="primary"></v-icon>
@@ -98,7 +98,7 @@
     <!-- Customer Stats Summary -->
     <v-row class="mb-4">
       <v-col cols="6" sm="3">
-        <v-card variant="outlined" class="stat-card">
+        <v-card variant="flat" class="stat-card">
           <v-card-text class="d-flex align-center">
             <v-avatar color="primary-lighten-4" size="large" class="me-3">
               <v-icon color="primary" icon="mdi-account-multiple"></v-icon>
@@ -111,7 +111,7 @@
         </v-card>
       </v-col>
       <v-col cols="6" sm="3">
-        <v-card variant="outlined" class="stat-card">
+        <v-card variant="flat" class="stat-card">
           <v-card-text class="d-flex align-center">
             <v-avatar color="info-lighten-4" size="large" class="me-3">
               <v-icon color="info" icon="mdi-car-multiple"></v-icon>
@@ -124,7 +124,7 @@
         </v-card>
       </v-col>
       <v-col cols="6" sm="3">
-        <v-card variant="outlined" class="stat-card">
+        <v-card variant="flat" class="stat-card">
           <v-card-text class="d-flex align-center">
             <v-avatar color="success-lighten-4" size="large" class="me-3">
               <v-icon color="success" icon="mdi-wrench"></v-icon>
@@ -137,7 +137,7 @@
         </v-card>
       </v-col>
       <v-col cols="6" sm="3">
-        <v-card variant="outlined" class="stat-card">
+        <v-card variant="flat" class="stat-card">
           <v-card-text class="d-flex align-center">
             <v-avatar color="warning-lighten-4" size="large" class="me-3">
               <v-icon color="warning" icon="mdi-calendar-clock"></v-icon>
@@ -164,7 +164,7 @@
         cols="12" sm="6" lg="4">
         <v-card
           class="mb-3 customer-card"
-          variant="outlined"
+          variant="flat"
           elevation="2"
           @click="goToCustomerDetail(customer.id)"
         >
@@ -254,9 +254,9 @@
       <v-card>
         <v-card-title>Edit Pelanggan</v-card-title>
         <v-card-text>
-          <v-text-field v-model="editableCustomer.nama" label="Nama Pelanggan*" :rules="requiredRule" required variant="outlined"
+          <v-text-field v-model="editableCustomer.nama" label="Nama Pelanggan*" :rules="requiredRule" required variant="flat"
             density="compact" class="mb-3"></v-text-field>
-          <v-text-field v-model="editableCustomer.noHp" label="Nomor HP*" :rules="phoneRule" required variant="outlined" density="compact"
+          <v-text-field v-model="editableCustomer.noHp" label="Nomor HP*" :rules="phoneRule" required variant="flat" density="compact"
             type="tel"></v-text-field> <!-- Apply phoneRule -->
           <!-- Note: Editing vehicles associated with customer is more complex and not included here -->
         </v-card-text>

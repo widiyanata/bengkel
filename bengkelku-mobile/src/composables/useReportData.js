@@ -135,26 +135,66 @@ const dailyRevenueData = computed(() => {
 
   // Invoice statistics
   const invoiceStats = computed(() => {
+    console.log("Computing invoice stats with invoices:", invoices.value);
+    
+    // Pastikan invoices.value adalah array
+    if (!Array.isArray(invoices.value)) {
+      console.warn("invoices.value is not an array:", invoices.value);
+      return {
+        total: 0,
+        paid: 0,
+        unpaid: 0,
+        totalAmount: 0,
+        paidAmount: 0,
+        unpaidAmount: 0
+      };
+    }
+    
     const filteredInvoices = invoices.value.filter(invoice => {
+      if (!invoice) return false;
+      
       if (!filterDateRange.value || !filterDateRange.value.start || !filterDateRange.value.end) {
         return true;
       }
-      const invoiceDate = new Date(invoice.tanggalInvoice);
-      const startDate = new Date(filterDateRange.value.start);
-      const endDate = new Date(filterDateRange.value.end);
-      endDate.setHours(23, 59, 59, 999);
-      return invoiceDate >= startDate && invoiceDate <= endDate;
+      
+      // Pastikan invoice memiliki tanggal
+      if (!invoice.tanggalInvoice) {
+        console.warn("Invoice without date:", invoice);
+        return false;
+      }
+      
+      try {
+        const invoiceDate = new Date(invoice.tanggalInvoice);
+        const startDate = new Date(filterDateRange.value.start);
+        const endDate = new Date(filterDateRange.value.end);
+        endDate.setHours(23, 59, 59, 999);
+        return invoiceDate >= startDate && invoiceDate <= endDate;
+      } catch (e) {
+        console.error("Error filtering invoice by date:", e, invoice);
+        return false;
+      }
     });
-
+    
+    console.log("Filtered invoices:", filteredInvoices);
+    
     const total = filteredInvoices.length;
     const paid = filteredInvoices.filter(inv => inv.status === 'Dibayar').length;
     const unpaid = total - paid;
-    const totalAmount = filteredInvoices.reduce((sum, inv) => sum + (Number(inv.totalAmount) || 0), 0);
+    
+    const totalAmount = filteredInvoices.reduce((sum, inv) => {
+      const amount = Number(inv.totalAmount || 0);
+      return sum + (isNaN(amount) ? 0 : amount);
+    }, 0);
+    
     const paidAmount = filteredInvoices
       .filter(inv => inv.status === 'Dibayar')
-      .reduce((sum, inv) => sum + (Number(inv.totalAmount) || 0), 0);
+      .reduce((sum, inv) => {
+        const amount = Number(inv.totalAmount || 0);
+        return sum + (isNaN(amount) ? 0 : amount);
+      }, 0);
+      
     const unpaidAmount = totalAmount - paidAmount;
-
+    
     return {
       total,
       paid,

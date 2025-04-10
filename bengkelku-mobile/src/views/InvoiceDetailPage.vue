@@ -16,7 +16,7 @@
     <!-- Invoice Detail -->
     <div v-else>
       <!-- Enhanced Header with Card -->
-      <v-card class="mb-4 header-card" variant="outlined">
+      <v-card class="mb-4 header-card" variant="flat">
         <v-card-item>
           <template v-slot:prepend>
             <v-icon size="large" :icon="isEditMode ? 'mdi-file-edit-outline' : 'mdi-file-document-outline'" color="primary" class="me-3"></v-icon>
@@ -82,7 +82,7 @@
       <v-card
         class="mb-4 status-card"
         :class="invoice.status === 'Dibayar' ? 'paid-card' : 'unpaid-card'"
-        variant="outlined"
+        variant="flat"
       >
         <div class="status-indicator"></div>
         <v-card-item>
@@ -156,7 +156,7 @@
       <v-row class="mb-4">
         <!-- Workshop Info -->
         <v-col cols="12" md="4">
-          <v-card height="100%" variant="outlined" class="info-card workshop-card">
+          <v-card height="100%" variant="flat" class="info-card workshop-card">
             <v-card-item>
               <template v-slot:prepend>
                 <v-avatar color="primary-lighten-4" size="large">
@@ -181,7 +181,7 @@
 
         <!-- Customer Info -->
         <v-col cols="12" md="4">
-          <v-card height="100%" variant="outlined" class="info-card customer-card">
+          <v-card height="100%" variant="flat" class="info-card customer-card">
             <v-card-item>
               <template v-slot:prepend>
                 <v-avatar color="info-lighten-4" size="large">
@@ -210,7 +210,7 @@
                 <v-text-field
                   v-model="invoice.pelangganNama"
                   label="Nama Pelanggan"
-                  variant="outlined"
+                  variant="flat"
                   density="compact"
                   class="mb-2"
                   prepend-inner-icon="mdi-account-outline"
@@ -218,7 +218,7 @@
                 <v-text-field
                   v-model="invoice.pelangganNoHp"
                   label="No. HP"
-                  variant="outlined"
+                  variant="flat"
                   density="compact"
                   prepend-inner-icon="mdi-phone-outline"
                 ></v-text-field>
@@ -232,7 +232,7 @@
 
         <!-- Vehicle Info -->
         <v-col cols="12" md="4">
-          <v-card height="100%" variant="outlined" class="info-card vehicle-card">
+          <v-card height="100%" variant="flat" class="info-card vehicle-card">
             <v-card-item>
               <template v-slot:prepend>
                 <v-avatar color="secondary-lighten-4" size="large">
@@ -265,7 +265,7 @@
                 <v-text-field
                   v-model="invoice.nomorPolisi"
                   label="Nomor Polisi"
-                  variant="outlined"
+                  variant="flat"
                   density="compact"
                   class="mb-2"
                   prepend-inner-icon="mdi-car-info"
@@ -273,7 +273,7 @@
                 <v-text-field
                   v-model="invoice.merkTipe"
                   label="Merk/Tipe"
-                  variant="outlined"
+                  variant="flat"
                   density="compact"
                   prepend-inner-icon="mdi-car-cog"
                 ></v-text-field>
@@ -287,7 +287,7 @@
       </v-row>
 
       <!-- Enhanced Invoice Items -->
-      <v-card class="mb-4" variant="outlined">
+      <v-card class="mb-4" variant="flat">
         <v-card-item>
           <template v-slot:prepend>
             <v-avatar color="primary-lighten-4" size="large">
@@ -404,7 +404,7 @@
       </v-card>
 
       <!-- Enhanced Totals Card -->
-      <v-card class="mb-4 total-card" variant="outlined">
+      <v-card class="mb-4 total-card" variant="flat">
         <v-card-item>
           <template v-slot:prepend>
             <v-avatar color="success-lighten-4" size="large">
@@ -477,7 +477,7 @@
       </v-card>
 
       <!-- Enhanced Notes Card -->
-      <v-card class="mb-4 notes-card" variant="outlined">
+      <v-card class="mb-4 notes-card" variant="flat">
         <v-card-item>
           <template v-slot:prepend>
             <v-avatar color="grey-lighten-3" size="large">
@@ -509,7 +509,7 @@
             <v-textarea
               v-model="invoice.catatan"
               label="Catatan"
-              variant="outlined"
+              variant="flat"
               rows="3"
               counter
               maxlength="500"
@@ -527,7 +527,7 @@
 
 
       <!-- Enhanced Actions Card -->
-      <v-card class="mb-4 actions-card" variant="outlined">
+      <v-card class="mb-4 actions-card" variant="flat">
         <v-card-item>
           <template v-slot:prepend>
             <v-avatar color="primary-lighten-4" size="large">
@@ -590,7 +590,7 @@
               label="Pilih Jasa (Opsional)"
               return-object
               clearable
-              variant="outlined"
+              variant="flat"
               class="mb-3"
               @update:model-value="onJasaSelectionChange"
             ></v-autocomplete>
@@ -598,7 +598,7 @@
             <v-text-field
               v-model="newItem.deskripsi"
               label="Deskripsi Jasa*"
-              variant="outlined"
+              variant="flat"
               density="comfortable"
               class="mb-3"
               :rules="[v => !!v || 'Deskripsi wajib diisi']"
@@ -606,11 +606,11 @@
 
             <!-- Quick Price Buttons for Jasa -->
             <div class="d-flex flex-wrap mb-3">
-              <v-btn size="small" variant="outlined" class="mr-2 mb-2" @click="newItem.biaya = 10000">10rb</v-btn>
-              <v-btn size="small" variant="outlined" class="mr-2 mb-2" @click="newItem.biaya = 15000">15rb</v-btn>
-              <v-btn size="small" variant="outlined" class="mr-2 mb-2" @click="newItem.biaya = 20000">20rb</v-btn>
-              <v-btn size="small" variant="outlined" class="mr-2 mb-2" @click="newItem.biaya = 25000">25rb</v-btn>
-              <v-btn size="small" variant="outlined" class="mr-2 mb-2" @click="newItem.biaya = 50000">50rb</v-btn>
+              <v-btn size="small" variant="flat" class="mr-2 mb-2" @click="newItem.biaya = 10000">10rb</v-btn>
+              <v-btn size="small" variant="flat" class="mr-2 mb-2" @click="newItem.biaya = 15000">15rb</v-btn>
+              <v-btn size="small" variant="flat" class="mr-2 mb-2" @click="newItem.biaya = 20000">20rb</v-btn>
+              <v-btn size="small" variant="flat" class="mr-2 mb-2" @click="newItem.biaya = 25000">25rb</v-btn>
+              <v-btn size="small" variant="flat" class="mr-2 mb-2" @click="newItem.biaya = 50000">50rb</v-btn>
             </div>
           </div>
 
@@ -622,7 +622,7 @@
               item-title="title"
               label="Pilih Sparepart*"
               return-object
-              variant="outlined"
+              variant="flat"
               class="mb-3"
               :loading="isLoadingItems"
               :rules="[v => !!v || 'Sparepart wajib dipilih']"
@@ -639,7 +639,7 @@
               <v-text-field
                 v-model.number="newItem.jumlah"
                 label="Jumlah*"
-                variant="outlined"
+                variant="flat"
                 density="comfortable"
                 type="number"
                 min="1"
@@ -653,7 +653,7 @@
               <v-text-field
                 v-model.number="newItem.biaya"
                 label="Harga Satuan*"
-                variant="outlined"
+                variant="flat"
                 density="comfortable"
                 type="number"
                 min="0"

@@ -4,7 +4,7 @@
     <!-- Removed placeholder alert -->
 
     <!-- Workshop Info Form -->
-    <v-card variant="outlined">
+    <v-card variant="flat">
       <v-form ref="form" @submit.prevent="saveChanges">
         <v-card-text>
           <p class="mb-4">Atur nama bengkel, alamat, nomor telepon, dan informasi lainnya yang mungkin muncul di nota atau laporan.</p>
@@ -13,13 +13,13 @@
             label="Nama Bengkel*"
             :rules="requiredRule"
             required
-            variant="outlined"
+            variant="flat"
             density="compact"
             class="mb-3"></v-text-field>
           <v-textarea
             v-model="workshopInfo.alamat"
             label="Alamat Bengkel"
-            variant="outlined"
+            variant="flat"
             density="compact"
             rows="3"
             class="mb-3"></v-textarea>
@@ -28,7 +28,7 @@
             label="Nomor Telepon Bengkel"
             type="tel"
             :rules="phoneRuleOptional"
-            variant="outlined"
+            variant="flat"
             density="compact"
             class="mb-3"></v-text-field>
            <!-- Add other fields like NPWP, footer nota etc. later if needed -->

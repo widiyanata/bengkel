@@ -23,7 +23,7 @@
               label="Mulai"
               type="date"
               density="compact"
-              variant="outlined"
+              variant="flat"
               hide-details
               @update:model-value="updateRange"
             ></v-text-field>
@@ -35,7 +35,7 @@
               label="Akhir"
               type="date"
               density="compact"
-              variant="outlined"
+              variant="flat"
               hide-details
               @update:model-value="updateRange"
             ></v-text-field>
@@ -117,7 +117,7 @@
             label="Tanggal Mulai"
             type="date"
             density="compact"
-            variant="outlined"
+            variant="flat"
             hide-details
             @update:model-value="updateRange"
           ></v-text-field>
@@ -129,7 +129,7 @@
             label="Tanggal Akhir"
             type="date"
             density="compact"
-            variant="outlined"
+            variant="flat"
             hide-details
             @update:model-value="updateRange"
           ></v-text-field>

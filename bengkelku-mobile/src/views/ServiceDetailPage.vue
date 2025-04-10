@@ -29,7 +29,7 @@
       </div>
 
       <!-- Customer & Vehicle Info -->
-      <v-card variant="outlined" class="mb-4 info-card">
+      <v-card variant="flat" class="mb-4 info-card">
         <v-card-item>
           <template v-slot:prepend>
             <v-icon icon="mdi-car-info" color="primary" class="me-2"></v-icon>
@@ -67,7 +67,7 @@
       </v-card>
 
       <!-- Initial Complaint -->
-      <v-card variant="outlined" class="mb-4 info-card">
+      <v-card variant="flat" class="mb-4 info-card">
         <v-card-item>
           <template v-slot:prepend>
             <v-icon icon="mdi-wrench" color="primary" class="me-2"></v-icon>
@@ -84,7 +84,7 @@
                   v-for="(type, index) in service.jenisServisNames"
                   :key="index"
                   size="small"
-                  variant="outlined"
+                  variant="flat"
                   density="comfortable"
                   class="service-type-chip"
                 >
@@ -105,7 +105,7 @@
       </v-card>
 
       <!-- Jasa / Service Fees -->
-      <v-card variant="outlined" class="mb-4 info-card">
+      <v-card variant="flat" class="mb-4 info-card">
         <v-card-item>
           <template v-slot:prepend>
             <v-icon icon="mdi-cash-register" color="primary" class="me-2"></v-icon>
@@ -158,7 +158,7 @@
       </v-card>
 
       <!-- Spare Parts Used -->
-      <v-card variant="outlined" class="mb-4 info-card">
+      <v-card variant="flat" class="mb-4 info-card">
         <v-card-item>
           <template v-slot:prepend>
             <v-icon icon="mdi-cog-outline" color="primary" class="me-2"></v-icon>
@@ -218,7 +218,7 @@
       </v-card>
 
       <!-- Cost Summary & Status -->
-      <v-card variant="outlined" class="mb-4 info-card">
+      <v-card variant="flat" class="mb-4 info-card">
         <v-card-item>
           <template v-slot:prepend>
             <v-icon icon="mdi-currency-usd" color="primary" class="me-2"></v-icon>
@@ -369,7 +369,7 @@
       </v-alert>
 
       <!-- Action Buttons Container -->
-      <v-card variant="outlined" class="mb-4 action-buttons-card">
+      <v-card variant="flat" class="mb-4 action-buttons-card">
         <v-card-text>
           <!-- Primary Actions -->
           <v-row>
@@ -417,7 +417,7 @@
             <!-- Delete Button -->
             <v-btn
               color="error"
-              variant="outlined"
+              variant="flat"
               @click="showDeleteConfirmDialog = true"
               prepend-icon="mdi-delete-outline"
               :disabled="invoicePaid"
@@ -491,7 +491,7 @@
                 v-model="jasaSearchQuery"
                 prepend-inner-icon="mdi-magnify"
                 label="Cari jasa..."
-                variant="outlined"
+                variant="flat"
                 density="compact"
                 hide-details
                 class="mb-2"
@@ -503,7 +503,7 @@
                 <v-card
                   v-for="(jasa, index) in filteredPredefinedJasa"
                   :key="index"
-                  variant="outlined"
+                  variant="flat"
                   class="service-card"
                   @click="selectPredefinedJasa(jasa)"
                   :class="{ 'selected-service': selectedPredefinedJasa && selectedPredefinedJasa.deskripsi === jasa.deskripsi }"
@@ -539,7 +539,7 @@
                 v-model="newJasa.deskripsi"
                 label="Deskripsi Jasa*"
                 required
-                variant="outlined"
+                variant="flat"
                 density="compact"
                 class="mb-2"
                 hide-details
@@ -551,7 +551,7 @@
                 type="number"
                 prefix="Rp"
                 required
-                variant="outlined"
+                variant="flat"
                 density="compact"
                 class="mb-2"
                 hide-details
@@ -644,7 +644,7 @@
               v-model="partSearchQuery"
               prepend-inner-icon="mdi-magnify"
               label="Cari nama atau kode part..."
-              variant="outlined"
+              variant="flat"
               density="compact"
               hide-details
               class="flex-grow-1"
@@ -657,7 +657,7 @@
               v-model="partCategoryFilter"
               :items="partCategories"
               label="Kategori"
-              variant="outlined"
+              variant="flat"
               density="compact"
               hide-details
               class="part-category-filter"
@@ -675,7 +675,7 @@
             <v-card
               v-for="part in filteredParts"
               :key="part.id"
-              variant="outlined"
+              variant="flat"
               class="part-card"
               @click="selectPart(part)"
               :class="{ 'selected-part': selectedPart && selectedPart.id === part.id }"
@@ -721,7 +721,7 @@
                 type="number"
                 min="1"
                 :max="selectedPart.stokSaatIni || 0"
-                variant="outlined"
+                variant="flat"
                 density="compact"
                 hide-details
                 class="quantity-input mx-1"

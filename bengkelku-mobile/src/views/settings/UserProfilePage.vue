@@ -4,7 +4,7 @@
     <!-- Removed placeholder alert -->
 
     <!-- User Profile Form -->
-    <v-card variant="outlined">
+    <v-card variant="flat">
        <v-form ref="form" @submit.prevent="saveChanges">
         <v-card-text>
           <p class="mb-4">Atur nama tampilan Anda.</p>
@@ -13,13 +13,13 @@
             label="Nama Tampilan*"
             :rules="requiredRule"
             required
-            variant="outlined"
+            variant="flat"
             density="compact"
             class="mb-3"></v-text-field>
           <!-- Password fields are complex and insecure without a backend, omitted for now -->
-          <!-- <v-text-field label="Password Lama" type="password" variant="outlined" density="compact"></v-text-field> -->
-          <!-- <v-text-field label="Password Baru" type="password" variant="outlined" density="compact"></v-text-field> -->
-          <!-- <v-text-field label="Konfirmasi Password Baru" type="password" variant="outlined" density="compact"></v-text-field> -->
+          <!-- <v-text-field label="Password Lama" type="password" variant="flat" density="compact"></v-text-field> -->
+          <!-- <v-text-field label="Password Baru" type="password" variant="flat" density="compact"></v-text-field> -->
+          <!-- <v-text-field label="Konfirmasi Password Baru" type="password" variant="flat" density="compact"></v-text-field> -->
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>

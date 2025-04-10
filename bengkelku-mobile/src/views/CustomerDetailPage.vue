@@ -2,7 +2,7 @@
   <v-container>
     <div v-if="customer && !loading">
       <!-- Enhanced Header with Card -->
-      <v-card class="mb-4 header-card" variant="outlined">
+      <v-card class="mb-4 header-card" variant="flat">
         <v-card-item>
           <template v-slot:prepend>
             <v-avatar color="primary-lighten-4" size="large">
@@ -40,7 +40,7 @@
       <!-- Customer Stats Card -->
       <v-row class="mb-4">
         <v-col cols="6" sm="4">
-          <v-card variant="outlined" class="stat-card">
+          <v-card variant="flat" class="stat-card">
             <v-card-text class="d-flex align-center">
               <v-avatar color="info-lighten-4" size="large" class="me-3">
                 <v-icon color="info" icon="mdi-car-multiple"></v-icon>
@@ -53,7 +53,7 @@
           </v-card>
         </v-col>
         <v-col cols="6" sm="4">
-          <v-card variant="outlined" class="stat-card">
+          <v-card variant="flat" class="stat-card">
             <v-card-text class="d-flex align-center">
               <v-avatar color="success-lighten-4" size="large" class="me-3">
                 <v-icon color="success" icon="mdi-wrench"></v-icon>
@@ -66,7 +66,7 @@
           </v-card>
         </v-col>
         <v-col cols="12" sm="4">
-          <v-card variant="outlined" class="stat-card">
+          <v-card variant="flat" class="stat-card">
             <v-card-text class="d-flex align-center">
               <v-avatar color="warning-lighten-4" size="large" class="me-3">
                 <v-icon color="warning" icon="mdi-calendar-clock"></v-icon>
@@ -81,7 +81,7 @@
       </v-row>
 
       <!-- Enhanced Vehicle List Card -->
-      <v-card variant="outlined" class="mb-4 vehicle-card">
+      <v-card variant="flat" class="mb-4 vehicle-card">
         <v-card-item>
           <template v-slot:prepend>
             <v-avatar color="info-lighten-4" size="large">
@@ -133,7 +133,7 @@
       </v-card>
 
       <!-- Enhanced Service History Card -->
-      <v-card variant="outlined" class="mb-4 service-card">
+      <v-card variant="flat" class="mb-4 service-card">
         <v-card-item>
           <template v-slot:prepend>
             <v-avatar color="success-lighten-4" size="large">
@@ -204,9 +204,9 @@
       <v-card>
         <v-card-title>Edit Pelanggan</v-card-title>
         <v-card-text>
-          <v-text-field v-model="editableCustomer.nama" label="Nama Pelanggan*" :rules="requiredRule" required variant="outlined"
+          <v-text-field v-model="editableCustomer.nama" label="Nama Pelanggan*" :rules="requiredRule" required variant="flat"
             density="compact" class="mb-3"></v-text-field>
-          <v-text-field v-model="editableCustomer.noHp" label="Nomor HP*" :rules="phoneRule" required variant="outlined" density="compact"
+          <v-text-field v-model="editableCustomer.noHp" label="Nomor HP*" :rules="phoneRule" required variant="flat" density="compact"
             type="tel"></v-text-field> <!-- Apply rules -->
         </v-card-text>
         <v-card-actions>
@@ -240,9 +240,9 @@
         <v-card-title>{{ isEditingVehicle ? 'Edit' : 'Tambah' }} Kendaraan</v-card-title>
         <v-form ref="editVehicleForm">
           <v-card-text>
-            <v-text-field v-model="editableVehicle.nomorPolisi" label="Nomor Polisi*" required variant="outlined"
+            <v-text-field v-model="editableVehicle.nomorPolisi" label="Nomor Polisi*" required variant="flat"
               density="compact" class="mb-3"></v-text-field>
-            <v-text-field v-model="editableVehicle.merkTipe" label="Merk / Tipe Kendaraan*" required variant="outlined"
+            <v-text-field v-model="editableVehicle.merkTipe" label="Merk / Tipe Kendaraan*" required variant="flat"
               density="compact" placeholder="Contoh: Honda Vario 125 2020"></v-text-field>
           </v-card-text>
           <v-card-actions>

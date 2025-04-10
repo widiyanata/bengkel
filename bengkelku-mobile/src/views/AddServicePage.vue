@@ -7,13 +7,13 @@
       </div>
       <div class="d-flex align-center">
         <v-icon icon="mdi-wrench-outline" color="primary" size="large" class="me-2"></v-icon>
-        <h1 class="text-h4 font-weight-bold">Tambah Servis Baru</h1>
+        <h1 class="text-h5 font-weight-bold">Tambah Servis Baru</h1>
       </div>
     </div>
 
     <v-form ref="form">
       <!-- Identifikasi Kendaraan -->
-      <v-card variant="outlined" class="mb-4 vehicle-card">
+      <v-card variant="flat" class="mb-4 vehicle-card">
         <v-card-item>
           <template v-slot:prepend>
             <v-icon icon="mdi-car" color="primary" class="me-2"></v-icon>
@@ -76,7 +76,7 @@
           <!-- Search Results / Add New Button (only show if no vehicle selected) -->
           <div v-if="!serviceData.selectedVehicleInfo" class="mt-2">
             <!-- Search Result Found -->
-            <v-card v-if="searchResult" variant="outlined" class="mb-3 search-result-card">
+            <v-card v-if="searchResult" variant="flat" class="mb-3 search-result-card">
               <v-card-item>
                 <template v-slot:prepend>
                   <v-avatar color="info" variant="tonal">
@@ -137,7 +137,7 @@
       </v-card>
 
       <!-- Keluhan/Jenis Servis -->
-      <v-card variant="outlined" class="mb-4 service-type-card">
+      <v-card variant="flat" class="mb-4 service-type-card">
         <v-card-item>
           <template v-slot:prepend>
             <v-icon icon="mdi-wrench" color="primary" class="me-2"></v-icon>
@@ -145,12 +145,12 @@
           <v-card-title>Keluhan / Jenis Servis*</v-card-title>
         </v-card-item>
         <v-divider></v-divider>
-        <v-card-text class="pt-4">
-          <div class="service-type-grid">
+        <v-card-text class="pt-2">
+          <div class="service-type-grid mb-0">
             <v-chip-group v-model="serviceData.jenisServis" multiple>
               <v-chip
                 filter
-                variant="outlined"
+                variant="flat"
                 color="primary"
                 class="service-type-chip dark--text"
                 text-color="primary"
@@ -160,7 +160,7 @@
               </v-chip>
               <v-chip
                 filter
-                variant="outlined"
+                variant="flat"
                 color="primary"
                 class="service-type-chip dark--text"
                 text-color="primary"
@@ -170,7 +170,7 @@
               </v-chip>
               <v-chip
                 filter
-                variant="outlined"
+                variant="flat"
                 color="primary"
                 class="service-type-chip dark--text"
                 text-color="primary"
@@ -180,7 +180,7 @@
               </v-chip>
               <v-chip
                 filter
-                variant="outlined"
+                variant="flat"
                 color="primary"
                 class="service-type-chip dark--text"
                 text-color="primary"
@@ -190,7 +190,7 @@
               </v-chip>
               <v-chip
                 filter
-                variant="outlined"
+                variant="flat"
                 color="primary"
                 class="service-type-chip dark--text"
                 text-color="primary"
@@ -200,7 +200,7 @@
               </v-chip>
               <v-chip
                 filter
-                variant="outlined"
+                variant="flat"
                 color="primary"
                 class="service-type-chip dark--text"
                 text-color="primary"
@@ -225,7 +225,7 @@
                 class="ma-1 dark--text"
                 color="primary"
                 text-color="rgba(0,0,0,0.87)"
-                variant="outlined"
+                variant="flat"
               >
                 {{ getServiceTypeName(index) }}
               </v-chip>
@@ -249,27 +249,24 @@
       </v-card>
 
       <!-- Tombol Aksi -->
-      <v-card variant="outlined" class="mb-4 action-card">
+      <v-card variant="flat" class="mb-4 action-card">
         <v-card-text>
           <div class="d-flex flex-column flex-sm-row gap-3">
             <v-btn
               color="primary"
-              size="large"
               @click="confirmSave"
               :loading="isSaving"
               prepend-icon="mdi-content-save"
-              class="flex-grow-1"
-              min-height="56px"
+              class="flex-grow-1 mb-2"
+              dense="compact"
             >
               Simpan Servis
             </v-btn>
             <v-btn
-              variant="outlined"
-              size="large"
+              variant="tonal"
               @click="goBack"
               prepend-icon="mdi-arrow-left"
-              class="flex-grow-1"
-              min-height="56px"
+              class="flex-grow-1 ms-lg-2 mb-2"
             >
               Kembali
             </v-btn>
@@ -352,7 +349,7 @@
                   v-model="newCustomer.nama"
                   label="Nama Pelanggan*"
                   required
-                  variant="outlined"
+                  variant="flat"
                   density="compact"
                   prepend-inner-icon="mdi-account"
                   :rules="[v => !!v || 'Nama pelanggan wajib diisi']"
@@ -366,7 +363,7 @@
                   label="Nomor HP*"
                   required
                   :rules="phoneRule"
-                  variant="outlined"
+                  variant="flat"
                   density="compact"
                   type="tel"
                   prepend-inner-icon="mdi-phone"
@@ -379,7 +376,7 @@
                   v-model="newCustomer.kendaraan"
                   label="Merk / Tipe Kendaraan*"
                   required
-                  variant="outlined"
+                  variant="flat"
                   density="compact"
                   placeholder="Contoh: Honda Vario 125 2020"
                   prepend-inner-icon="mdi-car"
@@ -392,7 +389,7 @@
                 <v-text-field
                   v-model="newCustomer.nomorPolisi"
                   label="Nomor Polisi"
-                  variant="outlined"
+                  variant="flat"
                   density="compact"
                   readonly
                   disabled

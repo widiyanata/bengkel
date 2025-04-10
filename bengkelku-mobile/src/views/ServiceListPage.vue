@@ -59,8 +59,8 @@
             Hari Ini
           </div>
           <v-row dense>
-            <v-col v-for="service in todayServices" :key="service.id" cols="12">
-              <v-card @click="goToServiceDetail(service.id)" class="service-card mb-3" elevation="1">
+            <v-col v-for="service in todayServices" :key="service.id" cols="12" md="6">
+              <v-card @click="goToServiceDetail(service.id)" class="service-card mb-3" elevation="1" variant="flat">
                 <v-card-item>
                   <template v-slot:prepend>
                     <v-icon :icon="getStatusIcon(service.status)" :color="getStatusColor(service.status)" class="me-2"></v-icon>
@@ -73,16 +73,18 @@
                   </v-card-title>
                   <v-card-subtitle class="pa-0 text-body-2">{{ service.namaPelanggan }}</v-card-subtitle>
                 </v-card-item>
-                <v-card-text class="pt-0">
+                <v-card-text class="pt-0 pb-1">
                   <div class="d-flex flex-wrap gap-1 service-types">
-                    <v-chip v-for="(type, index) in service.jenisServisNames" :key="index" size="x-small" variant="outlined" density="comfortable" class="service-type-chip">
+                    <v-chip v-for="(type, index) in service.jenisServisNames" :key="index" size="x-small" variant="tonal" density="comfortable" class="service-type-chip">
                       {{ type }}
                     </v-chip>
                   </div>
                   <div v-if="service.keterangan" class="text-caption text-truncate mt-1">
                     <span class="text-grey">Ket:</span> {{ service.keterangan }}
                   </div>
-                  <div class="d-flex justify-space-between align-center mt-2">
+                </v-card-text>
+                <v-card-text class="py-1 bg-surface-variant">
+                  <div class="d-flex justify-space-between align-center bg">
                     <div class="text-caption text-grey">
                       <v-icon icon="mdi-clock-outline" size="x-small" class="me-1"></v-icon>
                       {{ formatTime(service.timestamp) }}
@@ -118,7 +120,7 @@
                 </v-card-item>
                 <v-card-text class="pt-0">
                   <div class="d-flex flex-wrap gap-1 service-types">
-                    <v-chip v-for="(type, index) in service.jenisServisNames" :key="index" size="x-small" variant="outlined" density="comfortable" class="service-type-chip">
+                    <v-chip v-for="(type, index) in service.jenisServisNames" :key="index" size="x-small" variant="flat" density="comfortable" class="service-type-chip">
                       {{ type }}
                     </v-chip>
                   </div>
@@ -157,7 +159,7 @@
             </v-card-item>
             <v-card-text class="pt-0">
               <div class="d-flex flex-wrap gap-1 service-types">
-                <v-chip v-for="(type, index) in service.jenisServisNames" :key="index" size="x-small" variant="outlined" density="comfortable" class="service-type-chip">
+                <v-chip v-for="(type, index) in service.jenisServisNames" :key="index" size="x-small" variant="flat" density="comfortable" class="service-type-chip">
                   {{ type }}
                 </v-chip>
               </div>
