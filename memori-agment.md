@@ -129,6 +129,21 @@
 - Menu dropdown pada halaman stok memiliki perbaikan CSS untuk mencegah terpotong pada tampilan mobile
 - Semua fungsi pada halaman stok memiliki penanganan error untuk mencegah crash aplikasi
 - Atribut pada komponen v-select diperbaiki untuk menghindari warning dan error
+- Penanganan nilai null/undefined ditambahkan pada semua bagian tampilan untuk mencegah error "Cannot read properties of null"
+
+## Peningkatan UI Halaman Invoice
+- Halaman daftar invoice menggunakan tampilan kartu yang lebih visual dengan indikator status pembayaran
+- Kartu invoice memiliki badge status (Dibayar/Belum Dibayar) dan badge pelanggan langsung
+- Halaman daftar invoice memiliki filter dan pengurutan yang responsif untuk tampilan mobile
+- Halaman detail invoice menggunakan layout kartu yang lebih terorganisir dengan avatar dan ikon
+- Informasi bengkel, pelanggan, dan kendaraan ditampilkan dalam kartu terpisah dengan ikon yang jelas
+- Daftar item invoice memiliki tampilan yang berbeda untuk mobile (list) dan desktop (tabel)
+- Item jasa dan part dibedakan dengan warna dan ikon yang berbeda
+- Ringkasan biaya menampilkan breakdown jasa dan part dengan ikon yang jelas
+- Status pembayaran ditampilkan dengan kartu visual yang mencolok
+- Tombol aksi (cetak, download) ditampilkan dengan lebih jelas dan responsif
+- Catatan invoice ditampilkan dengan format yang lebih baik dan dapat diedit dengan mudah
+- Semua elemen UI memiliki transisi dan animasi halus untuk meningkatkan pengalaman pengguna
 
 ## Peningkatan AppBar dan Bottom Navigation
 - AppBar ditingkatkan dengan fitur pencarian global untuk mencari servis, pelanggan, dan part
@@ -143,4 +158,6 @@
 
 # Lingkungan Pengembangan
 - Pengguna menggunakan command line Windows PowerShell
-
+- Aplikasi dapat dijalankan menggunakan file batch:
+  - `start-bengkelku.bat`: File batch yang dapat mendeteksi lokasi aplikasi secara otomatis dan menjalankan server development
+  - `bengkelku-menu.bat`: File batch dengan menu interaktif dan deteksi lokasi otomatis untuk menjalankan server development, build produksi, dan preview

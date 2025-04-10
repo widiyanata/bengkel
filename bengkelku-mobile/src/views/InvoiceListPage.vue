@@ -1,16 +1,33 @@
 <template>
   <v-container>
-    <div class="d-flex justify-space-between align-center mb-4">
-      <h1>Daftar Invoice</h1>
-      <div>
-        <v-btn color="success" prepend-icon="mdi-account-cash" @click="createWalkInInvoice" class="mr-2">
-          Invoice Langsung
-        </v-btn>
-        <v-btn color="primary" prepend-icon="mdi-refresh" @click="loadInvoices" :loading="isLoading">
-          Refresh
-        </v-btn>
-      </div>
-    </div>
+    <!-- Enhanced Header with Card -->
+    <v-card class="mb-4 header-card" variant="outlined">
+      <v-card-item>
+        <template v-slot:prepend>
+          <v-icon size="large" icon="mdi-file-document-multiple" color="primary" class="me-3"></v-icon>
+        </template>
+        <v-card-title class="text-h5">Manajemen Invoice</v-card-title>
+        <v-card-subtitle>Kelola dan pantau semua invoice bengkel</v-card-subtitle>
+
+        <template v-slot:append>
+          <!-- Desktop buttons -->
+          <div class="d-none d-sm-flex gap-2">
+            <v-btn color="success" prepend-icon="mdi-account-cash" @click="createWalkInInvoice">
+              Invoice Langsung
+            </v-btn>
+            <v-btn color="primary" prepend-icon="mdi-refresh" @click="loadInvoices" :loading="isLoading">
+              Refresh
+            </v-btn>
+          </div>
+
+          <!-- Mobile buttons -->
+          <div class="d-flex d-sm-none">
+            <v-btn color="success" icon="mdi-account-cash" size="small" @click="createWalkInInvoice"></v-btn>
+            <v-btn color="primary" icon="mdi-refresh" size="small" class="ms-2" @click="loadInvoices" :loading="isLoading"></v-btn>
+          </div>
+        </template>
+      </v-card-item>
+    </v-card>
 
     <!-- Loading Indicator -->
     <div v-if="isLoading" class="d-flex justify-center my-5">
@@ -27,30 +44,59 @@
 
     <!-- Invoice List -->
     <div v-else>
-      <!-- Filter Controls -->
-      <v-card class="mb-4">
-        <v-card-text>
+      <!-- Enhanced Filter Controls -->
+      <v-card class="mb-4" variant="outlined">
+        <v-card-item>
+          <template v-slot:prepend>
+            <v-icon icon="mdi-filter-variant" color="primary"></v-icon>
+          </template>
+          <v-card-title>Filter & Pencarian</v-card-title>
+
+          <!-- Mobile toggle button -->
+          <template v-slot:append>
+            <v-btn
+              v-if="$vuetify.display.xs"
+              icon="mdi-chevron-down"
+              variant="text"
+              :class="{'rotate-icon': showFilterOptions}"
+              @click="showFilterOptions = !showFilterOptions"
+            ></v-btn>
+          </template>
+        </v-card-item>
+
+        <!-- Filter Options (Responsive) -->
+        <v-card-text :class="{'d-none': !showFilterOptions && $vuetify.display.xs}">
           <v-row>
             <v-col cols="12" sm="4">
               <v-text-field
                 v-model="search"
-                label="Cari"
+                label="Cari Invoice"
                 density="compact"
                 variant="outlined"
                 prepend-inner-icon="mdi-magnify"
                 hide-details
                 class="mb-2"
+                clearable
+                placeholder="Nomor invoice, nama pelanggan, plat..."
               ></v-text-field>
             </v-col>
             <v-col cols="12" sm="4">
               <v-select
                 v-model="statusFilter"
-                label="Status"
+                label="Status Pembayaran"
                 density="compact"
                 variant="outlined"
-                :items="['Semua', 'Belum Dibayar', 'Dibayar']"
+                :items="[
+                  { title: 'Semua Status', value: 'Semua' },
+                  { title: 'Belum Dibayar', value: 'Belum Dibayar' },
+                  { title: 'Sudah Dibayar', value: 'Dibayar' }
+                ]"
+                item-title="title"
+                item-value="value"
                 hide-details
                 class="mb-2"
+                :menu-props="{ maxHeight: 300 }"
+                prepend-inner-icon="mdi-cash-check"
               ></v-select>
             </v-col>
             <v-col cols="12" sm="4">
@@ -60,75 +106,100 @@
                 density="compact"
                 variant="outlined"
                 :items="[
-                  { title: 'Terbaru', value: 'newest' },
-                  { title: 'Terlama', value: 'oldest' },
-                  { title: 'Nominal Tertinggi', value: 'highest' },
-                  { title: 'Nominal Terendah', value: 'lowest' },
+                  { title: 'Terbaru', value: 'newest', icon: 'mdi-sort-calendar-descending' },
+                  { title: 'Terlama', value: 'oldest', icon: 'mdi-sort-calendar-ascending' },
+                  { title: 'Nominal Tertinggi', value: 'highest', icon: 'mdi-sort-numeric-descending' },
+                  { title: 'Nominal Terendah', value: 'lowest', icon: 'mdi-sort-numeric-ascending' },
                 ]"
                 item-title="title"
                 item-value="value"
                 hide-details
                 class="mb-2"
-              ></v-select>
+                :menu-props="{ maxHeight: 300 }"
+                prepend-inner-icon="mdi-sort"
+              >
+                <template v-slot:item="{ item, props }">
+                  <v-list-item v-bind="props">
+                    <template v-slot:prepend>
+                      <v-icon :icon="item.raw.icon"></v-icon>
+                    </template>
+                    <v-list-item-title>{{ item.raw.title }}</v-list-item-title>
+                  </v-list-item>
+                </template>
+              </v-select>
             </v-col>
           </v-row>
         </v-card-text>
       </v-card>
 
-      <!-- Invoice Cards -->
+      <!-- Enhanced Invoice Cards with Animation -->
       <v-row>
-        <v-col v-for="invoice in filteredInvoices" :key="invoice.id" cols="12" md="6">
-          <v-card :class="{ 'border-success': invoice.status === 'Dibayar' }">
+        <v-col v-for="invoice in filteredInvoices" :key="invoice.id" cols="12" sm="6" lg="4">
+          <v-card
+            :class="{
+              'invoice-card': true,
+              'paid-invoice': invoice.status === 'Dibayar',
+              'unpaid-invoice': invoice.status !== 'Dibayar'
+            }"
+            variant="outlined"
+            elevation="2"
+            @click="viewInvoice(invoice.id)"
+            class="position-relative transition-swing"
+          >
+            <!-- Status Badge -->
+            <div class="status-badge" :class="invoice.status === 'Dibayar' ? 'paid-badge' : 'unpaid-badge'">
+              <v-icon size="small" :icon="invoice.status === 'Dibayar' ? 'mdi-check' : 'mdi-clock-outline'"></v-icon>
+              {{ invoice.status }}
+            </div>
+
+            <!-- Walk-in Badge if applicable -->
+            <div v-if="invoice.isWalkIn" class="walkin-badge">
+              <v-icon size="x-small" icon="mdi-account-arrow-right"></v-icon>
+              Langsung
+            </div>
+
             <v-card-item>
               <template v-slot:prepend>
-                <v-icon :icon="invoice.status === 'Dibayar' ? 'mdi-check-circle' : 'mdi-clock-outline'"
-                  :color="invoice.status === 'Dibayar' ? 'success' : 'warning'" size="large"></v-icon>
-              </template>
-              <v-card-title>{{ invoice.id }}</v-card-title>
-              <v-card-subtitle>{{ formatDate(invoice.tanggalInvoice) }}</v-card-subtitle>
-
-              <template v-slot:append>
-                <div class="d-flex flex-column align-end">
-                  <v-chip
+                <v-avatar color="grey-lighten-3" class="invoice-avatar">
+                  <v-icon
+                    :icon="invoice.status === 'Dibayar' ? 'mdi-file-check-outline' : 'mdi-file-clock-outline'"
                     :color="invoice.status === 'Dibayar' ? 'success' : 'warning'"
-                    size="small"
-                    class="mb-1"
-                  >
-                    {{ invoice.status }}
-                  </v-chip>
-                  <v-chip
-                    v-if="invoice.isWalkIn"
-                    color="info"
-                    size="x-small"
-                  >
-                    Pelanggan Langsung
-                  </v-chip>
-                </div>
+                  ></v-icon>
+                </v-avatar>
               </template>
+              <v-card-title class="text-truncate">{{ invoice.id }}</v-card-title>
+              <v-card-subtitle>
+                <v-icon size="x-small" icon="mdi-calendar" class="me-1"></v-icon>
+                {{ formatDate(invoice.tanggalInvoice) }}
+              </v-card-subtitle>
             </v-card-item>
 
             <v-card-text>
-              <div class="d-flex justify-space-between mb-2">
-                <div class="text-subtitle-2">Pelanggan:</div>
-                <div>{{ invoice.pelangganNama }}</div>
+              <div class="d-flex align-center mb-2">
+                <v-icon size="small" color="grey" class="me-2">mdi-account</v-icon>
+                <div class="text-truncate">{{ invoice.pelangganNama }}</div>
               </div>
-              <div class="d-flex justify-space-between mb-2">
-                <div class="text-subtitle-2">Kendaraan:</div>
-                <div>{{ invoice.nomorPolisi }}</div>
+              <div class="d-flex align-center mb-2">
+                <v-icon size="small" color="grey" class="me-2">mdi-car</v-icon>
+                <div class="text-truncate">{{ invoice.nomorPolisi || 'Tidak ada' }}</div>
               </div>
-              <div class="d-flex justify-space-between mb-2">
+              <div class="d-flex align-center mb-2">
+                <v-icon size="small" color="grey" class="me-2">mdi-tag-multiple</v-icon>
+                <div class="text-truncate">{{ invoice.items?.length || 0 }} item</div>
+              </div>
+              <div class="d-flex justify-space-between align-center mt-4">
                 <div class="text-subtitle-2">Total:</div>
-                <div class="text-h6">{{ formatCurrency(invoice.totalAmount) }}</div>
+                <div class="text-h6 font-weight-bold">{{ formatCurrency(invoice.totalAmount) }}</div>
               </div>
             </v-card-text>
 
             <v-divider></v-divider>
 
             <v-card-actions>
-              <v-btn variant="text" prepend-icon="mdi-eye" @click="viewInvoice(invoice.id)">
+              <v-btn variant="text" density="comfortable" prepend-icon="mdi-eye" @click.stop="viewInvoice(invoice.id)">
                 Lihat
               </v-btn>
-              <v-btn variant="text" prepend-icon="mdi-printer" @click="printInvoice(invoice)">
+              <v-btn variant="text" density="comfortable" prepend-icon="mdi-printer" @click.stop="printInvoice(invoice)">
                 Cetak
               </v-btn>
               <v-spacer></v-spacer>
@@ -136,9 +207,11 @@
                 v-if="invoice.status === 'Belum Dibayar'"
                 color="success"
                 variant="tonal"
-                @click="markAsPaid(invoice)"
+                density="comfortable"
+                @click.stop="markAsPaid(invoice)"
               >
-                Tandai Dibayar
+                <v-icon start>mdi-cash-check</v-icon>
+                Dibayar
               </v-btn>
             </v-card-actions>
           </v-card>
@@ -159,7 +232,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { getAllInvoices, updateInvoice } from '../stores/localStorage.js';
 import { formatCurrency, formatDate, printInvoice as printInvoiceUtil } from '../utils/invoiceGenerator.js';
@@ -172,6 +245,7 @@ const isLoading = ref(true);
 const search = ref('');
 const statusFilter = ref('Semua');
 const sortBy = ref('newest');
+const showFilterOptions = ref(true); // For mobile filter toggle
 
 // Snackbar state
 const snackbar = ref(false);
@@ -271,7 +345,104 @@ onMounted(() => {
 </script>
 
 <style scoped>
-.border-success {
-  border-left: 4px solid rgb(var(--v-theme-success));
+/* Header card styles */
+.header-card {
+  background-color: rgba(var(--v-theme-surface-variant), 0.7);
+  transition: all 0.3s ease;
+}
+
+/* Filter toggle animation */
+.rotate-icon {
+  transform: rotate(180deg);
+  transition: transform 0.3s ease;
+}
+
+/* Invoice card styles */
+.invoice-card {
+  transition: all 0.3s ease;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.invoice-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1) !important;
+}
+
+.paid-invoice {
+  border-left: 4px solid var(--v-theme-success) !important;
+}
+
+.unpaid-invoice {
+  border-left: 4px solid var(--v-theme-warning) !important;
+}
+
+.invoice-avatar {
+  transition: all 0.3s ease;
+}
+
+.invoice-card:hover .invoice-avatar {
+  transform: scale(1.1);
+}
+
+/* Status badge */
+.status-badge {
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  border-bottom-left-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  z-index: 1;
+}
+
+.paid-badge {
+  background-color: rgba(var(--v-theme-success), 0.15);
+  color: var(--v-theme-success);
+}
+
+.unpaid-badge {
+  background-color: rgba(var(--v-theme-warning), 0.15);
+  color: var(--v-theme-warning);
+}
+
+/* Walk-in badge */
+.walkin-badge {
+  position: absolute;
+  top: 0;
+  left: 0;
+  padding: 4px 8px;
+  font-size: 0.7rem;
+  border-bottom-right-radius: 8px;
+  background-color: rgba(var(--v-theme-info), 0.15);
+  color: var(--v-theme-info);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  z-index: 1;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .v-card-title {
+    font-size: 1rem !important;
+  }
+
+  .v-card-subtitle {
+    font-size: 0.8rem !important;
+  }
+
+  .text-h6 {
+    font-size: 1rem !important;
+  }
+
+  .v-btn {
+    padding: 0 8px !important;
+  }
 }
 </style>
+
+

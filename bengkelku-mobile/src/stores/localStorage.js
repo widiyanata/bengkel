@@ -11,6 +11,11 @@ const WORKSHOP_INFO_KEY = "bengkelku_workshop_info"; // Key for workshop details
 const USER_PROFILE_KEY = "bengkelku_user_profile"; // Key for user profile
 const INVOICES_KEY = "bengkelku_invoices"; // Key for invoices
 
+let idCounter = Date.now();
+function getNextId() {
+  return idCounter++;
+}
+
 // Helper function to get data from Local Storage
 function getData(key, defaultValue = []) { // Allow default value override
   try {
@@ -43,7 +48,7 @@ export function getAllCustomers() {
 export function addCustomer(customerData) {
   const customers = getAllCustomers();
   const newCustomer = {
-    id: Date.now(), // Simple unique ID generation
+    id: getNextId(), // Simple unique ID generation
     ...customerData,
   };
   customers.push(newCustomer);
@@ -107,7 +112,7 @@ export function addVehicle(vehicleData) {
   }
   const vehicles = getAllVehicles();
   const newVehicle = {
-    id: Date.now() + 1, // Simple unique ID generation (slightly offset)
+    id: getNextId() + 1, // Simple unique ID generation (slightly offset)
     ...vehicleData,
   };
   vehicles.push(newVehicle);
@@ -198,7 +203,7 @@ export function addService(serviceData) {
   // Expects serviceData to include customerId, vehicleId etc.
   const services = getAllServices();
   const newService = {
-    id: Date.now() + 2, // Simple unique ID
+    id: getNextId() + 2, // Simple unique ID
     timestamp: new Date().toISOString(),
     status: "Baru", // Default status
     ...serviceData,
@@ -398,7 +403,7 @@ export function recordPurchase(purchaseData) {
   // Expects purchaseData: { supplier?: string, date: string, items: [{itemId: number, quantity: number, purchasePrice: number}], totalCost: number }
   const purchases = getAllPurchases();
   const newPurchase = {
-    id: Date.now() + 4, // Simple unique ID
+    id: getNextId() + 4, // Simple unique ID
     ...purchaseData,
     timestamp: new Date().toISOString(), // Record when the purchase was logged
   };

@@ -1,70 +1,186 @@
-<template>
+﻿<template>
   <v-container>
     <div v-if="customer && !loading">
-      <!-- Header with Edit/Delete Customer -->
-      <div class="d-flex justify-space-between align-center mb-4">
-        <h1>Detail Pelanggan</h1>
-        <div>
-          <v-btn icon="mdi-pencil-outline" color="info" variant="text" size="small" @click="openEditDialog(customer)"
-            class="mr-1"></v-btn>
-          <v-btn icon="mdi-delete-outline" color="error" variant="text" size="small"
-            @click="openDeleteDialog(customer)"></v-btn>
-        </div>
-      </div>
+      <!-- Enhanced Header with Card -->
+      <v-card class="mb-4 header-card" variant="outlined">
+        <v-card-item>
+          <template v-slot:prepend>
+            <v-avatar color="primary-lighten-4" size="large">
+              <v-icon size="large" icon="mdi-account" color="primary"></v-icon>
+            </v-avatar>
+          </template>
+          <v-card-title class="text-h5">{{ customer.nama }}</v-card-title>
+          <v-card-subtitle>
+            <v-icon size="x-small" icon="mdi-phone" class="me-1"></v-icon>
+            {{ customer.noHp || 'Tidak ada nomor' }}
+          </v-card-subtitle>
 
-      <!-- Customer Info Card -->
-      <v-card variant="outlined" class="mb-4">
-        <v-card-title>Informasi Kontak</v-card-title>
-        <v-card-text>
-          <div><strong>Nama:</strong> {{ customer.nama }}</div>
-          <div><strong>No. HP:</strong> {{ customer.noHp }}</div>
-        </v-card-text>
+          <template v-slot:append>
+            <!-- Desktop buttons -->
+            <div class="d-none d-sm-flex gap-2">
+              <v-btn icon="mdi-arrow-left" variant="text" @click="goBack" class="me-2"></v-btn>
+              <v-btn color="info" prepend-icon="mdi-pencil" @click="openEditDialog(customer)">
+                Edit
+              </v-btn>
+              <v-btn color="error" prepend-icon="mdi-delete" @click="openDeleteDialog(customer)">
+                Hapus
+              </v-btn>
+            </div>
+            
+            <!-- Mobile buttons -->
+            <div class="d-flex d-sm-none">
+              <v-btn icon="mdi-arrow-left" variant="text" size="small" @click="goBack"></v-btn>
+              <v-btn icon="mdi-pencil" color="info" variant="text" size="small" @click="openEditDialog(customer)" class="ms-2"></v-btn>
+              <v-btn icon="mdi-delete" color="error" variant="text" size="small" @click="openDeleteDialog(customer)" class="ms-2"></v-btn>
+            </div>
+          </template>
+        </v-card-item>
       </v-card>
 
-      <!-- Vehicle List Card -->
-      <v-card variant="outlined" class="mb-4">
-        <v-card-title class="d-flex justify-space-between align-center">
-          <span>Kendaraan Terdaftar</span>
-          <v-btn color="secondary" size="small" @click="openAddVehicleDialog" prepend-icon="mdi-plus-box-outline">Tambah
-            Kendaraan</v-btn>
-        </v-card-title>
-        <v-card-text>
+      <!-- Customer Stats Card -->
+      <v-row class="mb-4">
+        <v-col cols="6" sm="4">
+          <v-card variant="outlined" class="stat-card">
+            <v-card-text class="d-flex align-center">
+              <v-avatar color="info-lighten-4" size="large" class="me-3">
+                <v-icon color="info" icon="mdi-car-multiple"></v-icon>
+              </v-avatar>
+              <div>
+                <div class="text-caption text-medium-emphasis">Kendaraan</div>
+                <div class="text-h6">{{ vehicles.length }}</div>
+              </div>
+            </v-card-text>
+          </v-card>
+        </v-col>
+        <v-col cols="6" sm="4">
+          <v-card variant="outlined" class="stat-card">
+            <v-card-text class="d-flex align-center">
+              <v-avatar color="success-lighten-4" size="large" class="me-3">
+                <v-icon color="success" icon="mdi-wrench"></v-icon>
+              </v-avatar>
+              <div>
+                <div class="text-caption text-medium-emphasis">Total Servis</div>
+                <div class="text-h6">{{ serviceHistory.length }}</div>
+              </div>
+            </v-card-text>
+          </v-card>
+        </v-col>
+        <v-col cols="12" sm="4">
+          <v-card variant="outlined" class="stat-card">
+            <v-card-text class="d-flex align-center">
+              <v-avatar color="warning-lighten-4" size="large" class="me-3">
+                <v-icon color="warning" icon="mdi-calendar-clock"></v-icon>
+              </v-avatar>
+              <div>
+                <div class="text-caption text-medium-emphasis">Terakhir Servis</div>
+                <div class="text-subtitle-2">{{ serviceHistory.length > 0 ? formatTimestamp(serviceHistory[0].timestamp) : 'Belum ada' }}</div>
+              </div>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
+
+      <!-- Enhanced Vehicle List Card -->
+      <v-card variant="outlined" class="mb-4 vehicle-card">
+        <v-card-item>
+          <template v-slot:prepend>
+            <v-avatar color="info-lighten-4" size="large">
+              <v-icon icon="mdi-car-multiple" color="info"></v-icon>
+            </v-avatar>
+          </template>
+          <v-card-title>Kendaraan Terdaftar</v-card-title>
+          
+          <template v-slot:append>
+            <v-btn color="info" prepend-icon="mdi-plus" @click="openAddVehicleDialog">
+              Tambah Kendaraan
+            </v-btn>
+          </template>
+        </v-card-item>
+        
+        <v-divider></v-divider>
+        
+        <v-card-text class="pa-0">
           <v-list lines="one" v-if="vehicles.length > 0">
-            <v-list-item v-for="vehicle in vehicles" :key="vehicle.id">
-              <v-list-item-title>{{ vehicle.merkTipe }}</v-list-item-title>
-              <v-list-item-subtitle>{{ vehicle.nomorPolisi }}</v-list-item-subtitle>
+            <v-list-item v-for="vehicle in vehicles" :key="vehicle.id" class="vehicle-item">
+              <template v-slot:prepend>
+                <v-avatar color="info-lighten-5" size="small">
+                  <v-icon icon="mdi-car" color="info" size="small"></v-icon>
+                </v-avatar>
+              </template>
+              
+              <v-list-item-title class="font-weight-medium">{{ vehicle.merkTipe }}</v-list-item-title>
+              <v-list-item-subtitle>
+                <v-icon size="x-small" icon="mdi-car-info" class="me-1"></v-icon>
+                {{ vehicle.nomorPolisi }}
+              </v-list-item-subtitle>
+              
               <!-- Vehicle Actions -->
               <template v-slot:append>
-                <v-btn icon="mdi-pencil-outline" color="info" variant="text" size="x-small"
-                  @click="openEditVehicleDialog(vehicle)" class="mr-1"></v-btn>
-                <v-btn icon="mdi-delete-outline" color="error" variant="text" size="x-small"
-                  @click="openDeleteVehicleDialog(vehicle)"></v-btn>
+                <div class="d-flex">
+                  <v-btn icon="mdi-pencil" color="info" variant="text" size="x-small" @click="openEditVehicleDialog(vehicle)" class="me-1"></v-btn>
+                  <v-btn icon="mdi-delete" color="error" variant="text" size="x-small" @click="openDeleteVehicleDialog(vehicle)"></v-btn>
+                </div>
               </template>
             </v-list-item>
           </v-list>
-          <v-alert v-else type="info" variant="tonal" density="compact">Belum ada kendaraan terdaftar untuk pelanggan
-            ini.</v-alert>
+          <v-alert v-else type="info" variant="tonal" density="compact" class="mt-2">
+            <div class="d-flex align-center">
+              <v-icon icon="mdi-information-outline" class="me-2"></v-icon>
+              <span>Belum ada kendaraan terdaftar untuk pelanggan ini.</span>
+            </div>
+          </v-alert>
         </v-card-text>
       </v-card>
 
-      <!-- Service History Card -->
-      <v-card variant="outlined" class="mb-4">
-        <v-card-title>Riwayat Servis</v-card-title>
-        <v-card-text>
+      <!-- Enhanced Service History Card -->
+      <v-card variant="outlined" class="mb-4 service-card">
+        <v-card-item>
+          <template v-slot:prepend>
+            <v-avatar color="success-lighten-4" size="large">
+              <v-icon icon="mdi-wrench" color="success"></v-icon>
+            </v-avatar>
+          </template>
+          <v-card-title>Riwayat Servis</v-card-title>
+        </v-card-item>
+        
+        <v-divider></v-divider>
+        
+        <v-card-text class="pa-0">
           <v-list lines="two" v-if="serviceHistory.length > 0">
-            <v-list-item v-for="service in serviceHistory" :key="service.id" @click="goToServiceDetail(service.id)">
-              <v-list-item-title>{{ service.nomorPolisi }} -
-                {{ formatTimestamp(service.timestamp) }}</v-list-item-title>
+            <v-list-item 
+              v-for="service in serviceHistory" 
+              :key="service.id" 
+              @click="goToServiceDetail(service.id)"
+              class="service-item"
+              :class="{'completed-service': service.status === 'Selesai'}"
+            >
+              <template v-slot:prepend>
+                <v-avatar :color="getServiceStatusColor(service.status)" size="small">
+                  <v-icon :icon="getServiceStatusIcon(service.status)" :color="getServiceIconColor(service.status)" size="small"></v-icon>
+                </v-avatar>
+              </template>
+              
+              <v-list-item-title class="font-weight-medium">
+                {{ service.nomorPolisi }} - {{ formatTimestamp(service.timestamp) }}
+              </v-list-item-title>
               <v-list-item-subtitle>
-                Status: {{ service.status }} | Jenis: {{ service.jenisServisNames?.join(', ') || 'N/A' }}
+                <v-chip size="x-small" :color="getStatusChipColor(service.status)" class="me-1">
+                  {{ service.status }}
+                </v-chip>
+                {{ service.jenisServisNames?.join(', ') || 'N/A' }}
               </v-list-item-subtitle>
+              
               <template v-slot:append>
-                <v-icon>mdi-chevron-right</v-icon>
+                <v-btn icon="mdi-chevron-right" variant="text" size="small"></v-btn>
               </template>
             </v-list-item>
           </v-list>
-          <v-alert v-else type="info" variant="tonal" density="compact">Belum ada riwayat servis untuk pelanggan
-            ini.</v-alert>
+          <v-alert v-else type="info" variant="tonal" density="compact" class="mt-2">
+            <div class="d-flex align-center">
+              <v-icon icon="mdi-information-outline" class="me-2"></v-icon>
+              <span>Belum ada riwayat servis untuk pelanggan ini.</span>
+            </div>
+          </v-alert>
         </v-card-text>
       </v-card>
 
@@ -122,17 +238,19 @@
     <v-dialog v-model="showVehicleDialog" persistent max-width="500px">
       <v-card>
         <v-card-title>{{ isEditingVehicle ? 'Edit' : 'Tambah' }} Kendaraan</v-card-title>
-        <v-card-text>
-          <v-text-field v-model="editableVehicle.nomorPolisi" label="Nomor Polisi*" required variant="outlined"
-            density="compact" class="mb-3"></v-text-field>
-          <v-text-field v-model="editableVehicle.merkTipe" label="Merk / Tipe Kendaraan*" required variant="outlined"
-            density="compact" placeholder="Contoh: Honda Vario 125 2020"></v-text-field>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="grey darken-1" variant="text" @click="cancelVehicleEdit">Batal</v-btn>
-          <v-btn color="info" variant="flat" @click="saveVehicle" :loading="isSavingVehicle">Simpan</v-btn>
-        </v-card-actions>
+        <v-form ref="editVehicleForm">
+          <v-card-text>
+            <v-text-field v-model="editableVehicle.nomorPolisi" label="Nomor Polisi*" required variant="outlined"
+              density="compact" class="mb-3"></v-text-field>
+            <v-text-field v-model="editableVehicle.merkTipe" label="Merk / Tipe Kendaraan*" required variant="outlined"
+              density="compact" placeholder="Contoh: Honda Vario 125 2020"></v-text-field>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="grey darken-1" variant="text" @click="cancelVehicleEdit">Batal</v-btn>
+            <v-btn color="info" variant="flat" @click="saveVehicle" :loading="isSavingVehicle">Simpan</v-btn>
+          </v-card-actions>
+        </v-form>
       </v-card>
     </v-dialog>
 
@@ -168,7 +286,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted } from "vue";
+import { ref, reactive, computed, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
 import {
   getCustomerById,
@@ -186,6 +304,7 @@ const props = defineProps({
 });
 
 const router = useRouter();
+const editVehicleForm = ref(null); // Add missing ref for the form
 const customer = ref(null);
 const vehicles = ref([]);
 const serviceHistory = ref([]);
@@ -458,9 +577,120 @@ function executeDeleteVehicle() {
   }
 }
 
+// Helper functions for service status
+function getServiceStatusColor(status) {
+  switch (status) {
+    case 'Selesai': return 'success-lighten-4';
+    case 'Dalam Pengerjaan': return 'warning-lighten-4';
+    case 'Menunggu': return 'grey-lighten-3';
+    default: return 'grey-lighten-3';
+  }
+}
+
+function getServiceStatusIcon(status) {
+  switch (status) {
+    case 'Selesai': return 'mdi-check-circle';
+    case 'Dalam Pengerjaan': return 'mdi-progress-wrench';
+    case 'Menunggu': return 'mdi-clock-outline';
+    default: return 'mdi-help-circle';
+  }
+}
+
+function getServiceIconColor(status) {
+  switch (status) {
+    case 'Selesai': return 'success';
+    case 'Dalam Pengerjaan': return 'warning';
+    case 'Menunggu': return 'grey';
+    default: return 'grey';
+  }
+}
+
+function getStatusChipColor(status) {
+  switch (status) {
+    case 'Selesai': return 'success';
+    case 'Dalam Pengerjaan': return 'warning';
+    case 'Menunggu': return 'grey';
+    default: return 'grey';
+  }
+}
+
 
 </script>
 
 <style scoped>
-/* Add specific styles if needed */
+/* Header card styles */
+.header-card {
+  background-color: rgba(var(--v-theme-surface-variant), 0.7);
+  transition: all 0.3s ease;
+}
+
+/* Stat card styles */
+.stat-card {
+  transition: all 0.3s ease;
+  height: 100%;
+}
+
+.stat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Vehicle card styles */
+.vehicle-card {
+  border-top: 2px solid var(--v-theme-info) !important;
+  transition: all 0.3s ease;
+}
+
+.vehicle-item {
+  transition: all 0.3s ease;
+  border-radius: 8px;
+}
+
+.vehicle-item:hover {
+  background-color: rgba(var(--v-theme-info), 0.05);
+}
+
+/* Service card styles */
+.service-card {
+  border-top: 2px solid var(--v-theme-success) !important;
+  transition: all 0.3s ease;
+}
+
+.service-item {
+  transition: all 0.3s ease;
+  border-radius: 8px;
+}
+
+.service-item:hover {
+  background-color: rgba(var(--v-theme-surface-variant), 0.3);
+}
+
+.completed-service {
+  border-left: 3px solid var(--v-theme-success);
+}
+
+/* Dialog styles */
+.dialog-card {
+  border-radius: 16px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+  .v-card-title {
+    font-size: 1rem !important;
+  }
+  
+  .v-card-subtitle {
+    font-size: 0.8rem !important;
+  }
+  
+  .text-h6 {
+    font-size: 1rem !important;
+  }
+  
+  .v-btn {
+    padding: 0 8px !important;
+  }
+}
 </style>
+<!-- Fixed editVehicleForm ref issue -->

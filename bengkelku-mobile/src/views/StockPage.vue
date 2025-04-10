@@ -104,7 +104,7 @@
     <div v-else-if="filteredStock.length > 0">
       <v-row>
         <v-col v-for="item in filteredStock" :key="item.id" cols="12" sm="6" md="4" lg="3">
-          <v-card variant="outlined" :class="{'stock-low-card': Number(item.stokMinimal || 0) > 0 && Number(item.stokSaatIni || 0) <= Number(item.stokMinimal || 0)}">
+          <v-card :class="{'stock-low-card': Number(item.stokMinimal || 0) > 0 && Number(item.stokSaatIni || 0) <= Number(item.stokMinimal || 0)}">
             <!-- Card Header with Stock Status -->
             <v-card-item>
               <template v-slot:prepend>
@@ -134,10 +134,10 @@
 
                 <div class="d-flex align-center">
                   <v-icon size="small" color="grey" class="me-1">mdi-cube-outline</v-icon>
-                  <span class="text-body-2">{{ item.stokSaatIni }} {{ item.satuan }}</span>
+                  <span class="text-body-2">{{ Number(item.stokSaatIni || 0) }} {{ item.satuan || '' }}</span>
                 </div>
 
-                <div class="d-flex align-center" v-if="item.hargaJual">
+                <div class="d-flex align-center" v-if="item && item.hargaJual">
                   <v-icon size="small" color="grey" class="me-1">mdi-tag-outline</v-icon>
                   <span class="text-body-2">{{ formatCurrency(item.hargaJual) }}</span>
                 </div>
@@ -145,8 +145,8 @@
             </v-card-text>
 
             <!-- Stock Progress Bar -->
-            <div class="px-4 pb-2" v-if="item.stokMinimal > 0">
-              <v-tooltip :text="`Minimal: ${item.stokMinimal} ${item.satuan}`">
+            <div class="px-4 pb-2" v-if="item && Number(item.stokMinimal || 0) > 0">
+              <v-tooltip :text="`Minimal: ${Number(item.stokMinimal || 0)} ${item.satuan || ''}`">
                 <template v-slot:activator="{ props }">
                   <v-progress-linear
                     v-bind="props"
@@ -176,7 +176,7 @@
 
               <!-- Edit Button -->
               <v-btn
-                variant="tonal"
+                variant=""
                 color="info"
                 density="comfortable"
                 class="flex-grow-1 action-button"
@@ -188,7 +188,7 @@
 
               <!-- Delete Button -->
               <v-btn
-                variant="tonal"
+                variant=""
                 color="error"
                 density="comfortable"
                 class="flex-grow-1 action-button"
