@@ -1072,15 +1072,15 @@ onMounted(() => {
 }
 
 .workshop-card {
-  border-top: 2px solid var(--v-theme-primary) !important;
+  border-top: 2px solid rgb(var(--v-theme-primary)) !important;
 }
 
 .customer-card {
-  border-top: 2px solid var(--v-theme-info) !important;
+  border-top: 2px solid rgb(var(--v-theme-info)) !important;
 }
 
 .vehicle-card {
-  border-top: 2px solid var(--v-theme-secondary) !important;
+  border-top: 2px solid rgb(var(--v-theme-secondary)) !important;
 }
 
 /* Item styles */
@@ -1090,7 +1090,7 @@ onMounted(() => {
 }
 
 .jasa-item {
-  border-left-color: var(--v-theme-info) !important;
+  border-left-color: rgb(var(--v-theme-info)) !important;
 }
 
 .part-item {
@@ -1098,7 +1098,7 @@ onMounted(() => {
 }
 
 .jasa-row {
-  background-color: rgba(var(--v-theme-info), 0.05);
+  background-color: rgba(rgb(var(--v-theme-info)), 0.05);
 }
 
 .part-row {

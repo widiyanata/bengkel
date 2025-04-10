@@ -1706,7 +1706,7 @@ function executeDelete() {
 }
 
 .selected-service {
-  border: 2px solid var(--v-theme-primary);
+  border: 2px solid rgb(var(--v-theme-primary));
   background-color: rgba(var(--v-theme-primary), 0.05);
 }
 
@@ -1752,7 +1752,7 @@ function executeDelete() {
 }
 
 .selected-part {
-  border: 2px solid var(--v-theme-primary);
+  border: 2px solid rgb(var(--v-theme-primary));
   background-color: rgba(var(--v-theme-primary), 0.05);
 }
 

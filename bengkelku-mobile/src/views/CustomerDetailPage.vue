@@ -637,7 +637,7 @@ function getStatusChipColor(status) {
 
 /* Vehicle card styles */
 .vehicle-card {
-  border-top: 2px solid var(--v-theme-info) !important;
+  border-top: 2px solid rgb(var(--v-theme-info)) !important;
   transition: all 0.3s ease;
 }
 
@@ -647,12 +647,12 @@ function getStatusChipColor(status) {
 }
 
 .vehicle-item:hover {
-  background-color: rgba(var(--v-theme-info), 0.05);
+  background-color: rgba(rgb(var(--v-theme-info)), 0.05);
 }
 
 /* Service card styles */
 .service-card {
-  border-top: 2px solid var(--v-theme-success) !important;
+  border-top: 2px solid rgb(var(--v-theme-success)) !important;
   transition: all 0.3s ease;
 }
 
@@ -666,7 +666,7 @@ function getStatusChipColor(status) {
 }
 
 .completed-service {
-  border-left: 3px solid var(--v-theme-success);
+  border-left: 3px solid rgb(var(--v-theme-success));
 }
 
 /* Dialog styles */

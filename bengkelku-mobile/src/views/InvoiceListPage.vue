@@ -370,11 +370,11 @@ onMounted(() => {
 }
 
 .paid-invoice {
-  border-left: 4px solid var(--v-theme-success) !important;
+  border-left: 4px solid rgb(var(--v-theme-success)) !important;
 }
 
 .unpaid-invoice {
-  border-left: 4px solid var(--v-theme-warning) !important;
+  border-left: 4px solid rgb(var(--v-theme-warning)) !important;
 }
 
 .invoice-avatar {
@@ -417,8 +417,8 @@ onMounted(() => {
   padding: 4px 8px;
   font-size: 0.7rem;
   border-bottom-right-radius: 8px;
-  background-color: rgba(var(--v-theme-info), 0.15);
-  color: var(--v-theme-info);
+  background-color: rgba(rgb(var(--v-theme-info)), 0.15);
+  color: rgb(var(--v-theme-info));
   display: flex;
   align-items: center;
   gap: 4px;

@@ -396,7 +396,7 @@ onUnmounted(() => {
 
 /* Badge Styling */
 .badge-elevated :deep(.v-badge__badge) {
-  border: 2px solid var(--v-theme-surface);
+  border: 2px solid rgb(var(--v-theme-surface));
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   z-index: 101;
   transform: scale(1.2);
