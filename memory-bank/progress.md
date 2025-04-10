@@ -47,6 +47,10 @@
 - **Reporting (Partial):**
     - Basic page (`ReportingPage`) exists.
     - Displays service summary and stock summary (total items, low stock count).
+    - **Added list of low stock items to Stock Summary.**
+    - **Added Daily Revenue report (from completed services).**
+    - **Added Parts Usage report (from completed services).**
+    - **Added Completed Services List report.**
 
 ### UI/UX & PWA
 - **Theme & Style:** Custom light theme (Sleek Grey/Charcoal) and Vuetify MD3 blueprint applied.
@@ -67,8 +71,10 @@
     - Implement robust customer search.
     - Verify service history display is complete and accurate.
 - **Reporting (Basic):**
-    - Implement remaining reports specified in `memori-agment.md`: Daily revenue, parts usage, completed services list.
-    - Enhance existing stock summary (e.g., list low stock items).
+    - **(Implemented)** List low stock items.
+    - **(Implemented)** Daily revenue report.
+    - **(Implemented)** Parts usage report.
+    - **(Implemented)** Completed services list.
 - **Settings (Basic):**
     - Implement printer settings placeholder/logic (if feasible client-side).
     - Implement basic data backup (e.g., export JSON from Local Storage).
