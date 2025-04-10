@@ -1,6 +1,14 @@
 <template>
   <v-container>
-    <h1>Pengaturan</h1>
+    <v-card class="mb-4 header-card" variant="flat">
+      <v-card-item>
+        <template v-slot:prepend>
+          <v-icon size="large" icon="mdi-cog" color="primary" class="me-3"></v-icon>
+        </template>
+        <v-card-title class="text-h5">Pengaturan</v-card-title>
+        <v-card-subtitle>Konfigurasi aplikasi Bengkelku</v-card-subtitle>
+      </v-card-item>
+    </v-card>
 
     <v-list lines="one">
       <v-list-item title="Profil Pengguna" subtitle="Ubah nama, password, dll."

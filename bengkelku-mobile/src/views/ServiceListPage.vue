@@ -1,11 +1,21 @@
 <template>
   <v-container>
-    <div class="d-flex justify-space-between align-center mb-4">
-      <h1>Daftar Servis</h1>
-      <v-btn color="primary" prepend-icon="mdi-plus" to="/servis/baru">
-        Servis Baru
-      </v-btn>
-    </div>
+    <!-- Enhanced Header with Card -->
+    <v-card class="mb-4 header-card" variant="flat">
+      <v-card-item>
+        <template v-slot:prepend>
+          <v-icon size="large" icon="mdi-wrench" color="primary" class="me-3"></v-icon>
+        </template>
+        <v-card-title class="text-h5">Servis</v-card-title>
+        <v-card-subtitle>Kelola servis kendaraan pelanggan</v-card-subtitle>
+        
+        <template v-slot:append>
+          <v-btn color="primary" prepend-icon="mdi-plus" to="/servis/baru">
+            Servis Baru
+          </v-btn>
+        </template>
+      </v-card-item>
+    </v-card>
 
     <!-- Search Bar -->
     <v-text-field

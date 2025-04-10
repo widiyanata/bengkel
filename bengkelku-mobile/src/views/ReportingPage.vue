@@ -1,16 +1,25 @@
 // src/views/ReportingPage.vue
 <template>
-  <v-container class="pa-2 pa-sm-4">
-    <div class="d-flex align-center justify-space-between mb-2 mb-sm-4 flex-wrap">
-      <h1 class="text-h5 text-sm-h4">Laporan Bengkel</h1>
-      <export-button
-        :data="reportData.generateReportData()"
-        filename="bengkelku-report"
-        label="Export"
-        icon="mdi-file-export"
-        density="comfortable"
-      />
-    </div>
+  <v-container>
+    <v-card class="mb-4 header-card" variant="flat">
+      <v-card-item>
+        <template v-slot:prepend>
+          <v-icon size="large" icon="mdi-chart-box" color="primary" class="me-3"></v-icon>
+        </template>
+        <v-card-title class="text-h5">Laporan Bengkel</v-card-title>
+        <v-card-subtitle>Analisis performa bengkel Anda</v-card-subtitle>
+        
+        <template v-slot:append>
+          <export-button
+            :data="reportData.generateReportData()"
+            filename="bengkelku-report"
+            label="Export"
+            icon="mdi-file-export"
+            density="comfortable"
+          />
+        </template>
+      </v-card-item>
+    </v-card>
     
     <!-- Date Range Selector -->
     <report-card
@@ -536,9 +545,9 @@ const safePartsUsageData = computed(() => {
 <style scoped>
 /* Add any additional styles here */
 @media (max-width: 600px) {
-  .v-card-title {
+  /* .v-card-title {
     font-size: 1rem !important;
-  }
+  } */
   
   .v-card-subtitle {
     font-size: 0.75rem !important;

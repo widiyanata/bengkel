@@ -1,15 +1,22 @@
 <template>
   <v-container class="pa-2">
     <!-- Nama Bengkel dan Tanggal -->
-    <div class="d-flex align-center justify-space-between mb-3">
-      <div>
-        <h1 class="text-h6">{{ workshopName }}</h1>
-        <p class="text-caption text-grey">{{ currentDate }}</p>
-      </div>
-      <v-btn color="primary" density="comfortable" prepend-icon="mdi-plus-circle-outline" @click="goToAddService" size="small">
-        Servis Baru
-      </v-btn>
-    </div>
+    <!-- Enhanced Header with Card -->
+    <v-card class="mb-4 header-card" variant="flat">
+      <v-card-item>
+        <template v-slot:prepend>
+          <v-icon size="large" icon="mdi-home" color="primary" class="me-3"></v-icon>
+        </template>
+        <v-card-title class="text-h5">{{ workshopName }}</v-card-title>
+        <v-card-subtitle>{{ currentDate }}</v-card-subtitle>
+        
+        <template v-slot:append>
+          <v-btn color="primary" density="comfortable" prepend-icon="mdi-plus-circle-outline" @click="goToAddService" size="small">
+            Servis Baru
+          </v-btn>
+        </template>
+      </v-card-item>
+    </v-card>
 
     <!-- Loading Indicator -->
     <div v-if="isLoading" class="d-flex justify-center align-center" style="height: 200px">

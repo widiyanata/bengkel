@@ -676,9 +676,9 @@ function getStatusChipColor(status) {
 
 /* Responsive adjustments */
 @media (max-width: 600px) {
-  .v-card-title {
+  /* .v-card-title {
     font-size: 1rem !important;
-  }
+  } */
   
   .v-card-subtitle {
     font-size: 0.8rem !important;

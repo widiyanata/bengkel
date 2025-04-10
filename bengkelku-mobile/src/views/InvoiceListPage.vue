@@ -6,7 +6,7 @@
         <template v-slot:prepend>
           <v-icon size="large" icon="mdi-file-document-multiple" color="primary" class="me-3"></v-icon>
         </template>
-        <v-card-title class="text-h5">Manajemen Invoice</v-card-title>
+        <v-card-title class="text-h5">Invoice</v-card-title>
         <v-card-subtitle>Kelola dan pantau semua invoice bengkel</v-card-subtitle>
 
         <template v-slot:append>
@@ -427,9 +427,9 @@ onMounted(() => {
 
 /* Responsive adjustments */
 @media (max-width: 600px) {
-  .v-card-title {
+  /* .v-card-title {
     font-size: 1rem !important;
-  }
+  } */
 
   .v-card-subtitle {
     font-size: 0.8rem !important;

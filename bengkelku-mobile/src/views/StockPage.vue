@@ -844,10 +844,7 @@ function executeItemDelete() {
 
 /* Responsive adjustments */
 @media (max-width: 600px) {
-  .v-card-title {
-    font-size: 0.95rem !important;
-  }
-
+  
   .action-text {
     font-size: 0.8rem;
   }
