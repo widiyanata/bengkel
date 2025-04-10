@@ -57,7 +57,6 @@
     - Updated `PwaSettingsPage.vue` to use the composable, removing local state management for the prompt.
     - Updated `progress.md` to reflect this refactoring.
 - Modified `AddServicePage.vue` to allow saving services without selecting/adding a customer (walk-in customer). The `addService` function in `localStorage.js` already handles `null` customer/vehicle IDs correctly.
-- Updated this `activeContext.md` file.
 - **Implemented Custom Theme:** Defined and applied a custom light theme (Sleek Grey/Charcoal: Primary `#37474F`, Secondary `#42A5F5`) in `src/plugins/vuetify.js`.
 - **Applied MD3 Blueprint:** Enabled the Vuetify MD3 blueprint in `src/plugins/vuetify.js` to adopt modern Material Design component styles.
 - **Revised Navigation:** Modified `MainLayout.vue`:
@@ -66,15 +65,17 @@
 - **Compact Views:**
     - Refactored `StockPage.vue` to use a compact `v-list` instead of `v-card`s.
     - Applied `density="compact"` to lists, cards, and form fields in `PurchaseCartPage.vue`.
+- **Updated Memory Bank:** Integrated information from `memori-agment.md` into all core Memory Bank files (`projectbrief.md`, `productContext.md`, `systemPatterns.md`, `techContext.md`, `activeContext.md`, `progress.md`).
 
-## 3. Next Steps (Based on `progress.md`)
-With the theme, blueprint, revised navigation, and compactness improvements applied, the next logical steps involve:
-- **Continue UI/UX Polish:** Further refine the UI based on the new theme (e.g., component styling, layout consistency).
-- **Further Enhance Reporting:** Add more detailed reports to `ReportingPage.vue` (e.g., list low stock items, purchase history summary).
-- **Error Handling:** Implement more comprehensive error handling for data operations in `localStorage.js` and component interactions.
+## 3. Next Steps (Based on `progress.md` and updated context)
+With the Memory Bank updated and recent UI changes applied, the next logical steps involve addressing items from `progress.md` and `productContext.md`:
+- **Continue UI/UX Polish:** Systematically review and refine UI components across the application to align with the detailed preferences outlined in `productContext.md` (e.g., specific styles for Dashboard, Stock Page, Invoice Pages, AppBar, Bottom Nav, FAB; ensuring high contrast, smooth transitions, handling nulls gracefully).
+- **Enhance Reporting Page:** Implement the remaining basic reporting features mentioned in `productContext.md` and `progress.md`, such as listing low-stock items and providing a purchase history summary on `ReportingPage.vue`.
+- **Implement Basic Customer Management:** Complete the basic customer management features (database, service history, search) as outlined in the Free Version scope (`productContext.md`). Currently, `CustomerDetailPage.vue` is open, suggesting this might be a good area to focus on.
+- **Error Handling:** Implement more comprehensive error handling, particularly for data operations within `localStorage.js` and related component interactions.
 
 ## 4. Active Decisions & Considerations
-- **Priority:** Continue focusing on **UI/UX Polish** by refining components and layouts to align with the new theme, or enhance the **Reporting** page. Error handling remains important.
-- **Complexity:** UI polish involves reviewing components and potentially adjusting styles/props. Adding reports involves data aggregation. Error handling requires careful consideration of potential failure points.
+- **Priority:** Given the open `CustomerDetailPage.vue` tab and the unimplemented state of basic customer management, focusing on **Implementing Basic Customer Management** seems like a logical next step. Alternatively, continuing with **UI/UX Polish** across other views or **Enhancing the Reporting Page** are also viable options based on `progress.md`. Error handling remains an underlying need.
+- **Complexity:** Customer management involves UI work (lists, details, forms) and data interaction. UI polish requires careful review and styling adjustments. Reporting involves data aggregation from `localStorage.js`. Error handling requires identifying potential failure points.
 
-*This context reflects the state after applying compactness improvements to Stock and Purchase Cart pages. The focus remains on further UI/UX polish or enhancing reporting.*
+*This context reflects the state after updating the Memory Bank based on `memori-agment.md`. The immediate focus could be on completing Customer Management, further UI polish, or enhancing Reporting.*

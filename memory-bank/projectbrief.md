@@ -4,26 +4,35 @@
 Bengkelku Mobile
 
 ## 2. Project Type
-Mobile application (developed using Vue.js, likely intended as a Progressive Web App or for use with a wrapper like Capacitor/Cordova).
+Mobile-first Progressive Web App (PWA) built with Vue.js.
 
-## 3. Core Goal
-To create a digital tool that helps manage the daily operations of an auto repair workshop ("bengkel").
+## 3. Business Model
+- Commercial application with planned Free and Pro versions.
+- Initial development focuses on the Free version.
+- Pro version features intended as add-on modules.
 
-## 4. Key Requirements & Features (Inferred from file structure)
-- **Service Management:** Ability to add new services, list existing services, and view service details.
-- **Inventory Management:** Ability to add new stock items, view current stock levels, and record item purchases.
-- **Customer Management:** Ability to list and manage customer information.
-- **Settings:** Basic application configuration.
-- **User Interface:** Utilize Vuetify components for a consistent look and feel.
-- **Navigation:** Use Vue Router for navigating between different sections of the app.
+## 4. Core Goal
+To create a digital tool that digitizes and streamlines the daily operations of an auto repair workshop ("bengkel").
 
-## 5. Technology Stack (Inferred)
-- **Frontend Framework:** Vue.js 3
-- **UI Library:** Vuetify
-- **Routing:** Vue Router
-- **Build Tool:** Vite
+## 5. Key Requirements & Features (Free Version - Initial Focus)
+- **Service Management:** Record, track status, detail (parts/services), search.
+- **Basic Inventory Management:** Record parts, pricing, search.
+- **Basic Invoice Management:** Create from completed services or walk-in, edit, print/download, track payment status.
+- **Basic Customer Management:** Database, service history, search. (Partially implemented)
+- **Basic Reporting:** Daily revenue, parts usage, completed services. (Partially implemented)
+- **Basic Settings:** Workshop info, user profile. (Partially implemented)
+- **User Interface:** Utilize Vuetify components, adhering to specific UI preferences (see `productContext.md`).
+- **Navigation:** Use Vue Router for SPA navigation.
+- **Data Storage:** Utilize Browser Local Storage.
 
-## 6. Target Users
-Workshop owners, mechanics, or administrative staff managing the workshop.
+## 6. Technology Stack (Confirmed)
+- **Frontend Framework:** Vue.js 3 (^3.5.13)
+- **UI Library:** Vuetify (^3.8.0-beta.0) with MD3 Blueprint
+- **Routing:** Vue Router (^4.5.0)
+- **Build Tool:** Vite (^6.2.0)
+- **PWA:** `vite-plugin-pwa`
 
-*This brief is based on initial analysis and may need refinement as more context is gathered.*
+## 7. Target Users
+Workshop owners, mechanics, or administrative staff managing the workshop. Prioritize ease of use.
+
+*This brief incorporates information from `memori-agment.md` and reflects the current understanding of the project scope.*

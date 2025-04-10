@@ -16,15 +16,21 @@
 - **Likely Approaches:**
     - **Component Local State:** Data is likely managed within individual components using `ref` or `reactive`.
     - **Props/Events:** Parent components might pass data down via props and receive updates via emitted events.
-    - **Provide/Inject:** Vue's provide/inject API might be used for deeper state sharing.
-    - **Local Storage/Session Storage:** Simple persistence might be handled using browser storage (Needs verification).
-- **Future Consideration:** As complexity grows, a dedicated state management solution might be necessary.
+- **Provide/Inject:** Vue's provide/inject API might be used for deeper state sharing (Usage not confirmed).
+- **Local Storage:** **Primary data persistence mechanism.** All core application data (services, stock, customers, vehicles, purchases, settings) is managed via functions within `src/stores/localStorage.js`.
+- **Composables:** Reusable stateful logic is extracted into composables (e.g., `src/composables/usePwaInstall.js`, `useAppStatus.js`, `useDashboardStats.js`).
+- **State Management Library:** No dedicated library (Pinia/Vuex) is currently used. State is managed locally, via props/events, or through composables.
 
-## 4. Component Relationships (High-Level)
-- `main.js` -> Initializes Vue App with `App.vue`
-- `App.vue` -> Uses `MainLayout.vue` and `<router-view>`
-- `MainLayout.vue` -> Provides structure (e.g., App Bar, Navigation) and contains `<router-view>` placeholder.
-- `router/index.js` -> Defines routes mapping paths to specific Views (e.g., `/home` -> `HomePage.vue`).
-- Views (`src/views/*.vue`) -> Represent distinct pages/screens, potentially composing smaller components from `src/components/`.
+## 4. PWA Patterns
+- **Configuration:** `vite-plugin-pwa` is used in `vite.config.js` to configure the manifest, service worker generation (`GenerateSW`), icons, screenshots, etc.
+- **Install Prompt:** Managed via the `beforeinstallprompt` event, typically handled within a composable (`usePwaInstall.js`) and exposed to UI components (`MainLayout.vue`, `PwaSettingsPage.vue`).
 
-*This document reflects patterns inferred from the file structure. Further code analysis is needed for confirmation and detail.*
+## 5. Component Relationships (High-Level)
+- `main.js` -> Initializes Vue App with `App.vue`, registers plugins (Router, Vuetify).
+- `App.vue` -> Uses `MainLayout.vue` and `<router-view>`.
+- `MainLayout.vue` -> Provides structure (App Bar, Bottom Navigation, FAB), contains `<router-view>`, and may utilize composables (e.g., `usePwaInstall`).
+- `router/index.js` -> Defines routes mapping paths to specific Views (e.g., `/stok` -> `StockPage.vue`), uses lazy loading.
+- Views (`src/views/*.vue`) -> Represent distinct pages/screens, potentially composing smaller components from `src/components/` and utilizing composables.
+- `localStorage.js` -> Central module for all data interactions with Browser Local Storage.
+
+*This document incorporates confirmed patterns from code analysis and `memori-agment.md`.*
