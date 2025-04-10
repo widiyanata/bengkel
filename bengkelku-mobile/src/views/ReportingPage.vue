@@ -158,10 +158,16 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-import { getAllServices, getAllItems } from '../stores/localStorage.js'; // Import functions
+// Import necessary functions including customer/vehicle lookups
+import {
+  getAllServices,
+  getAllItems,
+  getCustomerById,
+  getVehicleById,
+} from '../stores/localStorage.js';
 
 const loading = ref(true);
-const services = ref([]);
+const services = ref([]); // This will hold the *enriched* services data
 const stockItems = ref([]); // Add ref for stock items
 
 // Computed properties for reporting
@@ -275,14 +281,29 @@ onMounted(() => {
   loadReportData();
 });
 
+// Modified function to enrich service data
 function loadReportData() {
   loading.value = true;
   try {
-    services.value = getAllServices();
-    stockItems.value = getAllItems(); // Load stock items
-    // Load other data if needed for more reports
+    const rawServices = getAllServices();
+    const rawItems = getAllItems();
+    stockItems.value = rawItems; // Assign stock items directly
+
+    // Enrich services with customer and vehicle data
+    const enrichedServices = rawServices.map(service => {
+      const customer = service.customerId ? getCustomerById(service.customerId) : null;
+      const vehicle = service.vehicleId ? getVehicleById(service.vehicleId) : null;
+      return {
+        ...service,
+        customer: customer, // Add the looked-up customer object
+        vehicle: vehicle,   // Add the looked-up vehicle object
+      };
+    });
+
+    services.value = enrichedServices; // Assign the enriched data
+
   } catch (error) {
-    console.error("Error loading report data:", error);
+    console.error("Error loading or processing report data:", error);
     // Handle error display if necessary
   } finally {
     loading.value = false;
