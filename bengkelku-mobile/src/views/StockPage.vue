@@ -678,19 +678,16 @@ function goToRecordPurchase() {
 function goToRecordPurchaseForItem(item) {
   console.log('Adding item to purchase cart:', item.nama, 'ID:', item.id);
   try {
-    // Fetch full item details to get current purchase price if needed
     const fullItemData = getItemById(item.id);
     const itemToAdd = {
       itemId: item.id,
       nama: item.nama,
       satuan: item.satuan,
-      jumlahBeli: 1, // Default quantity to add
-      hargaBeli: fullItemData?.hargaBeli || null // Use last known purchase price or null
+      jumlahBeli: 1,
+      hargaBeli: fullItemData?.hargaBeli || null
     };
     addItemToCart(itemToAdd);
     showSnackbar(`${item.nama} ditambahkan ke keranjang pembelian.`, 'success');
-    // Optionally navigate to the cart page immediately? Or just add? Staying here for now.
-    // router.push('/keranjang-pembelian'); // Need to create this route/page
   } catch (error) {
     console.error("Error adding item to cart:", error);
     showSnackbar("Gagal menambahkan item ke keranjang.", 'error');
