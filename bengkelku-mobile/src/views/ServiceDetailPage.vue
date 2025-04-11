@@ -329,6 +329,15 @@
               </v-chip>
               <v-chip
                 filter
+                value="Selesai"
+                color="green"
+                :prepend-icon="getStatusIcon('Selesai')"
+                class="status-chip"
+              >
+                Selesai
+              </v-chip>
+              <v-chip
+                filter
                 value="Dikerjakan"
                 color="orange"
                 :prepend-icon="getStatusIcon('Dikerjakan')"
@@ -344,15 +353,6 @@
                 class="status-chip"
               >
                 Tunggu Part
-              </v-chip>
-              <v-chip
-                filter
-                value="Selesai"
-                color="green"
-                :prepend-icon="getStatusIcon('Selesai')"
-                class="status-chip"
-              >
-                Selesai
               </v-chip>
             </v-chip-group>
           </div>
@@ -491,7 +491,7 @@
                 v-model="jasaSearchQuery"
                 prepend-inner-icon="mdi-magnify"
                 label="Cari jasa..."
-                variant="flat"
+                variant="outlined"
                 density="compact"
                 hide-details
                 class="mb-2"
@@ -539,7 +539,7 @@
                 v-model="newJasa.deskripsi"
                 label="Deskripsi Jasa*"
                 required
-                variant="flat"
+                variant="outlined"
                 density="compact"
                 class="mb-2"
                 hide-details
@@ -551,7 +551,7 @@
                 type="number"
                 prefix="Rp"
                 required
-                variant="flat"
+                variant="outlined"
                 density="compact"
                 class="mb-2"
                 hide-details
@@ -644,7 +644,7 @@
               v-model="partSearchQuery"
               prepend-inner-icon="mdi-magnify"
               label="Cari nama atau kode part..."
-              variant="flat"
+              variant="outlined"
               density="compact"
               hide-details
               class="flex-grow-1"
@@ -657,7 +657,7 @@
               v-model="partCategoryFilter"
               :items="partCategories"
               label="Kategori"
-              variant="flat"
+              variant="outlined"
               density="compact"
               hide-details
               class="part-category-filter"
@@ -721,7 +721,7 @@
                 type="number"
                 min="1"
                 :max="selectedPart.stokSaatIni || 0"
-                variant="flat"
+                variant="outlined"
                 density="compact"
                 hide-details
                 class="quantity-input mx-1"
