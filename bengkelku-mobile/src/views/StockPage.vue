@@ -1,6 +1,6 @@
 
 <template>
-  <v-container class="pa-2">
+  <v-container>
     <!-- Compact Header -->
     <v-card class="mb-4 header-card" variant="flat">
       <v-card-item>
@@ -106,9 +106,9 @@
       >
         <div class="d-flex align-center pa-2">
           <!-- Status Icon -->
-          <v-avatar :color="getStockStatusColor(item)" size="32" class="me-2">
+          <!-- <v-avatar :color="getStockStatusColor(item)" size="32" class="me-2">
             <v-icon icon="mdi-package-variant" size="small" color="white"></v-icon>
-          </v-avatar>
+          </v-avatar> -->
           
           <!-- Item Info -->
           <div class="flex-grow-1 item-info">
@@ -121,8 +121,13 @@
                 variant="elevated"
                 class="ms-1"
               >
-                Stok Menipis
+                Menipis
               </v-chip>
+              <div class="flex-wrap ga-1 bg-surface-variant rounded">
+                <v-btn size="x-small" variant="text" color="secondary" @click="goToRecordPurchaseForItem(item)" prepend-icon="mdi-cart-plus" title="Beli"></v-btn>
+                <v-btn size="x-small" variant="text" @click="openEditItemDialog(item)" prepend-icon="mdi-pencil-outline" title="Edit"></v-btn>
+                <v-btn size="x-small" variant="text" @click="openDeleteItemDialog(item)" prepend-icon="mdi-delete-outline" title="Hapus" color="error"></v-btn>
+              </div>
             </div>
             
             <div class="d-flex align-center justify-space-between mt-1">
@@ -136,7 +141,7 @@
           </div>
           
           <!-- Action Menu -->
-          <v-menu location="bottom end">
+          <!-- <v-menu location="bottom end">
             <template v-slot:activator="{ props }">
               <v-btn
                 v-bind="props"
@@ -151,7 +156,7 @@
               <v-list-item @click="openEditItemDialog(item)" prepend-icon="mdi-pencil-outline" title="Edit"></v-list-item>
               <v-list-item @click="openDeleteItemDialog(item)" prepend-icon="mdi-delete-outline" title="Hapus" color="error"></v-list-item>
             </v-list>
-          </v-menu>
+          </v-menu> -->
         </div>
         
         <!-- Stock Progress Bar -->
@@ -816,26 +821,4 @@ function executeItemDelete() {
   z-index: 100;
 } */
 
-/* Responsive Adjustments */
-@media (max-width: 600px) {
-  .v-container {
-    padding: 8px !important;
-  }
-  
-  .stock-item-card {
-    margin-bottom: 8px;
-  }
-  
-  .text-subtitle-1 {
-    font-size: 0.9rem !important;
-  }
-  
-  .text-body-2 {
-    font-size: 0.8rem !important;
-  }
-  
-  .text-caption {
-    font-size: 0.7rem !important;
-  }
-}
 </style>
