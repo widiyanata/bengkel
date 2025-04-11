@@ -358,6 +358,10 @@ onUnmounted(() => {
   opacity: 1;
 }
 
+.cart-btn {
+  bottom: 150px!important; /* Adjusted for the wrapper padding */
+}
+
 .fab-hidden {
   transform: scale(0.8) translateY(80px);
   opacity: 0;
