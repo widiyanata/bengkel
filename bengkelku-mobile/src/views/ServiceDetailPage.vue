@@ -1,457 +1,326 @@
 <template>
   <v-container>
     <div v-if="service && !loading">
-      <!-- Breadcrumb Navigation -->
-      <div class="d-flex align-center mb-3">
-        <v-btn variant="text" density="compact" icon="mdi-arrow-left" @click="goBack" class="me-2"></v-btn>
-        <div class="text-grey">Daftar Servis</div>
-        <v-icon size="small" class="mx-1">mdi-chevron-right</v-icon>
-        <div class="font-weight-medium">Detail Servis</div>
-      </div>
-
-      <!-- Enhanced Header -->
-      <div class="d-flex flex-column flex-sm-row justify-space-between align-sm-center mb-4 gap-2">
+      <!-- Simplified Header -->
+      <div class="d-flex align-center mb-6">
+        <v-btn variant="text" icon="mdi-arrow-left" @click="goBack"></v-btn>
         <div>
-          <h1 class="text-h4 mb-1">{{ service.nomorPolisi }}</h1>
-          <div class="text-subtitle-1 text-medium-emphasis">{{ service.customerName || 'Pelanggan Tidak Diketahui' }}</div>
-        </div>
-        <div class="d-flex align-center">
-          <v-chip
-            :color="getStatusColor(service.status)"
-            :prepend-icon="getStatusIcon(service.status)"
-            size="large"
-            label
-            class="status-chip"
-          >
-            {{ service.status }}
-          </v-chip>
+          <h2 class="text-h5 mb-1">{{ service.nomorPolisi }}</h2>
+          <div class="d-flex align-center">
+            <span class="text-body-1 text-medium-emphasis">{{ service.customerName }}</span>
+            <v-chip
+              :color="getStatusColor(service.status)"
+              size="small"
+              class="ml-2"
+              density="comfortable"
+            >
+              {{ service.status }}
+            </v-chip>
+          </div>
         </div>
       </div>
 
-      <!-- Customer & Vehicle Info -->
-      <v-card variant="flat" class="mb-4 info-card">
-        <v-card-item>
-          <template v-slot:prepend>
-            <v-icon icon="mdi-car-info" color="primary" class="me-2"></v-icon>
-          </template>
-          <v-card-title>Informasi Kendaraan & Pelanggan</v-card-title>
-        </v-card-item>
-        <v-card-text class="pt-0">
-          <v-row dense>
-            <v-col cols="12" sm="6">
-              <div class="d-flex align-center mb-2">
-                <v-icon size="small" color="grey" class="me-2">mdi-car</v-icon>
-                <div><strong>Kendaraan:</strong> {{ service.vehicleInfo || 'Tidak Ditemukan' }}</div>
+      <!-- Main Content Cards -->
+      <v-row>
+        <!-- Left Column -->
+        <v-col cols="12" md="8">
+          <!-- Vehicle & Customer Info -->
+          <v-card class="mb-4">
+            <v-card-text>
+              <div class="d-flex flex-wrap gap-4">
+                <div>
+                  <div class="text-caption text-medium-emphasis mb-1">Kendaraan</div>
+                  <div class="d-flex align-center">
+                    <v-icon size="small" color="primary" class="mr-2">mdi-car</v-icon>
+                    <span>{{ service.vehicleInfo }}</span>
+                  </div>
+                </div>
+                <div>
+                  <div class="text-caption text-medium-emphasis mb-1">No. Polisi</div>
+                  <div class="d-flex align-center">
+                    <v-icon size="small" color="primary" class="mr-2">mdi-card-account-details</v-icon>
+                    <span>{{ service.nomorPolisi }}</span>
+                  </div>
+                </div>
+                <div>
+                  <div class="text-caption text-medium-emphasis mb-1">Pelanggan</div>
+                  <div class="d-flex align-center">
+                    <v-icon size="small" color="primary" class="mr-2">mdi-account</v-icon>
+                    <span>{{ service.customerName }}</span>
+                  </div>
+                </div>
+                <div v-if="service.customerPhone">
+                  <div class="text-caption text-medium-emphasis mb-1">Telepon</div>
+                  <div class="d-flex align-center">
+                    <v-icon size="small" color="primary" class="mr-2">mdi-phone</v-icon>
+                    <span>{{ service.customerPhone }}</span>
+                  </div>
+                </div>
               </div>
-              <div class="d-flex align-center mb-2">
-                <v-icon size="small" color="grey" class="me-2">mdi-card-account-details-outline</v-icon>
-                <div><strong>No. Polisi:</strong> {{ service.nomorPolisi }}</div>
-              </div>
-            </v-col>
-            <v-col cols="12" sm="6">
-              <div class="d-flex align-center mb-2">
-                <v-icon size="small" color="grey" class="me-2">mdi-account</v-icon>
-                <div><strong>Pelanggan:</strong> {{ service.customerName || 'Tidak Ditemukan' }}</div>
-              </div>
-              <div v-if="service.customerPhone" class="d-flex align-center mb-2">
-                <v-icon size="small" color="grey" class="me-2">mdi-phone</v-icon>
-                <div><strong>No. HP:</strong> {{ service.customerPhone }}</div>
-              </div>
-            </v-col>
-          </v-row>
-          <div class="d-flex align-center mt-2 text-caption text-grey">
-            <v-icon size="x-small" class="me-1">mdi-calendar-clock</v-icon>
-            <span>Tanggal Masuk: {{ formatTimestamp(service.timestamp) }}</span>
-          </div>
-        </v-card-text>
-      </v-card>
+            </v-card-text>
+          </v-card>
 
-      <!-- Initial Complaint -->
-      <v-card variant="flat" class="mb-4 info-card">
-        <v-card-item>
-          <template v-slot:prepend>
-            <v-icon icon="mdi-wrench" color="primary" class="me-2"></v-icon>
-          </template>
-          <v-card-title>Keluhan Awal & Jenis Servis</v-card-title>
-        </v-card-item>
-        <v-card-text class="pt-0">
-          <div class="d-flex align-start mb-3">
-            <v-icon size="small" color="grey" class="me-2 mt-1">mdi-tools</v-icon>
-            <div>
-              <div class="font-weight-medium mb-1">Jenis Servis Diminta:</div>
-              <div class="d-flex flex-wrap gap-1">
+          <!-- Service Details -->
+          <v-card class="mb-4">
+            <v-card-text>
+              <div class="d-flex flex-column gap-2">
+                <!-- Service Types & Complaint in one row -->
+                <div class="d-flex flex-wrap gap-4">
+                  <!-- Service Types -->
+                  <div class="flex-grow-1">
+                    <div class="d-flex align-center mb-1">
+                      <v-icon size="small" color="primary" class="mr-2">mdi-wrench</v-icon>
+                      <span class="text-subtitle-2">Jenis Servis</span>
+                    </div>
+                    <div class="d-flex flex-wrap gap-1">
+                      <v-chip
+                        v-for="type in service.jenisServisNames"
+                        :key="type"
+                        size="x-small"
+                        variant="flat"
+                        color="primary"
+                        density="compact"
+                      >
+                        {{ type }}
+                      </v-chip>
+                    </div>
+                  </div>
+
+                  <!-- Complaint -->
+                  <div class="flex-grow-1">
+                    <div class="d-flex align-center mb-1">
+                      <v-icon size="small" color="warning" class="mr-2">mdi-alert-circle</v-icon>
+                      <span class="text-subtitle-2">Keluhan</span>
+                    </div>
+                    <p class="text-body-2 text-medium-emphasis mb-0">
+                      {{ service.keterangan || 'Tidak ada keluhan tercatat' }}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </v-card-text>
+          </v-card>
+
+          <!-- Parts & Services -->
+          <v-card>
+            <v-tabs v-model="activeTab">
+              <v-tab value="jasa">Jasa</v-tab>
+              <v-tab value="parts">Spare Parts</v-tab>
+            </v-tabs>
+
+            <v-card-text>
+              <v-window v-model="activeTab">
+                <!-- Jasa Tab -->
+                <v-window-item value="jasa">
+                  <div class="d-flex justify-space-between align-center mb-3">
+                    <div class="text-h6">Jasa Servis</div>
+                    <v-btn
+                      color="primary"
+                      prepend-icon="mdi-plus"
+                      @click="openAddJasaDialog"
+                      :disabled="invoicePaid"
+                    >
+                      Tambah
+                    </v-btn>
+                  </div>
+                  
+                  <v-table v-if="service.jasa?.length">
+                    <tbody>
+                      <tr v-for="(item, index) in service.jasa" :key="index">
+                        <td>{{ item.deskripsi }}</td>
+                        <td class="text-right">{{ formatCurrency(item.biaya) }}</td>
+                        <td width="50" v-if="!invoicePaid">
+                          <v-btn
+                            icon="mdi-delete"
+                            variant="text"
+                            density="compact"
+                            color="error"
+                            @click="removeJasa(index)"
+                          ></v-btn>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </v-table>
+                  <v-alert
+                    v-else
+                    type="info"
+                    variant="tonal"
+                    density="compact"
+                  >
+                    Belum ada jasa servis tercatat
+                  </v-alert>
+                </v-window-item>
+
+                <!-- Parts Tab -->
+                <v-window-item value="parts">
+                  <div class="d-flex justify-space-between align-center mb-3">
+                    <div class="text-h6">Spare Parts</div>
+                    <v-btn
+                      color="primary"
+                      prepend-icon="mdi-plus"
+                      @click="showAddPartDialog = true"
+                      :disabled="invoicePaid"
+                    >
+                      Tambah
+                    </v-btn>
+                  </div>
+
+                  <v-table v-if="service.parts?.length">
+                    <tbody>
+                      <tr v-for="(part, index) in service.parts" :key="index">
+                        <td>
+                          <div>{{ part.nama }}</div>
+                          <div class="text-caption text-grey">{{ part.kode }}</div>
+                        </td>
+                        <td class="text-center">{{ part.jumlah }} {{ part.satuan }}</td>
+                        <td class="text-right">{{ formatCurrency(part.hargaJual) }}</td>
+                        <td width="50" v-if="!invoicePaid">
+                          <v-btn
+                            icon="mdi-delete"
+                            variant="text"
+                            density="compact"
+                            color="error"
+                            @click="removePart(index)"
+                          ></v-btn>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </v-table>
+                  <v-alert
+                    v-else
+                    type="info"
+                    variant="tonal"
+                    density="compact"
+                  >
+                    Belum ada spare parts tercatat
+                  </v-alert>
+                </v-window-item>
+              </v-window>
+            </v-card-text>
+          </v-card>
+        </v-col>
+
+        <!-- Right Column -->
+        <v-col cols="12" md="4">
+          <v-card class="sticky-card mb-3">
+            <v-card-text>
+              <!-- Status Update -->
+              <div class="d-flex align-center mb-2">
+                <v-icon icon="mdi-clipboard-check-outline" color="primary" class="me-2"></v-icon>
+                <div class="text-subtitle-1 font-weight-medium">Update Status Servis</div>
+              </div>
+              <v-chip-group v-model="editableStatus" mandatory :disabled="invoicePaid" class="status-chips">
                 <v-chip
-                  v-for="(type, index) in service.jenisServisNames"
-                  :key="index"
+                  filter
+                  value="Antri"
+                  color="blue"
+                  :prepend-icon="getStatusIcon('Antri')"
+                  class="status-chip"
                   size="small"
-                  variant="flat"
-                  density="comfortable"
-                  class="service-type-chip"
                 >
-                  {{ type }}
+                  Antri
                 </v-chip>
-                <span v-if="!service.jenisServisNames || service.jenisServisNames.length === 0" class="text-grey">Tidak ada</span>
+                <v-chip
+                  filter
+                  value="Selesai"
+                  color="green"
+                  :prepend-icon="getStatusIcon('Selesai')"
+                  class="status-chip"
+                  size="small"
+                >
+                  Selesai
+                </v-chip>
+                <v-chip
+                  filter
+                  value="Dikerjakan"
+                  color="orange"
+                  :prepend-icon="getStatusIcon('Dikerjakan')"
+                  class="status-chip"
+                  size="small"
+                >
+                  Dikerjakan
+                </v-chip>
+                <v-chip
+                  filter
+                  value="Tunggu Part"
+                  color="purple"
+                  :prepend-icon="getStatusIcon('Tunggu Part')"
+                  class="status-chip"
+                  size="small"
+                >
+                  Tunggu Part
+                </v-chip>
+              </v-chip-group>
+            </v-card-text>
+          </v-card>
+          <!-- Summary Card -->
+          <v-card class="sticky-card">
+            <v-card-text>
+              <h3 class="text-h6 mb-4">Ringkasan Biaya</h3>
+              
+              <div class="d-flex justify-space-between mb-2">
+                <span class="text-body-2">Total Jasa</span>
+                <span class="text-body-2">{{ formatCurrency(totalBiayaJasa) }}</span>
               </div>
-            </div>
-          </div>
-          <div v-if="service.keterangan" class="d-flex align-start">
-            <v-icon size="small" color="grey" class="me-2 mt-1">mdi-comment-text-outline</v-icon>
-            <div>
-              <div class="font-weight-medium mb-1">Keluhan Awal:</div>
-              <div class="complaint-text">{{ service.keterangan }}</div>
-            </div>
-          </div>
-        </v-card-text>
-      </v-card>
-
-      <!-- Jasa / Service Fees -->
-      <v-card variant="flat" class="mb-4 info-card">
-        <v-card-item>
-          <template v-slot:prepend>
-            <v-icon icon="mdi-cash-register" color="primary" class="me-2"></v-icon>
-          </template>
-          <v-card-title>Jasa / Biaya Servis</v-card-title>
-          <template v-slot:append>
-            <v-btn
-              color="secondary"
-              size="small"
-              @click="openAddJasaDialog"
-              prepend-icon="mdi-plus-circle-outline"
-              :disabled="invoicePaid"
-              variant="tonal"
-              rounded
-            >
-              Tambah Jasa
-            </v-btn>
-          </template>
-        </v-card-item>
-        <v-divider></v-divider>
-        <v-card-text class="pa-0">
-          <div v-if="service.jasa && service.jasa.length > 0" class="service-fees-table">
-            <v-table density="comfortable">
-              <thead>
-                <tr>
-                  <th>Deskripsi Jasa</th>
-                  <th class="text-right">Biaya</th>
-                  <th v-if="!invoicePaid" class="text-center" width="50">Aksi</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(j, index) in service.jasa" :key="`jasa-${index}`">
-                  <td>{{ j.deskripsi }}</td>
-                  <td class="text-right font-weight-medium">{{ formatCurrency(j.biaya) }}</td>
-                  <td v-if="!invoicePaid" class="text-center">
-                    <v-btn icon="mdi-delete-outline" variant="text" color="error" size="x-small" density="comfortable"
-                      @click="removeJasa(index)" :disabled="invoicePaid"></v-btn>
-                  </td>
-                </tr>
-                <tr class="total-row">
-                  <td class="text-subtitle-2">Total Jasa</td>
-                  <td class="text-right text-subtitle-2 font-weight-bold">{{ formatCurrency(totalBiayaJasa) }}</td>
-                  <td v-if="!invoicePaid"></td>
-                </tr>
-              </tbody>
-            </v-table>
-          </div>
-          <v-alert v-else type="info" variant="tonal" class="ma-3">Belum ada jasa yang ditambahkan.</v-alert>
-        </v-card-text>
-      </v-card>
-
-      <!-- Spare Parts Used -->
-      <v-card variant="flat" class="mb-4 info-card">
-        <v-card-item>
-          <template v-slot:prepend>
-            <v-icon icon="mdi-cog-outline" color="primary" class="me-2"></v-icon>
-          </template>
-          <v-card-title>Spare Part Digunakan</v-card-title>
-          <template v-slot:append>
-            <v-btn
-              color="secondary"
-              size="small"
-              @click="showAddPartDialog = true"
-              prepend-icon="mdi-plus-circle-outline"
-              :disabled="invoicePaid"
-              variant="tonal"
-              rounded
-            >
-              Tambah Part
-            </v-btn>
-          </template>
-        </v-card-item>
-        <v-divider></v-divider>
-        <v-card-text class="pa-0">
-          <div v-if="service.parts && service.parts.length > 0" class="parts-table">
-            <v-table density="comfortable">
-              <thead>
-                <tr>
-                  <th>Nama Part</th>
-                  <th class="text-center">Jumlah</th>
-                  <th class="text-right">Harga</th>
-                  <th class="text-right">Subtotal</th>
-                  <th v-if="!invoicePaid" class="text-center" width="50">Aksi</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(p, index) in service.parts" :key="`part-${p.itemId}`">
-                  <td>
-                    <div>{{ p.nama }}</div>
-                    <div class="text-caption text-grey">{{ p.kode || 'Kode: N/A' }}</div>
-                  </td>
-                  <td class="text-center">{{ p.jumlah }} {{ p.satuan }}</td>
-                  <td class="text-right">{{ formatCurrency(p.hargaJual) }}</td>
-                  <td class="text-right font-weight-medium">{{ formatCurrency(p.jumlah * p.hargaJual) }}</td>
-                  <td v-if="!invoicePaid" class="text-center">
-                    <v-btn icon="mdi-delete-outline" variant="text" color="error" size="x-small" density="comfortable"
-                      @click="removePart(index)" :disabled="invoicePaid"></v-btn>
-                  </td>
-                </tr>
-                <tr class="total-row">
-                  <td colspan="3" class="text-subtitle-2">Total Spare Part</td>
-                  <td class="text-right text-subtitle-2 font-weight-bold">{{ formatCurrency(totalBiayaParts) }}</td>
-                  <td v-if="!invoicePaid"></td>
-                </tr>
-              </tbody>
-            </v-table>
-          </div>
-          <v-alert v-else type="info" variant="tonal" class="ma-3">Belum ada spare part yang ditambahkan.</v-alert>
-        </v-card-text>
-      </v-card>
-
-      <!-- Cost Summary & Status -->
-      <v-card variant="flat" class="mb-4 info-card">
-        <v-card-item>
-          <template v-slot:prepend>
-            <v-icon icon="mdi-currency-usd" color="primary" class="me-2"></v-icon>
-          </template>
-          <v-card-title>Biaya & Status</v-card-title>
-        </v-card-item>
-        <v-divider></v-divider>
-        <v-card-text>
-          <!-- Cost Summary with Visual Representation -->
-          <v-row class="mt-2">
-            <v-col cols="12" sm="6">
-              <div class="cost-summary-card pa-3 rounded">
-                <div class="d-flex justify-space-between align-center mb-2">
-                  <div class="text-subtitle-2">Total Jasa</div>
-                  <div class="text-subtitle-1 font-weight-medium">{{ formatCurrency(totalBiayaJasa) }}</div>
-                </div>
-                <div class="d-flex justify-space-between align-center mb-2">
-                  <div class="text-subtitle-2">Total Spare Part</div>
-                  <div class="text-subtitle-1 font-weight-medium">{{ formatCurrency(totalBiayaParts) }}</div>
-                </div>
-                <v-divider class="my-2"></v-divider>
-                <div class="d-flex justify-space-between align-center">
-                  <div class="text-subtitle-1 font-weight-bold">Total Keseluruhan</div>
-                  <div class="text-h6 font-weight-bold">{{ formatCurrency(totalBiayaKeseluruhan) }}</div>
-                </div>
+              <div class="d-flex justify-space-between mb-4">
+                <span class="text-body-2">Total Spare Parts</span>
+                <span class="text-body-2">{{ formatCurrency(totalBiayaParts) }}</span>
               </div>
-            </v-col>
-            <v-col cols="12" sm="6">
-              <!-- Cost Breakdown Chart -->
-              <div class="cost-chart-container pa-3 rounded d-flex flex-column align-center justify-center">
-                <div class="text-subtitle-2 mb-2">Perbandingan Biaya</div>
-
-                <!-- Legend -->
-                <div class="cost-legend">
-                  <div class="legend-item">
-                    <div class="legend-color jasa-color"></div>
-                    <span>Jasa</span>
-                  </div>
-                  <div class="legend-item">
-                    <div class="legend-color parts-color"></div>
-                    <span>Spare Part</span>
-                  </div>
-                </div>
-
-                <!-- Chart -->
-                <div class="cost-chart">
-                  <div
-                    class="cost-bar jasa-bar"
-                    :style="{ width: adjustedJasaPercentage + '%' }"
-                    v-if="adjustedJasaPercentage > 0"
-                  >
-                    <span class="cost-label" v-if="adjustedJasaPercentage >= 20">{{ jasaPercentage }}%</span>
-                  </div>
-                  <div
-                    class="cost-bar parts-bar"
-                    :style="{ width: adjustedPartsPercentage + '%' }"
-                    v-if="adjustedPartsPercentage > 0"
-                  >
-                    <span class="cost-label" v-if="adjustedPartsPercentage >= 20">{{ partsPercentage }}%</span>
-                  </div>
-                </div>
-
-                <!-- Percentage labels for small segments -->
-                <div class="d-flex justify-space-between w-100 mt-1" v-if="totalBiayaKeseluruhan > 0">
-                  <div class="text-caption" v-if="adjustedJasaPercentage > 0 && adjustedJasaPercentage < 20">
-                    Jasa: {{ jasaPercentage }}%
-                  </div>
-                  <div></div>
-                  <div class="text-caption" v-if="adjustedPartsPercentage > 0 && adjustedPartsPercentage < 20">
-                    Part: {{ partsPercentage }}%
-                  </div>
-                </div>
-
-                <!-- Actual values -->
-                <div class="d-flex justify-space-between w-100 mt-2" v-if="totalBiayaKeseluruhan > 0">
-                  <div class="text-caption text-primary" v-if="totalBiayaJasa > 0">
-                    {{ formatCurrency(totalBiayaJasa) }}
-                  </div>
-                  <div></div>
-                  <div class="text-caption text-warning" v-if="totalBiayaParts > 0">
-                    {{ formatCurrency(totalBiayaParts) }}
-                  </div>
-                </div>
-
-                <!-- Empty state -->
-                <div v-if="totalBiayaKeseluruhan === 0" class="text-caption text-grey mt-2">
-                  Belum ada biaya yang ditambahkan
-                </div>
+              
+              <div class="d-flex justify-space-between mb-6">
+                <span class="text-h6">Total</span>
+                <span class="text-h6">{{ formatCurrency(totalBiayaKeseluruhan) }}</span>
               </div>
-            </v-col>
-          </v-row>
 
-          <!-- Status Update -->
-          <div class="mt-4">
-            <div class="d-flex align-center mb-2">
-              <v-icon icon="mdi-clipboard-check-outline" color="primary" class="me-2"></v-icon>
-              <div class="text-subtitle-1 font-weight-medium">Update Status Servis</div>
-            </div>
-            <v-chip-group v-model="editableStatus" mandatory :disabled="invoicePaid" class="status-chips">
-              <v-chip
-                filter
-                value="Antri"
-                color="blue"
-                :prepend-icon="getStatusIcon('Antri')"
-                class="status-chip"
-              >
-                Antri
-              </v-chip>
-              <v-chip
-                filter
-                value="Selesai"
-                color="green"
-                :prepend-icon="getStatusIcon('Selesai')"
-                class="status-chip"
-              >
-                Selesai
-              </v-chip>
-              <v-chip
-                filter
-                value="Dikerjakan"
-                color="orange"
-                :prepend-icon="getStatusIcon('Dikerjakan')"
-                class="status-chip"
-              >
-                Dikerjakan
-              </v-chip>
-              <v-chip
-                filter
-                value="Tunggu Part"
-                color="purple"
-                :prepend-icon="getStatusIcon('Tunggu Part')"
-                class="status-chip"
-              >
-                Tunggu Part
-              </v-chip>
-            </v-chip-group>
-          </div>
-        </v-card-text>
-      </v-card>
-
-      <!-- Invoice Paid Warning -->
-      <v-alert v-if="invoicePaid" type="warning" variant="tonal" class="mb-4" icon="mdi-alert-circle">
-        <div class="d-flex align-center">
-          <div>
-            <strong>Perhatian:</strong> Servis ini tidak dapat diedit karena invoice sudah dibayar.
-          </div>
-        </div>
-      </v-alert>
-
-      <!-- Action Buttons Container -->
-      <v-card variant="flat" class="mb-4 action-buttons-card">
-        <v-card-text>
-          <!-- Primary Actions -->
-          <v-row>
-            <v-col cols="12" sm="6">
-              <!-- Save Button -->
+              <!-- Action Buttons -->
               <v-btn
-                color="success"
+                color="primary"
                 block
-                size="large"
-                @click="saveChanges"
-                :loading="isSaving"
-                :disabled="isSaving || invoicePaid"
-                prepend-icon="mdi-content-save-outline"
-                class="action-button"
-              >
-                Simpan Perubahan
-              </v-btn>
-            </v-col>
-            <v-col cols="12" sm="6">
-              <!-- Invoice Button -->
-              <v-btn
-                :color="hasInvoice ? 'primary' : 'secondary'"
-                :variant="hasInvoice ? 'flat' : 'outlined'"
-                block
-                size="large"
+                class="mb-2"
+                :disabled="!canCreateInvoice"
                 @click="createInvoice"
-                prepend-icon="mdi-file-document-outline"
-                :disabled="!canCreateInvoice || !service.status || service.status === 'Dibatalkan'"
-                :title="invoiceButtonTooltip"
-                class="action-button"
               >
                 {{ hasInvoice ? 'Lihat Invoice' : 'Buat Invoice' }}
               </v-btn>
+              
+              <v-btn
+                color="success"
+                block
+                class="mb-2"
+                :loading="isSaving"
+                :disabled="isSaving || invoicePaid"
+                @click="saveChanges"
+              >
+                Simpan
+              </v-btn>
 
-              <!-- Invoice Validation Warning -->
-              <div v-if="!hasInvoice && !canCreateInvoice" class="text-caption text-warning text-center mt-1">
-                {{ invoiceValidationMessage }}
-              </div>
-            </v-col>
-          </v-row>
-
-          <!-- Secondary Actions -->
-          <v-divider class="my-4"></v-divider>
-          <div class="d-flex flex-column flex-sm-row gap-2">
-            <!-- Delete Button -->
-            <v-btn
-              color="error"
-              variant="flat"
-              @click="showDeleteConfirmDialog = true"
-              prepend-icon="mdi-delete-outline"
-              :disabled="invoicePaid"
-              class="secondary-action"
-            >
-              Hapus Servis
-            </v-btn>
-            <!-- Back Button -->
-            <v-btn
-              variant="text"
-              prepend-icon="mdi-arrow-left"
-              @click="goBack"
-              class="secondary-action"
-            >
-              Kembali ke Daftar
-            </v-btn>
-          </div>
-        </v-card-text>
-      </v-card>
-
+              <v-btn
+                color="error"
+                block
+                variant="outlined"
+                :disabled="invoicePaid"
+                @click="showDeleteConfirmDialog = true"
+              >
+                Hapus Servis
+              </v-btn>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
     </div>
-    <!-- Loading / Not Found States -->
-    <div v-else-if="loading" class="text-center">
+
+    <!-- Loading State -->
+    <div v-else-if="loading" class="d-flex justify-center align-center" style="height: 400px">
       <v-progress-circular indeterminate color="primary"></v-progress-circular>
-      <p>Memuat data servis...</p>
-    </div>
-    <div v-else>
-      <v-alert type="warning" variant="tonal">
-        Data servis dengan ID <strong>{{ props.id }}</strong> tidak ditemukan.
-      </v-alert>
-      <v-btn variant="text" block class="mt-2" @click="goBack">Kembali ke Daftar</v-btn>
     </div>
 
-    <!-- Dialog Add Jasa -->
+    <!-- Not Found State -->
+    <v-alert v-else type="warning" class="mt-4">
+      Data servis tidak ditemukan
+    </v-alert>
+
+    <!-- Reuse existing dialogs with their current implementation -->
+     <!-- Dialog Add Jasa -->
     <v-dialog v-model="showAddJasaDialog" persistent :max-width="$vuetify.display.xs ? '100%' : '500px'" :fullscreen="$vuetify.display.xs">
       <v-card class="jasa-dialog">
         <v-toolbar density="compact" color="primary" class="mobile-toolbar" v-if="$vuetify.display.xs">
@@ -788,7 +657,6 @@
         </v-btn>
       </template>
     </v-snackbar>
-
   </v-container>
 </template>
 
@@ -820,6 +688,8 @@ const loading = ref(true);
 const isSaving = ref(false);
 const hasInvoice = ref(false);
 const invoicePaid = ref(false); // Track if related invoice is paid
+
+const activeTab = ref('jasa');
 
 // Computed properties for invoice validation
 const canCreateInvoice = computed(() => {
@@ -1798,5 +1668,18 @@ function executeDelete() {
   .status-chip {
     margin-bottom: 8px;
   }
+}
+
+.sticky-card {
+  position: sticky;
+  top: 24px;
+}
+
+.gap-4 {
+  gap: 1rem;
+}
+
+.gap-1 {
+  gap: 0.25rem;
 }
 </style>
