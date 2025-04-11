@@ -117,7 +117,7 @@
             label="Tanggal Mulai"
             type="date"
             density="compact"
-            variant="flat"
+            variant="outlined"
             hide-details
             @update:model-value="updateRange"
           ></v-text-field>
@@ -129,7 +129,7 @@
             label="Tanggal Akhir"
             type="date"
             density="compact"
-            variant="flat"
+            variant="outlined"
             hide-details
             @update:model-value="updateRange"
           ></v-text-field>
@@ -151,7 +151,7 @@
         <v-col cols="3">
           <v-btn
             color="primary"
-            variant="text"
+            variant="tonal"
             block
             @click="setRange('today')"
             density="compact"
@@ -162,7 +162,7 @@
         <v-col cols="3">
           <v-btn
             color="primary"
-            variant="text"
+            variant="tonal"
             block
             @click="setRange('week')"
             density="compact"
@@ -173,7 +173,7 @@
         <v-col cols="3">
           <v-btn
             color="primary"
-            variant="text"
+            variant="tonal"
             block
             @click="setRange('month')"
             density="compact"
@@ -184,7 +184,7 @@
         <v-col cols="3">
           <v-btn
             color="primary"
-            variant="text"
+            variant="tonal"
             block
             @click="setRange('last_month')"
             density="compact"

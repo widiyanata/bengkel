@@ -346,10 +346,10 @@ onMounted(() => {
 
 <style scoped>
 /* Header card styles */
-.header-card {
+/* .header-card {
   background-color: rgba(var(--v-theme-surface-variant), 0.7);
   transition: all 0.3s ease;
-}
+} */
 
 /* Filter toggle animation */
 .rotate-icon {

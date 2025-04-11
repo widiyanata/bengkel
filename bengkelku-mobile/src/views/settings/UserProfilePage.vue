@@ -13,7 +13,7 @@
             label="Nama Tampilan*"
             :rules="requiredRule"
             required
-            variant="flat"
+            variant="outlined"
             density="compact"
             class="mb-3"></v-text-field>
           <!-- Password fields are complex and insecure without a backend, omitted for now -->
@@ -23,7 +23,7 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn type="submit" color="primary" :loading="isSaving">Simpan Profil</v-btn>
+          <v-btn type="submit" color="primary" variant="flat" :loading="isSaving">Simpan Profil</v-btn>
         </v-card-actions>
       </v-form>
     </v-card>

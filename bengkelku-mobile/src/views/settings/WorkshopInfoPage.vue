@@ -13,13 +13,13 @@
             label="Nama Bengkel*"
             :rules="requiredRule"
             required
-            variant="flat"
+            variant="outlined"
             density="compact"
             class="mb-3"></v-text-field>
           <v-textarea
             v-model="workshopInfo.alamat"
             label="Alamat Bengkel"
-            variant="flat"
+            variant="outlined"
             density="compact"
             rows="3"
             class="mb-3"></v-textarea>
@@ -28,14 +28,14 @@
             label="Nomor Telepon Bengkel"
             type="tel"
             :rules="phoneRuleOptional"
-            variant="flat"
+            variant="outlined"
             density="compact"
             class="mb-3"></v-text-field>
            <!-- Add other fields like NPWP, footer nota etc. later if needed -->
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn type="submit" color="primary" :loading="isSaving">Simpan Informasi</v-btn>
+          <v-btn type="submit" color="primary" variant="flat" :loading="isSaving">Simpan Informasi</v-btn>
         </v-card-actions>
       </v-form>
     </v-card>
