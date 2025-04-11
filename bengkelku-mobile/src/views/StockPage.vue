@@ -360,6 +360,7 @@ import {
   getItemById,
   doesItemCodeExist, // Import the checker function
 } from "../stores/localStorage.js"; // Import functions
+import { useCartState } from '../composables/useCartState'
 
 const router = useRouter();
 const searchQuery = ref('');
@@ -420,6 +421,8 @@ const isUpdatingItem = ref(false);
 const showDeleteItemDialog = ref(false);
 const itemToDelete = ref(null);
 const isDeletingItem = ref(false);
+
+const { updateCartCount } = useCartState()
 
 // --- Snackbar Helper ---
 function showSnackbar(text, color = "info") {
@@ -658,6 +661,7 @@ function goToRecordPurchaseForItem(item) {
       hargaBeli: fullItemData?.hargaBeli || null
     };
     addItemToCart(itemToAdd);
+    updateCartCount(); // Tambahkan ini untuk update cart count
     showSnackbar(`${item.nama} ditambahkan ke keranjang pembelian.`, 'success');
   } catch (error) {
     console.error("Error adding item to cart:", error);

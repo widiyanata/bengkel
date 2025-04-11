@@ -243,6 +243,7 @@ import { ref, onMounted, onUnmounted, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { usePwaInstall } from '../composables/usePwaInstall.js';
 import { useAppStatus } from '../composables/useAppStatus.js';
+import { useCartState } from '../composables/useCartState';
 
 // Use router for navigation
 const router = useRouter();
@@ -253,7 +254,6 @@ const {
   pendingServicesCount,
   lowStockCount,
   totalNotificationCount,
-  cartItemCount,
   pageTitle,
   fabIcon,
   fabDestination,
@@ -326,6 +326,14 @@ onMounted(() => {
 onUnmounted(() => {
   cleanup();
   window.removeEventListener('scroll', handleScroll);
+});
+
+// Cart state
+const { cartItemCount, updateCartCount } = useCartState();
+
+// Update cart count when component is mounted
+onMounted(() => {
+  updateCartCount();
 });
 </script>
 

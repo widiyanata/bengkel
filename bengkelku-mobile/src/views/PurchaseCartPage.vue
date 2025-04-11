@@ -187,12 +187,15 @@ import {
   clearPurchaseCart,
   recordPurchase, // Import recordPurchase to finalize
 } from "../stores/localStorage.js";
+import { useCartState } from '../composables/useCartState'
 
 const router = useRouter();
 const cartItems = ref([]);
 const loading = ref(false); // Might not be needed if cart loads instantly
 const isSaving = ref(false);
 const showClearCartConfirmDialog = ref(false);
+
+const { updateCartCount } = useCartState()
 
 // Snackbar State
 const snackbar = ref(false);
@@ -265,6 +268,7 @@ function removeItemFromCart(itemId) {
   if (confirm(`Hapus ${cartItems.value.find(i => i.itemId === itemId)?.nama} dari keranjang?`)) {
     removeCartItem(itemId);
     loadCart(); // Reload cart after removal
+    updateCartCount() // Update cart count
   }
 }
 
@@ -275,6 +279,7 @@ function confirmClearCart() {
 function executeClearCart() {
   clearPurchaseCart();
   loadCart();
+  updateCartCount() // Update cart count
   showClearCartConfirmDialog.value = false;
 }
 
