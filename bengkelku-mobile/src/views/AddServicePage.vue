@@ -1,7 +1,7 @@
 <template>
   <v-container class="add-service-container">
     <!-- Header with Breadcrumb -->
-    <div class="page-header mb-4">
+    <div class="page-header mb-2">
       <div class="d-flex align-center mb-2">
         <v-breadcrumbs :items="breadcrumbs" density="compact" class="pa-0"></v-breadcrumbs>
       </div>
@@ -13,7 +13,7 @@
 
     <v-form ref="form">
       <!-- Identifikasi Kendaraan -->
-      <v-card variant="flat" class="mb-4 vehicle-card">
+      <v-card variant="flat" class="mb-2 vehicle-card">
         <v-card-item>
           <template v-slot:prepend>
             <v-icon icon="mdi-car" color="primary" class="me-2"></v-icon>
@@ -21,7 +21,7 @@
           <v-card-title>Kendaraan</v-card-title>
         </v-card-item>
         <v-divider></v-divider>
-        <v-card-text class="pt-4">
+        <v-card-text class="">
           <v-text-field
             v-model="serviceData.nomorPolisi"
             label="Nomor Polisi*"
@@ -45,8 +45,8 @@
           </div>
 
           <!-- Display Selected Vehicle -->
-          <v-card v-if="serviceData.selectedVehicleInfo" color="success" variant="tonal" class="mb-3 selected-vehicle-card">
-            <v-card-item>
+          <v-card v-if="serviceData.selectedVehicleInfo" color="success" variant="tonal" class="selected-vehicle-card">
+            <!-- <v-card-item>
               <template v-slot:prepend>
                 <v-avatar color="success" variant="tonal">
                   <v-icon icon="mdi-check-circle"></v-icon>
@@ -56,28 +56,27 @@
               <template v-slot:append>
                 <v-btn icon="mdi-close-circle" variant="text" size="small" @click="clearSelectedVehicle"></v-btn>
               </template>
-            </v-card-item>
-            <v-card-text>
-              <div class="d-flex align-center mb-1">
-                <v-icon icon="mdi-account" size="small" class="me-2"></v-icon>
-                <span class="text-body-1">{{ serviceData.selectedVehicleInfo.customerName }}</span>
-              </div>
-              <div class="d-flex align-center mb-1">
-                <v-icon icon="mdi-car" size="small" class="me-2"></v-icon>
-                <span class="text-body-1">{{ serviceData.selectedVehicleInfo.vehicleInfo }}</span>
-              </div>
-              <div class="d-flex align-center">
-                <v-icon icon="mdi-license" size="small" class="me-2"></v-icon>
-                <span class="text-body-1">{{ serviceData.selectedVehicleInfo.nomorPolisi }}</span>
+            </v-card-item> -->
+            <!-- <v-divider></v-divider> -->
+            <v-card-text class="pa-2">
+              <div class="d-flex align-center justify-space-between">
+                <div>
+                  <div class="text-body-1 font-weight-medium">{{ serviceData.selectedVehicleInfo.nomorPolisi }}</div>
+                  <div class="text-caption text-grey">
+                    {{ serviceData.selectedVehicleInfo.customerName }} - {{ serviceData.selectedVehicleInfo.vehicleInfo }}
+                  </div>
+                </div>
+                <v-btn icon="mdi-close-circle" variant="text" size="small" @click="clearSelectedVehicle"></v-btn>
               </div>
             </v-card-text>
+            
           </v-card>
 
           <!-- Search Results / Add New Button (only show if no vehicle selected) -->
           <div v-if="!serviceData.selectedVehicleInfo" class="mt-2">
             <!-- Search Result Found -->
-            <v-card v-if="searchResult" variant="flat" class="mb-3 search-result-card">
-              <v-card-item>
+            <v-card v-if="searchResult" variant="tonal" color="info" class="mb-3 search-result-card">
+              <!-- <v-card-item>
                 <template v-slot:prepend>
                   <v-avatar color="info" variant="tonal">
                     <v-icon icon="mdi-car-search"></v-icon>
@@ -85,26 +84,23 @@
                 </template>
                 <v-card-title class="text-subtitle-1">Kendaraan Ditemukan</v-card-title>
               </v-card-item>
-              <v-card-text>
-                <div class="d-flex align-center mb-1">
-                  <v-icon icon="mdi-account" size="small" class="me-2"></v-icon>
-                  <span class="text-body-1">{{ searchResult.customerName }}</span>
-                </div>
-                <div class="d-flex align-center mb-1">
-                  <v-icon icon="mdi-car" size="small" class="me-2"></v-icon>
-                  <span class="text-body-1">{{ searchResult.merkTipe }}</span>
-                </div>
-                <div class="d-flex align-center">
-                  <v-icon icon="mdi-license" size="small" class="me-2"></v-icon>
-                  <span class="text-body-1">{{ searchResult.nomorPolisi }}</span>
+              <v-divider></v-divider> -->
+              <v-card-text class="pa-2" @click="selectVehicle">
+                <div class="d-flex align-center justify-space-between">
+                  <div>
+                    <div class="text-body-1 font-weight-medium">{{ searchResult.nomorPolisi }}</div>
+                    <div class="text-caption text-grey">
+                      {{ searchResult.customerName }} - {{ searchResult.merkTipe }}
+                    </div>
+                  </div>
+                  <v-icon
+                    :icon="serviceData?.kendaraanId === searchResult.id ? 'mdi-check-circle' : 'mdi-chevron-right'"
+                    :color="serviceData?.kendaraanId === searchResult.id ? 'success' : 'grey'"
+                    size="small"
+                  ></v-icon>
                 </div>
               </v-card-text>
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="primary" variant="tonal" @click="selectVehicle" prepend-icon="mdi-check">
-                  Pilih Kendaraan Ini
-                </v-btn>
-              </v-card-actions>
+              
             </v-card>
 
             <!-- Not Found -->
