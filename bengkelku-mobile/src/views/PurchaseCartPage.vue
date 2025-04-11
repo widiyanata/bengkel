@@ -1,95 +1,178 @@
 <template>
   <v-container>
-    <div class="d-flex justify-space-between align-center mb-4">
-      <h1>Keranjang Pembelian</h1>
-      <v-btn variant="text" @click="goBackToStock">Kembali ke Stok</v-btn>
-    </div>
-
-    <v-card variant="flat" class="mb-4" density="compact"> <!-- Added density -->
-      <v-card-title>Item di Keranjang</v-card-title>
-      <v-card-text>
-        <v-list lines="two" v-if="cartItems.length > 0" density="compact"> <!-- Added density -->
-          <!-- Removed unused 'index' from v-for -->
-          <v-list-item v-for="item in cartItems" :key="item.itemId">
-            <v-list-item-title class="font-weight-bold text-subtitle-1 mb-1">{{ item.nama }}</v-list-item-title>
-            <v-list-item-subtitle class="mt-1">
-              <v-row dense align="center">
-                <v-col cols="4" sm="3">
-                  <v-text-field v-model.number="item.jumlahBeli" label="Jumlah" type="number" min="1" density="compact"
-                    variant="flat" hide-details
-                    @change="updateCartItemQuantity(item.itemId, $event.target.value)"></v-text-field>
-                </v-col>
-                <v-col cols="1" class="text-center">{{ item.satuan }}</v-col>
-                <v-col cols="5" sm="4">
-                  <v-text-field v-model.number="item.hargaBeli" label="Harga Beli" type="number" min="0" prefix="Rp"
-                    density="compact" variant="flat" hide-details
-                    @change="updateCartItemPrice(item.itemId, $event.target.value)"></v-text-field>
-                </v-col>
-                <v-col cols="2" sm="1" class="text-right">
-                  <v-btn icon="mdi-delete-outline" variant="text" color="error" size="small"
-                    @click="removeItemFromCart(item.itemId)"></v-btn>
-                </v-col>
-              </v-row>
-            </v-list-item-subtitle>
-          </v-list-item>
-        </v-list>
-        <v-alert v-else type="info" variant="tonal">Keranjang pembelian kosong.</v-alert>
-      </v-card-text>
-      <v-divider v-if="cartItems.length > 0"></v-divider>
-      <v-card-text v-if="cartItems.length > 0" class="text-right">
-        <strong>Subtotal: {{ formatCurrency(cartSubtotal) }}</strong>
-      </v-card-text>
+    <!-- Modern Header -->
+    <v-card class="mb-4" variant="flat">
+      <v-card-item>
+        <template v-slot:prepend>
+          <v-icon size="large" icon="mdi-cart" color="primary" class="me-3"></v-icon>
+        </template>
+        <v-card-title class="text-h5">Keranjang Pembelian</v-card-title>
+        <v-card-subtitle>Kelola pembelian stok barang</v-card-subtitle>
+        
+        <template v-slot:append>
+          <v-btn variant="text" @click="goBackToStock" prepend-icon="mdi-arrow-left">
+            Kembali
+          </v-btn>
+        </template>
+      </v-card-item>
     </v-card>
 
-    <!-- Purchase Details Form (Supplier, Nota, Date) -->
-    <v-card variant=""  class="mb-4" v-if="cartItems.length > 0" density="compact"> <!-- Added density -->
-      <v-card-title>Detail Pembelian Final</v-card-title>
+    <!-- Cart Items -->
+    <v-card variant="flat" class="mb-4">
+      <v-list v-if="cartItems.length > 0" density="compact">
+        <v-list-item v-for="item in cartItems" :key="item.itemId" class="mb-1">
+          <template v-slot:prepend>
+            <v-icon icon="mdi-package-variant" color="primary"></v-icon>
+          </template>
+          
+          <v-list-item-title class="font-weight-medium">{{ item.nama }}</v-list-item-title>
+          
+          <v-list-item-subtitle>
+            <v-row dense align="center" class="mt-1">
+              <v-col cols="4">
+                <v-text-field
+                  v-model.number="item.jumlahBeli"
+                  label="Jumlah"
+                  type="number"
+                  min="1"
+                  density="compact"
+                  variant="outlined"
+                  hide-details
+                  @change="updateCartItemQuantity(item.itemId, $event.target.value)"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="1" class="text-center">{{ item.satuan }}</v-col>
+              <v-col cols="5">
+                <v-text-field
+                  v-model.number="item.hargaBeli"
+                  label="Harga"
+                  type="number"
+                  min="0"
+                  prefix="Rp"
+                  density="compact"
+                  variant="outlined"
+                  hide-details
+                  @change="updateCartItemPrice(item.itemId, $event.target.value)"
+                ></v-text-field>
+              </v-col>
+              <v-col cols="2" class="text-right">
+                <v-btn
+                  icon="mdi-delete"
+                  variant="text"
+                  color="error"
+                  density="compact"
+                  @click="removeItemFromCart(item.itemId)"
+                ></v-btn>
+              </v-col>
+            </v-row>
+          </v-list-item-subtitle>
+        </v-list-item>
+
+        <v-divider class="my-2"></v-divider>
+        
+        <v-list-item class="justify-end">
+          <div class="text-h6">Total: {{ formatCurrency(cartSubtotal) }}</div>
+        </v-list-item>
+      </v-list>
+      
+      <v-alert v-else type="info" variant="tonal" density="compact">
+        Keranjang pembelian kosong.
+      </v-alert>
+    </v-card>
+
+    <!-- Purchase Details -->
+    <v-card v-if="cartItems.length > 0" variant="flat" class="mb-4">
       <v-card-text>
-        <v-text-field v-model="purchaseDetails.tanggal" label="Tanggal Pembelian*" type="date" required
-          variant="flat" density="compact" class="mb-1"></v-text-field> <!-- Added density -->
-        <v-text-field v-model="purchaseDetails.supplier" label="Supplier (Opsional)" variant="flat"
-          density="compact" class="mb-1"></v-text-field> <!-- Added density -->
-        <v-text-field v-model="purchaseDetails.noNota" label="Nomor Nota/Invoice (Opsional)" variant="flat"
-          density="compact" class="mb-1"></v-text-field> <!-- Added density -->
-        <div class="text-h6 mt-3"><strong>Total Pembelian: {{ formatCurrency(cartSubtotal) }}</strong></div>
+        <v-row dense>
+          <v-col cols="12">
+            <v-text-field
+              v-model="purchaseDetails.tanggal"
+              label="Tanggal Pembelian*"
+              type="date"
+              required
+              variant="outlined"
+              density="compact"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12" sm="6">
+            <v-text-field
+              v-model="purchaseDetails.supplier"
+              label="Supplier"
+              variant="outlined"
+              density="compact"
+              placeholder="Opsional"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12" sm="6">
+            <v-text-field
+              v-model="purchaseDetails.noNota"
+              label="Nomor Nota/Invoice"
+              variant="outlined"
+              density="compact"
+              placeholder="Opsional"
+            ></v-text-field>
+          </v-col>
+        </v-row>
       </v-card-text>
     </v-card>
 
     <!-- Action Buttons -->
-    <v-btn color="primary" size="large" block @click="finalizePurchase" :disabled="cartItems.length === 0"
-      :loading="isSaving">
-      Simpan Pembelian & Update Stok
-    </v-btn>
-    <v-btn color="error" variant="flat" block class="mt-4" @click="confirmClearCart"
-      :disabled="cartItems.length === 0">
-      Kosongkan Keranjang
-    </v-btn>
+    <v-card variant="flat" class="pa-2">
+      <v-row dense>
+        <v-col cols="12">
+          <v-btn
+            color="primary"
+            block
+            @click="finalizePurchase"
+            :disabled="cartItems.length === 0"
+            :loading="isSaving"
+            prepend-icon="mdi-content-save"
+          >
+            Simpan Pembelian
+          </v-btn>
+        </v-col>
+        <v-col cols="12">
+          <v-btn
+            color="error"
+            variant="text"
+            block
+            @click="confirmClearCart"
+            :disabled="cartItems.length === 0"
+            prepend-icon="mdi-delete-sweep"
+          >
+            Kosongkan Keranjang
+          </v-btn>
+        </v-col>
+      </v-row>
+    </v-card>
 
-    <!-- Clear Cart Confirmation Dialog -->
-    <v-dialog v-model="showClearCartConfirmDialog" persistent max-width="400px">
+    <!-- Clear Cart Dialog -->
+    <v-dialog v-model="showClearCartConfirmDialog" persistent max-width="400">
       <v-card>
-        <v-card-title class="text-h5 warning--text">Konfirmasi Kosongkan</v-card-title>
+        <v-card-title class="text-h6">Konfirmasi Kosongkan</v-card-title>
         <v-card-text>
           Apakah Anda yakin ingin menghapus semua item dari keranjang pembelian?
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="grey darken-1" variant="text" @click="showClearCartConfirmDialog = false">Batal</v-btn>
-          <v-btn color="warning" variant="flat" @click="executeClearCart">Ya, Kosongkan</v-btn>
+          <v-btn variant="text" @click="showClearCartConfirmDialog = false">Batal</v-btn>
+          <v-btn color="error" @click="executeClearCart">Ya, Kosongkan</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
 
-    <!-- Snackbar for Notifications -->
-    <v-snackbar v-model="snackbar" :timeout="3000" :color="snackbarColor" location="top right">
+    <!-- Snackbar -->
+    <v-snackbar
+      v-model="snackbar"
+      :timeout="3000"
+      :color="snackbarColor"
+      location="top"
+    >
       {{ snackbarText }}
       <template v-slot:actions>
-        <v-btn color="white" variant="text" @click="snackbar = false">
-          Tutup
-        </v-btn>
+        <v-btn variant="text" @click="snackbar = false">Tutup</v-btn>
       </template>
     </v-snackbar>
-
   </v-container>
 </template>
 
@@ -248,5 +331,27 @@ function goBackToStock() {
 </script>
 
 <style scoped>
-/* Add specific styles if needed */
+.v-list-item {
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.v-list-item:hover {
+  background-color: rgb(var(--v-theme-surface-variant));
+}
+
+.v-text-field :deep(.v-field__input) {
+  min-height: 36px !important;
+}
+
+/* Mobile optimizations */
+@media (max-width: 600px) {
+  .v-card-title {
+    font-size: 1.25rem !important;
+  }
+  
+  .v-card-subtitle {
+    font-size: 0.875rem !important;
+  }
+}
 </style>
