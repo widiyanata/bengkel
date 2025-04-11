@@ -82,7 +82,7 @@ export function useAppStatus() {
 
   const showFab = computed(() => {
     const path = route.path;
-    // Don't show FAB on detail pages or form pages
+    // Simplified logic to show FAB
     return !path.includes('/baru') &&
            !path.includes('/edit') &&
            !path.includes('/keranjang-pembelian') &&
@@ -104,39 +104,11 @@ export function useAppStatus() {
 
   // Handle scroll to hide/show bottom nav and FAB
   function handleScroll() {
-    const currentScrollPosition = window.pageYOffset;
-    if (currentScrollPosition < 0) return;
-
-    // Calculate if we're at the bottom of the page
-    const windowHeight = window.innerHeight;
-    const documentHeight = document.documentElement.scrollHeight;
-    const scrollPosition = window.scrollY;
-
-    // Check if the page is scrollable
-    const isScrollable = documentHeight > windowHeight;
-
-    // If page is not scrollable, always show FAB
-    if (!isScrollable) {
-      isAtBottom.value = false;
+    if (!hideFab.value && window.scrollY > 100) {
+      hideFab.value = true;
+    } else if (hideFab.value && window.scrollY <= 100) {
       hideFab.value = false;
-      hideBottomNav.value = false;
-      return;
     }
-
-    // Check if we're at the bottom (with a larger threshold for smoother transition)
-    isAtBottom.value = (windowHeight + scrollPosition) >= (documentHeight - 150);
-
-    // Hide bottom nav when scrolling down, show when scrolling up
-    if (currentScrollPosition > lastScrollPosition.value + 30) {
-      hideBottomNav.value = true;
-    } else if (currentScrollPosition < lastScrollPosition.value - 30) {
-      hideBottomNav.value = false;
-    }
-
-    // Hide FAB when at the bottom, show otherwise
-    hideFab.value = isAtBottom.value;
-
-    lastScrollPosition.value = currentScrollPosition;
   }
 
   // Toggle search
