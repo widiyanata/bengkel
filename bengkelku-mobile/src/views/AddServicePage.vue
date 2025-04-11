@@ -235,8 +235,8 @@
           <v-card-title>Jasa & Spare Part</v-card-title>
           <template v-slot:append>
             <v-btn
-              color="primary"
-              variant="text"
+              color="success"
+              variant="tonal"
               prepend-icon="mdi-plus"
               @click="showAddItemDialog = true"
               size="small"
@@ -246,7 +246,7 @@
           </template>
         </v-card-item>
         <v-divider></v-divider>
-        <v-card-text>
+        <v-card-text class="pa-2">
           <div v-if="hasItems" class="mb-3">
             <v-list density="compact" class="pa-0 mb-2">
               <!-- Jasa Items -->
@@ -254,7 +254,7 @@
                 v-for="(jasa, index) in serviceData.jasa"
                 :key="`jasa-${index}`"
                 :subtitle="formatCurrency(jasa.biaya)"
-                class="px-2 py-1 mb-1 rounded"
+                class="px-1 py-1 mb-1 rounded"
                 density="compact"
                 variant="flat"
               >
@@ -276,12 +276,12 @@
                 v-for="(part, index) in serviceData.parts"
                 :key="`part-${index}`"
                 :subtitle="`${part.jumlah} ${part.satuan} × ${formatCurrency(part.hargaJual)}`"
-                class="px-2 py-1 mb-1 rounded"
+                class="px-1 py-1 mb-1 rounded"
                 density="compact"
                 variant="flat"
               >
                 <template v-slot:prepend>
-                  <v-icon icon="mdi-package-variant" size="small" color="primary"></v-icon>
+                  <v-icon icon="mdi-package-variant" size="small" color="secondary"></v-icon>
                 </template>
                 <v-list-item-title>{{ part.nama }}</v-list-item-title>
                 <template v-slot:append>
@@ -400,7 +400,7 @@
           </v-toolbar>
 
           <template v-if="!$vuetify.display.xs">
-            <v-card-title class="d-flex align-center py-2">
+            <v-card-title class="d-flex align-center py-2 bg-primary">
               <v-icon icon="mdi-cart-plus" color="primary" class="me-2"></v-icon>
               Tambah Item
             </v-card-title>
@@ -428,7 +428,7 @@
                       v-model="jasaSearchQuery"
                       prepend-inner-icon="mdi-magnify"
                       label="Cari jasa..."
-                      variant="flat"
+                      variant="outlined"
                       density="compact"
                       hide-details
                       class="mb-2"
@@ -466,7 +466,7 @@
                       <v-text-field
                         v-model="newJasa.deskripsi"
                         label="Deskripsi Jasa*"
-                        variant="flat"
+                        variant="outlined"
                         density="compact"
                         placeholder="Contoh: Ganti Oli Mesin"
                         :rules="[v => !!v || 'Deskripsi jasa wajib diisi']"
@@ -475,7 +475,7 @@
                       <v-text-field
                         v-model.number="newJasa.biaya"
                         label="Biaya Jasa*"
-                        variant="flat"
+                        variant="outlined"
                         density="compact"
                         type="number"
                         prefix="Rp"
@@ -499,7 +499,7 @@
                     v-model="partSearchQuery"
                     prepend-inner-icon="mdi-magnify"
                     label="Cari nama atau kode part..."
-                    variant="flat"
+                    variant="outlined"
                     density="compact"
                     hide-details
                     class="flex-grow-1"
@@ -512,7 +512,7 @@
                     v-model="partCategoryFilter"
                     :items="partCategories"
                     label="Kategori"
-                    variant="flat"
+                    variant="outlined"
                     density="compact"
                     hide-details
                     class="part-category-filter"
@@ -530,7 +530,7 @@
                   <v-card
                     v-for="part in filteredParts"
                     :key="part.id"
-                    variant="flat"
+                    variant="tonal"
                     class="part-card"
                     @click="selectPart(part)"
                     :class="{ 'selected-part': selectedPart && selectedPart.id === part.id }"
@@ -577,7 +577,7 @@
                     v-model.number="newPart.jumlah"
                     label="Jumlah*"
                     type="number"
-                    variant="flat"
+                    variant="outlined"
                     density="compact"
                     :suffix="selectedPart.satuan"
                     :rules="[
@@ -1129,7 +1129,7 @@ function addJasaToList() {
   showSnackbar(`Jasa "${jasaToAdd.deskripsi}" berhasil ditambahkan.`, "success");
   
   // Reset and close dialog
-  cancelAddItem();
+  // cancelAddItem();
 }
 
 function removeJasa(index) {
@@ -1230,7 +1230,7 @@ function addPartToList() {
   }
   
   // Reset and close dialog
-  cancelAddItem();
+  // cancelAddItem();
 }
 
 function removePart(index) {

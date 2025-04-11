@@ -19,6 +19,6 @@
 8. Global searching belum bisa
 9. Notifikasi: ikon stok menipis tidak ada
 10. Filter laporan di mobile terlalu besar, kalu bisa di hide/collapse dulu
-11. Pendapatan dari invoice langsung tidak masuk?
+11. Data dari invoice pelanggan langsung tidak masuk ke laporan pendapatan
     
    

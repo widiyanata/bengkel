@@ -114,7 +114,7 @@
             Sebelumnya
           </div>
           <v-row dense>
-            <v-col v-for="service in olderServices" :key="service.id" cols="12">
+            <v-col v-for="service in olderServices" :key="service.id" cols="12" sm="6">
               <v-card @click="goToServiceDetail(service.id)" class="service-card mb-3" elevation="1">
                 <v-card-item>
                   <template v-slot:prepend>
