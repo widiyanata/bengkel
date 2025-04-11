@@ -137,7 +137,7 @@ export function useAppStatus() {
     // Reset FAB state when changing routes
     hideFab.value = false;
     // Check scroll state after route change and DOM update
-    setTimeout(checkInitialScrollState, 1000);
+    setTimeout(checkInitialScrollState, 3000);
   });
 
   // Check initial scroll state
@@ -167,7 +167,7 @@ export function useAppStatus() {
     window.addEventListener('scroll', handleScroll);
 
     // Initial check after a short delay to ensure DOM is fully rendered
-    setTimeout(checkInitialScrollState, 300);
+    setTimeout(checkInitialScrollState, 3000);
 
     // Also check when window is resized
     window.addEventListener('resize', checkInitialScrollState);
