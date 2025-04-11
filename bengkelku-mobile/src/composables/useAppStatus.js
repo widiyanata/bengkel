@@ -165,7 +165,7 @@ export function useAppStatus() {
     // Reset FAB state when changing routes
     hideFab.value = false;
     // Check scroll state after route change and DOM update
-    setTimeout(checkInitialScrollState, 300);
+    setTimeout(checkInitialScrollState, 1000);
   });
 
   // Check initial scroll state
