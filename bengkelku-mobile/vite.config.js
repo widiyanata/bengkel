@@ -13,8 +13,8 @@ export default defineConfig({
         globPatterns: ['**/*.{js,css,html,ico,png,svg,json,vue,txt,woff2}'], // Cache common assets
       },
       manifest: {
-        name: 'Bengkelku Mobile',
-        short_name: 'Bengkelku',
+        name: 'BengkelPro Mobile',
+        short_name: 'BengkelPro',
         description: 'Aplikasi Manajemen Bengkel Sederhana',
         theme_color: '#37474F', // Primary color as theme color
         background_color: '#F5F5F5', // Light grey background
@@ -61,7 +61,7 @@ export default defineConfig({
         // Add protocol handlers
         protocol_handlers: [
           {
-            protocol: "web+bengkelku",
+            protocol: "web+bengkelpro",
             url: "/handle-url?url=%s" // Example URL structure, adjust as needed
           }
         ]
