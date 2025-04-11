@@ -380,8 +380,6 @@
         </v-card>
       </v-dialog>
 
-      <!-- Dialog Tambah Pelanggan Baru (tetap sama seperti sebelumnya) -->
-      <!-- ... -->
 
       <!-- Dialog Gabungan Tambah Jasa & Part -->
       <v-dialog v-model="showAddItemDialog" persistent :max-width="$vuetify.display.xs ? '100%' : '600px'" :fullscreen="$vuetify.display.xs">
@@ -622,8 +620,46 @@
         </v-card>
       </v-dialog>
 
-      <!-- Dialog Tambah Pelanggan Baru (tetap sama seperti sebelumnya) -->
-      <!-- ... -->
+      <!-- Dialog Tambah Pelanggan Baru -->
+      <v-dialog v-model="showAddCustomer" persistent max-width="500px">
+        <v-card>
+          <v-card-title>
+            <span class="text-h5">Tambah Pelanggan Baru</span>
+          </v-card-title>
+          <v-card-text>
+            <v-container>
+              <v-row>
+                <v-col cols="12">
+                  <v-text-field v-model="newCustomer.nama" label="Nama Pelanggan*" required variant="outlined"
+                    density="compact"></v-text-field>
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field v-model="newCustomer.noHp" label="Nomor HP*" required :rules="phoneRule" variant="outlined" density="compact"
+                    type="tel"></v-text-field> <!-- Apply phoneRule -->
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field v-model="newCustomer.kendaraan" label="Merk / Tipe Kendaraan*" required variant="outlined"
+                    density="compact" placeholder="Contoh: Honda Vario 125 2020"></v-text-field>
+                </v-col>
+                <v-col cols="12">
+                  <v-text-field v-model="newCustomer.nomorPolisi" label="Nomor Polisi" variant="outlined"
+                    density="compact" readonly disabled></v-text-field>
+                </v-col>
+              </v-row>
+            </v-container>
+            <small>*Wajib diisi</small>
+          </v-card-text>
+          <v-card-actions>
+            <v-spacer></v-spacer>
+            <v-btn color="blue-darken-1" variant="text" @click="cancelAddCustomer">
+              Batal
+            </v-btn>
+            <v-btn color="blue-darken-1" variant="text" @click="saveNewCustomer" :loading="isSaving">
+              Simpan Pelanggan
+            </v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
 
       <!-- Snackbar for Notifications -->
       <v-snackbar v-model="snackbar" :timeout="3000" :color="snackbarColor" location="top right">
@@ -751,7 +787,7 @@ const predefinedJasa = [
 ];
 
 const serviceData = reactive({
-  nomorPolisi: "WALK-IN",
+  nomorPolisi: "",
   pelangganId: null,
   kendaraanId: null,
   jenisServis: [5],
