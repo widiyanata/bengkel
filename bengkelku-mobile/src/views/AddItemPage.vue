@@ -1,49 +1,167 @@
 <template>
-  <v-container>
-    <h1 class="mb-4">Tambah Barang Baru</h1>
-    <v-form ref="form" @submit.prevent="saveItem"> <!-- Added submit prevention -->
-      <v-text-field v-model="itemData.nama" label="Nama Barang*" :rules="requiredRule" required variant="flat"
-        class="mb-3"></v-text-field>
+  <v-container class="pa-0">
+    <v-app-bar flat density="compact">
+      <v-btn icon="mdi-arrow-left" variant="text" density="compact" @click="goBack"></v-btn>
+      <v-app-bar-title class="text-subtitle-1">Tambah Barang</v-app-bar-title>
+    </v-app-bar>
 
-      <v-text-field v-model="itemData.kode" label="Kode Barang (Opsional)" :rules="itemCodeRule" variant="flat"
-        class="mb-3"></v-text-field> <!-- Apply itemCodeRule -->
+    <div class="form-wrapper mt-2 px-2">
+      <v-form ref="form" @submit.prevent="saveItem" class="form-container">
+        <!-- Basic Info -->
+        <v-card variant="flat" class="mb-3 pa-2">
+          <div class="d-flex align-center mb-2">
+            <v-icon size="small" color="primary" class="me-2">mdi-information-outline</v-icon>
+            <span class="text-subtitle-2">Informasi Barang</span>
+          </div>
+          
+          <v-text-field
+            v-model="itemData.nama"
+            label="Nama Barang"
+            :rules="requiredRule"
+            density="compact"
+            variant="outlined"
+            hide-details="auto"
+            class="mb-2"
+          ></v-text-field>
 
-      <v-text-field v-model="itemData.satuan" label="Satuan*" :rules="requiredRule" required
-        placeholder="Contoh: Pcs, Ltr, Set, Box" variant="flat" class="mb-3"></v-text-field>
+          <div class="d-flex gap-2">
+            <v-text-field
+              v-model="itemData.kode"
+              label="Kode"
+              :rules="itemCodeRule"
+              density="compact"
+              variant="outlined"
+              hide-details="auto"
+              placeholder="OLI-001"
+            ></v-text-field>
 
-      <v-text-field v-model.number="itemData.stokMinimal" label="Stok Minimal (Opsional)" type="number"
-        :rules="numberRule" variant="flat" class="mb-3"></v-text-field>
+            <v-text-field
+              v-model="itemData.satuan"
+              label="Satuan"
+              :rules="requiredRule"
+              density="compact"
+              variant="outlined"
+              hide-details="auto"
+              placeholder="Pcs"
+            ></v-text-field>
+          </div>
+        </v-card>
 
-      <!-- Added Harga Beli field -->
-      <v-text-field v-model.number="itemData.hargaBeli" label="Harga Beli (Opsional)" type="number" prefix="Rp"
-        :rules="numberRule" variant="flat" class="mb-3"></v-text-field>
+        <!-- Price Info -->
+        <v-card variant="flat" class="mb-3 pa-2">
+          <div class="d-flex align-center mb-2">
+            <v-icon size="small" color="primary" class="me-2">mdi-currency-usd</v-icon>
+            <span class="text-subtitle-2">Informasi Harga</span>
+          </div>
 
-      <v-text-field v-model.number="itemData.hargaJual" label="Harga Jual (Opsional)" type="number" prefix="Rp"
-        :rules="hargaJualRule" variant="flat" class="mb-3"></v-text-field> <!-- Apply new rule -->
+          <div class="d-flex gap-2 mb-2">
+            <v-text-field
+              v-model.number="itemData.hargaBeli"
+              label="Harga Beli"
+              type="number"
+              prefix="Rp"
+              :rules="numberRule"
+              density="compact"
+              variant="outlined"
+              hide-details="auto"
+            ></v-text-field>
 
-      <v-btn color="primary" size="large" block type="submit" :loading="isSaving"> <!-- Changed click to type=submit -->
-        Simpan Barang Baru
-      </v-btn>
-      <v-btn variant="text" block class="mt-2" @click="goBack">
-        Batal
-      </v-btn>
-    </v-form>
+            <v-text-field
+              v-model.number="itemData.hargaJual"
+              label="Harga Jual"
+              type="number"
+              prefix="Rp"
+              :rules="hargaJualRule"
+              density="compact"
+              variant="outlined"
+              hide-details="auto"
+            ></v-text-field>
+          </div>
 
-    <!-- Snackbar for Notifications -->
-    <v-snackbar v-model="snackbar" :timeout="3000" :color="snackbarColor" location="top right">
+          <v-slide-y-transition>
+            <v-chip
+              v-if="showMarginInfo"
+              :color="marginColor"
+              size="small"
+              class="mb-1"
+            >
+              <template v-slot:prepend>
+                <v-icon size="x-small">{{ marginIcon }}</v-icon>
+              </template>
+              Margin {{ calculateMargin }}% ({{ formatCurrency(calculateProfit) }})
+            </v-chip>
+          </v-slide-y-transition>
+        </v-card>
+
+        <!-- Stock Info -->
+        <v-card variant="flat" class="mb-3 pa-2">
+          <div class="d-flex align-center mb-2">
+            <v-icon size="small" color="primary" class="me-2">mdi-package-variant</v-icon>
+            <span class="text-subtitle-2">Informasi Stok</span>
+          </div>
+
+          <div class="d-flex gap-2">
+            <v-text-field
+              v-model.number="itemData.stokAwal"
+              label="Stok Awal"
+              type="number"
+              :rules="numberRule"
+              density="compact"
+              variant="outlined"
+              hide-details="auto"
+            ></v-text-field>
+
+            <v-text-field
+              v-model.number="itemData.stokMinimal"
+              label="Stok Min"
+              type="number"
+              :rules="numberRule"
+              density="compact"
+              variant="outlined"
+              hide-details="auto"
+            ></v-text-field>
+          </div>
+        </v-card>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <v-btn
+            color="primary"
+            block
+            type="submit"
+            :loading="isSaving"
+            :disabled="isSaving"
+            class="mb-1"
+          >
+            <v-icon size="small" class="me-1">mdi-content-save</v-icon>
+            Simpan
+          </v-btn>
+          
+          <v-btn
+            variant="text"
+            block
+            @click="goBack"
+            :disabled="isSaving"
+          >
+            Batal
+          </v-btn>
+        </div>
+      </v-form>
+    </div>
+
+    <v-snackbar
+      v-model="snackbar"
+      :color="snackbarColor"
+      location="top"
+      :timeout="2000"
+    >
       {{ snackbarText }}
-      <template v-slot:actions>
-        <v-btn color="white" variant="text" @click="snackbar = false">
-          Tutup
-        </v-btn>
-      </template>
     </v-snackbar>
-
   </v-container>
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, computed } from "vue";
 import { useRouter } from "vue-router";
 import { addItem, doesItemCodeExist } from "../stores/localStorage.js"; // Import functions
 
@@ -143,8 +261,90 @@ async function saveItem() {
 function goBack() {
   router.push('/stok');
 }
+
+// New computed properties for margin calculation
+const showMarginInfo = computed(() => {
+  return itemData.hargaBeli && itemData.hargaJual && 
+         Number(itemData.hargaBeli) > 0 && Number(itemData.hargaJual) > 0;
+});
+
+const calculateMargin = computed(() => {
+  if (!showMarginInfo.value) return 0;
+  const margin = ((itemData.hargaJual - itemData.hargaBeli) / itemData.hargaBeli) * 100;
+  return Math.round(margin);
+});
+
+const calculateProfit = computed(() => {
+  if (!showMarginInfo.value) return 0;
+  return itemData.hargaJual - itemData.hargaBeli;
+});
+
+const marginColor = computed(() => {
+  const margin = calculateMargin.value;
+  if (margin <= 0) return 'error';
+  if (margin < 10) return 'warning';
+  return 'success';
+});
+
+const marginIcon = computed(() => {
+  const margin = calculateMargin.value;
+  if (margin <= 0) return 'mdi-alert';
+  if (margin < 10) return 'mdi-alert-circle';
+  return 'mdi-check-circle';
+});
+
+// Helper function for currency formatting
+function formatCurrency(value) {
+  return new Intl.NumberFormat('id-ID', {
+    style: 'currency',
+    currency: 'IDR',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0
+  }).format(value);
+}
 </script>
 
 <style scoped>
-/* Add specific styles if needed */
+.form-wrapper {
+  max-width: 600px;
+  margin: 0 auto;
+  padding-bottom: 120px;
+}
+
+.gap-2 {
+  gap: 8px;
+}
+
+:deep(.v-field) {
+  border-radius: 8px !important;
+}
+
+:deep(.v-card) {
+  border: 1px solid rgb(var(--v-theme-outline));
+  border-radius: 8px;
+}
+
+.action-buttons {
+  /* position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0; */
+  /* padding: 12px;
+  background: rgb(var(--v-theme-background));
+  z-index: 99;
+  box-shadow: 0 -1px 4px rgba(0,0,0,0.1); */
+}
+
+@media (min-width: 600px) {
+  .action-buttons {
+    max-width: 600px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  
+  .form-wrapper {
+    padding: 16px;
+    padding-bottom: 120px;
+  }
+}
 </style>
