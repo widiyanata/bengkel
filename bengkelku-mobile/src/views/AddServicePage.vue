@@ -1420,7 +1420,7 @@ function saveService() {
 
 /* Predefined Jasa List */
 .predefined-jasa-list {
-  /* max-height: 300px; */
+  max-height: 400px;
   overflow-y: auto;
 }
 
@@ -1452,7 +1452,7 @@ function saveService() {
   }
   
   .parts-grid {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   }
 }
 </style>
