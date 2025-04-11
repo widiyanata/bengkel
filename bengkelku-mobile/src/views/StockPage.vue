@@ -1,6 +1,7 @@
+
 <template>
-  <v-container>
-    <!-- Enhanced Header with Card -->
+  <v-container class="pa-2">
+    <!-- Compact Header -->
     <v-card class="mb-4 header-card" variant="flat">
       <v-card-item>
         <template v-slot:prepend>
@@ -29,70 +30,63 @@
       </v-card-item>
     </v-card>
 
-    <!-- Enhanced Search and Filter Section -->
-    <v-card class="mb-4" variant="flat">
-      <v-card-text class="pa-2 pa-sm-4">
-        <!-- Search Field (Always visible) -->
-        <v-text-field
-          v-model="searchQuery"
-          label="Cari Barang (Nama/Kode)"
-          prepend-inner-icon="mdi-magnify"
+    <!-- Search and Filter Bar -->
+    <div class="search-filter-bar mb-3">
+      <v-text-field
+        v-model="searchQuery"
+        placeholder="Cari barang..."
+        prepend-inner-icon="mdi-magnify"
+        variant="outlined"
+        density="compact"
+        clearable
+        hide-details
+        class="search-field"
+      ></v-text-field>
+      
+      <div class="d-flex gap-1 mt-2">
+        <v-select
+          v-model="stockFilter"
+          :items="stockFilterOptions"
+          label="Filter"
           variant="outlined"
           density="compact"
-          clearable
           hide-details
-          class="mb-3"
-        ></v-text-field>
-
-        <!-- Filter Controls with Toggle for Mobile -->
-        <div class="d-flex align-center mb-2">
-          <span class="text-body-2 text-medium-emphasis">Filter & Urutan:</span>
-          <v-spacer></v-spacer>
-          <v-btn
-            density="compact"
-            variant="text"
-            @click="showFilterOptions = !showFilterOptions"
-            class="d-flex d-sm-none"
-          >
-            <v-icon start>{{ showFilterOptions ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
-            {{ showFilterOptions ? 'Sembunyikan' : 'Tampilkan' }}
-          </v-btn>
-        </div>
-
-        <!-- Filter Options (Responsive) -->
-        <div class="filter-options" :class="{'d-none': !showFilterOptions && $vuetify.display.xs}">
-          <div class="d-flex flex-column flex-sm-row gap-3">
-            <!-- Filter Dropdown -->
-            <v-select
-              v-model="stockFilter"
-              :items="stockFilterOptions"
-              label="Filter Stok"
-              variant="outlined"
-              density="compact"
-              hide-details
-              class="filter-select"
-              :menu-props="{ maxHeight: 300 }"
-              @update:model-value="onFilterChange"
-              :return-object="false"
-            ></v-select>
-
-            <!-- Sort Dropdown -->
-            <v-select
-              v-model="sortOption"
-              :items="sortOptions"
-              label="Urutkan"
-              variant="outlined"
-              density="compact"
-              hide-details
-              class="filter-select"
-              :menu-props="{ maxHeight: 300 }"
-              @update:model-value="onSortChange"
-              :return-object="false"
-            ></v-select>
-          </div>
-        </div>
-      </v-card-text>
-    </v-card>
+          class="filter-select"
+          :menu-props="{ maxHeight: 300 }"
+          @update:model-value="onFilterChange"
+          :return-object="false"
+        ></v-select>
+        
+        <v-menu>
+          <template v-slot:activator="{ props }">
+            <v-btn
+              v-bind="props"
+              variant="tonal"
+              desity="compact"
+              class="sort-button ms-1"
+              size="normal"
+            >
+              <v-icon start>mdi-sort</v-icon>
+              <span class="d-none">Urut</span>
+            </v-btn>
+          </template>
+          <v-list density="compact">
+            <v-list-item
+              v-for="option in sortOptions"
+              :key="option.value"
+              :value="option.value"
+              :title="option.title"
+              @click="sortOption = option.value"
+              :active="sortOption === option.value"
+            >
+              <template v-slot:prepend>
+                <v-icon v-if="sortOption === option.value" icon="mdi-check" size="small"></v-icon>
+              </template>
+            </v-list-item>
+          </v-list>
+        </v-menu>
+      </div>
+    </div>
 
     <!-- Loading Indicator -->
     <div v-if="loading" class="text-center pa-4">
@@ -100,105 +94,81 @@
       <p class="mt-2">Memuat data stok...</p>
     </div>
 
-    <!-- Stock Grid with Cards -->
-    <div v-else-if="filteredStock.length > 0">
-      <v-row>
-        <v-col v-for="item in filteredStock" :key="item.id" cols="12" sm="6" md="4" lg="3">
-          <v-card :class="{'stock-low-card': Number(item.stokMinimal || 0) > 0 && Number(item.stokSaatIni || 0) <= Number(item.stokMinimal || 0)}">
-            <!-- Card Header with Stock Status -->
-            <v-card-item>
-              <template v-slot:prepend>
-                <v-icon :color="getStockStatusColor(item)" icon="mdi-package-variant-closed"></v-icon>
-              </template>
-
-              <v-card-title class="text-subtitle-1 font-weight-bold text-truncate">{{ item.nama }}</v-card-title>
-
-              <template v-slot:append>
-                <v-chip v-if="Number(item.stokMinimal || 0) > 0 && Number(item.stokSaatIni || 0) <= Number(item.stokMinimal || 0)"
-                  color="warning"
-                  size="small"
-                  variant="elevated"
-                  class="font-weight-medium">
-                  Stok Menipis
-                </v-chip>
-              </template>
-            </v-card-item>
-
-            <!-- Card Content -->
-            <v-card-text class="pt-0">
-              <div class="d-flex flex-column gap-1">
-                <div class="d-flex align-center" v-if="item && item.kode">
-                  <v-icon size="small" color="grey" class="me-1">mdi-barcode</v-icon>
-                  <span class="text-caption text-medium-emphasis">{{ item.kode }}</span>
-                </div>
-
-                <div class="d-flex align-center">
-                  <v-icon size="small" color="grey" class="me-1">mdi-cube-outline</v-icon>
-                  <span class="text-body-2">{{ Number(item.stokSaatIni || 0) }} {{ item.satuan || '' }}</span>
-                </div>
-
-                <div class="d-flex align-center" v-if="item && item.hargaJual">
-                  <v-icon size="small" color="grey" class="me-1">mdi-tag-outline</v-icon>
-                  <span class="text-body-2">{{ formatCurrency(item.hargaJual) }}</span>
-                </div>
-              </div>
-            </v-card-text>
-
-            <!-- Stock Progress Bar -->
-            <div class="px-4 pb-2" v-if="item && Number(item.stokMinimal || 0) > 0">
-              <v-tooltip :text="`Minimal: ${Number(item.stokMinimal || 0)} ${item.satuan || ''}`">
-                <template v-slot:activator="{ props }">
-                  <v-progress-linear
-                    v-bind="props"
-                    :model-value="getStockPercentage(item)"
-                    :color="getStockStatusColor(item)"
-                    height="8"
-                    rounded
-                  ></v-progress-linear>
-                </template>
-              </v-tooltip>
+    <!-- Stock List (Compact Card View) -->
+    <div v-else-if="filteredStock.length > 0" class="stock-list">
+      <v-card
+        v-for="item in filteredStock"
+        :key="item.id"
+        class="mb-2 stock-item-card"
+        :class="{'stock-low-card': Number(item.stokMinimal || 0) > 0 && Number(item.stokSaatIni || 0) <= Number(item.stokMinimal || 0)}"
+        variant="flat"
+        density="compact"
+      >
+        <div class="d-flex align-center pa-2">
+          <!-- Status Icon -->
+          <v-avatar :color="getStockStatusColor(item)" size="32" class="me-2">
+            <v-icon icon="mdi-package-variant" size="small" color="white"></v-icon>
+          </v-avatar>
+          
+          <!-- Item Info -->
+          <div class="flex-grow-1 item-info">
+            <div class="d-flex align-center justify-space-between">
+              <div class="text-subtitle-1 font-weight-medium text-truncate">{{ item.nama }}</div>
+              <v-chip
+                v-if="Number(item.stokMinimal || 0) > 0 && Number(item.stokSaatIni || 0) <= Number(item.stokMinimal || 0)"
+                color="warning"
+                size="x-small"
+                variant="elevated"
+                class="ms-1"
+              >
+                Stok Menipis
+              </v-chip>
             </div>
-
-            <!-- Action Buttons - Enhanced for Mobile -->
-            <v-divider></v-divider>
-            <v-card-actions class="action-buttons pa-2">
-              <!-- Add Purchase Button -->
+            
+            <div class="d-flex align-center justify-space-between mt-1">
+              <div class="d-flex align-center">
+                <span class="text-body-2 font-weight-medium">{{ Number(item.stokSaatIni || 0) }} {{ item.satuan || '' }}</span>
+                <span class="text-caption text-grey mx-1">|</span>
+                <span class="text-caption text-grey">{{ item.kode || 'No Kode' }}</span>
+              </div>
+              <span class="text-body-2 primary--text font-weight-medium">{{ formatCurrency(item.hargaJual) }}</span>
+            </div>
+          </div>
+          
+          <!-- Action Menu -->
+          <v-menu location="bottom end">
+            <template v-slot:activator="{ props }">
               <v-btn
-                variant="tonal"
-                color="primary"
-                density="comfortable"
-                class="flex-grow-1 action-button"
-                @click.stop="goToRecordPurchaseForItem(item)"
-              >
-                <v-icon start>mdi-cart-plus</v-icon>
-                <span class="action-text">Beli</span>
-              </v-btn>
-
-              <!-- Edit Button -->
-              <v-btn
-                color="info"
-                density="comfortable"
-                class="flex-grow-1 action-button"
-                @click.stop="openEditItemDialog(item)"
-              >
-                <v-icon start>mdi-pencil-outline</v-icon>
-                <span class="action-text">Edit</span>
-              </v-btn>
-
-              <!-- Delete Button -->
-              <v-btn
-                color="error"
-                density="comfortable"
-                class="flex-grow-1 action-button"
-                @click.stop="openDeleteItemDialog(item)"
-              >
-                <v-icon start>mdi-delete-outline</v-icon>
-                <span class="action-text">Hapus</span>
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-col>
-      </v-row>
+                v-bind="props"
+                icon="mdi-dots-vertical"
+                variant="text"
+                size="small"
+                density="compact"
+              ></v-btn>
+            </template>
+            <v-list density="compact">
+              <v-list-item @click="goToRecordPurchaseForItem(item)" prepend-icon="mdi-cart-plus" title="Beli"></v-list-item>
+              <v-list-item @click="openEditItemDialog(item)" prepend-icon="mdi-pencil-outline" title="Edit"></v-list-item>
+              <v-list-item @click="openDeleteItemDialog(item)" prepend-icon="mdi-delete-outline" title="Hapus" color="error"></v-list-item>
+            </v-list>
+          </v-menu>
+        </div>
+        
+        <!-- Stock Progress Bar -->
+        <div v-if="item && Number(item.stokMinimal || 0) > 0" class="px-2 pb-2">
+          <v-tooltip :text="`Minimal: ${Number(item.stokMinimal || 0)} ${item.satuan || ''}`">
+            <template v-slot:activator="{ props }">
+              <v-progress-linear
+                v-bind="props"
+                :model-value="getStockPercentage(item)"
+                :color="getStockStatusColor(item)"
+                height="4"
+                rounded
+              ></v-progress-linear>
+            </template>
+          </v-tooltip>
+        </div>
+      </v-card>
     </div>
 
     <!-- Enhanced No Data Message -->
@@ -215,6 +185,17 @@
       </div>
     </v-card>
 
+    <!-- FAB for Mobile -->
+    <v-btn
+      color="primary"
+      icon="mdi-plus"
+      class="fab-button"
+      size="large"
+      position="fixed"
+      location="bottom right"
+      @click="goToAddItem"
+    ></v-btn>
+
     <!-- Enhanced Edit Item Dialog -->
     <v-dialog v-model="showEditItemDialog" persistent max-width="600px">
       <v-card>
@@ -226,95 +207,88 @@
 
         <v-card-text class="pt-4">
           <v-form ref="editForm">
-            <v-row>
-              <v-col cols="12">
-                <v-text-field
-                  v-model="editableItem.nama"
-                  label="Nama Barang*"
-                  :rules="requiredRule"
-                  required
-                  variant="outlined"
-                  density="compact"
-                  prepend-inner-icon="mdi-package-variant"
-                ></v-text-field>
-              </v-col>
+            <v-text-field
+              v-model="editableItem.nama"
+              label="Nama Barang*"
+              :rules="requiredRule"
+              required
+              variant="outlined"
+              density="compact"
+              prepend-inner-icon="mdi-package-variant"
+              class="mb-2"
+            ></v-text-field>
 
-              <v-col cols="12" sm="6">
-                <v-text-field
-                  v-model="editableItem.kode"
-                  label="Kode Barang (Opsional)"
-                  :rules="editItemCodeRule"
-                  variant="outlined"
-                  density="compact"
-                  prepend-inner-icon="mdi-barcode"
-                ></v-text-field>
-              </v-col>
+            <div class="d-flex gap-2 mb-2">
+              <v-text-field
+                v-model="editableItem.kode"
+                label="Kode Barang"
+                :rules="editItemCodeRule"
+                variant="outlined"
+                density="compact"
+                prepend-inner-icon="mdi-barcode"
+                class="flex-grow-1"
+              ></v-text-field>
 
-              <v-col cols="12" sm="6">
-                <v-text-field
-                  v-model="editableItem.satuan"
-                  label="Satuan*"
-                  :rules="requiredRule"
-                  required
-                  variant="outlined"
-                  density="compact"
-                  prepend-inner-icon="mdi-ruler"
-                ></v-text-field>
-              </v-col>
+              <v-text-field
+                v-model="editableItem.satuan"
+                label="Satuan*"
+                :rules="requiredRule"
+                required
+                variant="outlined"
+                density="compact"
+                prepend-inner-icon="mdi-ruler"
+                class="flex-grow-1"
+              ></v-text-field>
+            </div>
 
-              <v-col cols="12" sm="6">
-                <v-text-field
-                  v-model.number="editableItem.hargaBeli"
-                  label="Harga Beli (Opsional)"
-                  type="number"
-                  prefix="Rp"
-                  :rules="numberRule"
-                  variant="outlined"
-                  density="compact"
-                  prepend-inner-icon="mdi-cash-register"
-                ></v-text-field>
-              </v-col>
+            <div class="d-flex gap-2 mb-2">
+              <v-text-field
+                v-model.number="editableItem.hargaBeli"
+                label="Harga Beli"
+                type="number"
+                prefix="Rp"
+                :rules="numberRule"
+                variant="outlined"
+                density="compact"
+                prepend-inner-icon="mdi-cash-register"
+                class="flex-grow-1"
+              ></v-text-field>
 
-              <v-col cols="12" sm="6">
-                <v-text-field
-                  v-model.number="editableItem.hargaJual"
-                  label="Harga Jual (Opsional)"
-                  type="number"
-                  prefix="Rp"
-                  :rules="hargaJualRule"
-                  variant="outlined"
-                  density="compact"
-                  prepend-inner-icon="mdi-tag-outline"
-                ></v-text-field>
-              </v-col>
+              <v-text-field
+                v-model.number="editableItem.hargaJual"
+                label="Harga Jual"
+                type="number"
+                prefix="Rp"
+                :rules="hargaJualRule"
+                variant="outlined"
+                density="compact"
+                prepend-inner-icon="mdi-tag-outline"
+                class="flex-grow-1"
+              ></v-text-field>
+            </div>
 
-              <v-col cols="12" sm="6">
-                <v-text-field
-                  v-model.number="editableItem.stokMinimal"
-                  label="Stok Minimal (Opsional)"
-                  type="number"
-                  :rules="numberRule"
-                  variant="outlined"
-                  density="compact"
-                  prepend-inner-icon="mdi-alert-circle-outline"
-                  hint="Jumlah stok minimum sebelum peringatan stok menipis"
-                  persistent-hint
-                ></v-text-field>
-              </v-col>
-            </v-row>
+            <v-text-field
+              v-model.number="editableItem.stokMinimal"
+              label="Stok Minimal"
+              type="number"
+              :rules="numberRule"
+              variant="outlined"
+              density="compact"
+              prepend-inner-icon="mdi-alert-circle-outline"
+              hint="Jumlah stok minimum sebelum peringatan stok menipis"
+              persistent-hint
+            ></v-text-field>
           </v-form>
         </v-card-text>
 
         <v-divider></v-divider>
 
         <v-card-actions class="pa-4">
-          <v-btn color="grey" variant="flat" @click="cancelEditItem" :disabled="isUpdatingItem">
-            <v-icon start>mdi-cancel</v-icon>
+          <v-spacer></v-spacer>
+          <v-btn color="grey" variant="text" @click="cancelEditItem" :disabled="isUpdatingItem">
             Batal
           </v-btn>
-          <v-spacer></v-spacer>
-          <v-btn color="primary" variant="elevated" @click="executeItemUpdate" :loading="isUpdatingItem">
-            <v-icon start>mdi-content-save</v-icon>
+          <v-btn color="primary" variant="flat" @click="executeItemUpdate" :loading="isUpdatingItem">
             Simpan
           </v-btn>
         </v-card-actions>
@@ -352,13 +326,11 @@
         <v-divider></v-divider>
 
         <v-card-actions class="pa-4">
-          <v-btn color="grey" variant="flat" @click="cancelDeleteItem" :disabled="isDeletingItem">
-            <v-icon start>mdi-cancel</v-icon>
+          <v-spacer></v-spacer>
+          <v-btn color="grey" variant="text" @click="cancelDeleteItem" :disabled="isDeletingItem">
             Batal
           </v-btn>
-          <v-spacer></v-spacer>
-          <v-btn color="error" variant="elevated" @click="executeItemDelete" :loading="isDeletingItem">
-            <v-icon start>mdi-delete</v-icon>
+          <v-btn color="error" variant="flat" @click="executeItemDelete" :loading="isDeletingItem">
             Hapus
           </v-btn>
         </v-card-actions>
@@ -374,7 +346,6 @@
         </v-btn>
       </template>
     </v-snackbar>
-
   </v-container>
 </template>
 
@@ -798,88 +769,69 @@ function executeItemDelete() {
 </script>
 
 <style scoped>
-/* Enhanced styles for stock page */
-.header-card {
-  background-color: #f8f9fa;
-  border-left: 4px solid var(--v-primary-base);
+/* Compact and Modern Styling */
+.search-filter-bar {
+  /* background-color: rgba(var(--v-theme-surface), 1); */
+  border-radius: 8px;
 }
 
-.stock-low-card {
-  border-left: 4px solid var(--v-warning-base);
-}
-
-/* Card hover effect */
-.v-card {
-  transition: all 0.3s ease;
-}
-
-.v-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1) !important;
-}
-
-/* Filter styles */
-.filter-options {
-  transition: all 0.3s ease;
+.search-field {
+  width: 100%;
 }
 
 .filter-select {
-  flex: 1;
-  min-width: 0;
+  flex-grow: 1;
 }
 
-/* Action button styles */
-.action-buttons {
-  display: flex;
-  gap: 8px;
+.sort-button {
+  min-width: 48px;
 }
 
-.action-button {
+.stock-item-card {
   border-radius: 8px;
-  min-width: 0;
+  transition: all 0.2s ease;
 }
 
-/* Responsive adjustments */
+.stock-item-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.stock-low-card {
+  border-left: 3px solid rgb(var(--v-theme-warning))!important;
+}
+
+.item-info {
+  min-width: 0; /* Ensures text truncation works */
+}
+
+.fab-button {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  z-index: 100;
+}
+
+/* Responsive Adjustments */
 @media (max-width: 600px) {
+  .v-container {
+    padding: 8px !important;
+  }
   
-  .action-text {
-    font-size: 0.8rem;
+  .stock-item-card {
+    margin-bottom: 8px;
   }
-
-  .action-buttons {
-    padding: 8px 4px !important;
+  
+  .text-subtitle-1 {
+    font-size: 0.9rem !important;
   }
-
-  .action-button {
-    padding: 0 8px !important;
+  
+  .text-body-2 {
+    font-size: 0.8rem !important;
   }
-
-  /* Improve touch targets */
-  .v-btn {
-    min-height: 40px;
-  }
-
-  /* Better spacing for filter toggles */
-  .filter-options {
-    margin-top: 8px;
-  }
-
-  /* Fix for mobile select menus */
-  .v-select__selection {
-    max-width: 100%;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  /* Ensure menu doesn't get cut off */
-  :deep(.v-menu__content) {
-    max-width: 90vw !important;
-  }
-
-  /* Fix for select display */
-  :deep(.v-field__input) {
-    padding-top: 6px;
+  
+  .text-caption {
+    font-size: 0.7rem !important;
   }
 }
 </style>
