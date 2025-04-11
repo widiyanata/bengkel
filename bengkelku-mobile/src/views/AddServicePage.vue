@@ -392,8 +392,12 @@
             <v-spacer></v-spacer>
             <v-btn
               icon
+              variant="tonal"
+              density="compact"
+              color="success"
               @click="addSelectedItem"
               :disabled="!canAddSelectedItem"
+              class="me-2"
             >
               <v-icon>mdi-check</v-icon>
             </v-btn>
@@ -406,9 +410,9 @@
             </v-card-title>
           </template>
 
-          <v-tabs v-model="itemInputTab" density="compact">
-            <v-tab value="jasa" prepend-icon="mdi-wrench-outline">Jasa</v-tab>
-            <v-tab value="part" prepend-icon="mdi-package-variant">Spare Part</v-tab>
+          <v-tabs v-model="itemInputTab">
+            <v-tab value="jasa" prepend-icon="mdi-wrench-outline" color="primary">Jasa</v-tab>
+            <v-tab value="part" prepend-icon="mdi-package-variant" color="secondary">Spare Part</v-tab>
           </v-tabs>
 
           <v-card-text :class="$vuetify.display.xs ? 'pa-2' : 'pt-3'">
@@ -557,7 +561,7 @@
                 <div v-if="selectedPart" class="selected-part-details mt-3">
                   <v-divider class="mb-3"></v-divider>
                   <div class="text-subtitle-2 mb-2">Part Terpilih</div>
-                  <v-card variant="tonal" color="primary" class="mb-3">
+                  <v-card variant="tonal" color="success" class="mb-3">
                     <v-card-text class="py-2">
                       <div class="d-flex flex-column">
                         <div class="text-body-1 font-weight-medium">{{ selectedPart.nama }}</div>
@@ -1394,7 +1398,7 @@ function saveService() {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 8px;
-  max-height: 300px;
+  max-height: 400px;
   overflow-y: auto;
 }
 
@@ -1416,7 +1420,7 @@ function saveService() {
 
 /* Predefined Jasa List */
 .predefined-jasa-list {
-  max-height: 300px;
+  /* max-height: 300px; */
   overflow-y: auto;
 }
 
