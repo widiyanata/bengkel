@@ -186,7 +186,7 @@
     </v-card>
 
     <!-- FAB for Mobile -->
-    <v-btn
+    <!-- <v-btn
       color="primary"
       icon="mdi-plus"
       class="fab-button"
@@ -194,7 +194,7 @@
       position="fixed"
       location="bottom right"
       @click="goToAddItem"
-    ></v-btn>
+    ></v-btn> -->
 
     <!-- Enhanced Edit Item Dialog -->
     <v-dialog v-model="showEditItemDialog" persistent max-width="600px">
@@ -805,12 +805,12 @@ function executeItemDelete() {
   min-width: 0; /* Ensures text truncation works */
 }
 
-.fab-button {
+/* .fab-button {
   position: fixed;
   bottom: 16px;
   right: 16px;
   z-index: 100;
-}
+} */
 
 /* Responsive Adjustments */
 @media (max-width: 600px) {
