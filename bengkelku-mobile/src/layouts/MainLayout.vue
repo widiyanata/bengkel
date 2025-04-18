@@ -245,6 +245,7 @@ import { usePwaInstall } from '../composables/usePwaInstall.js';
 import { useAppStatus } from '../composables/useAppStatus.js';
 import { useCartState } from '../composables/useCartState';
 import { eventBus } from '../utils/eventBus';
+import { trackEvent } from '../utils/analytics';
 
 // Use router for navigation
 const router = useRouter();
@@ -305,6 +306,7 @@ function handleScroll() {
 
 // Go back function
 function goBack() {
+  trackEvent('navigation', { action: 'back_button' });
   router.go(-1);
 }
 
@@ -313,8 +315,10 @@ async function triggerInstallPromptAction() {
   const { outcome } = await triggerInstallPrompt();
   if (outcome === 'accepted') {
     console.log('PWA installation accepted from layout.');
+    trackEvent('pwa_install', { action: 'accepted' });
   } else {
     console.log('PWA installation dismissed from layout.');
+    trackEvent('pwa_install', { action: 'dismissed' });
   }
 }
 

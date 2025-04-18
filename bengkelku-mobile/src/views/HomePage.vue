@@ -74,7 +74,7 @@
       </div>
 
       <v-row dense>
-        <!-- Kolom Utama (Full Width di Mobile) -->
+        <!-- Kolom Kiri -->
         <v-col cols="12" md="6">
           <!-- Aksi Cepat -->
           <quick-actions />

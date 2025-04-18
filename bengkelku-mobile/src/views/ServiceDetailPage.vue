@@ -291,7 +291,7 @@
                 :loading="isSaving"
                 :disabled="isSaving || invoicePaid"
                 @click="saveAndComplete"
-              >                
+              >
                 <v-icon start>mdi-check-circle</v-icon>
                 Simpan & Selesaikan
               </v-btn>
@@ -693,6 +693,7 @@ import {
 
 import { generateInvoiceFromService } from "../utils/invoiceGenerator.js";
 import { useAppStatus } from "../composables/useAppStatus.js"; // Import for notifications
+import { trackEvent, trackServiceAction } from "../utils/analytics"; // Import for analytics
 
 const props = defineProps({
   id: { type: [String, Number], required: true },
@@ -1270,6 +1271,8 @@ function createInvoice() {
     // If invoice already exists, navigate to it regardless of payment status
     const invoices = getInvoicesByServiceId(props.id);
     if (invoices.length > 0) {
+      // Track viewing existing invoice
+      trackEvent('invoice_view', { service_id: props.id, invoice_id: invoices[0].id });
       router.push(`/invoice/${invoices[0].id}`);
     }
   } else {
@@ -1290,6 +1293,13 @@ function createInvoice() {
 
       // If we have a valid invoice
       if (result) {
+        // Track invoice creation
+        trackEvent('invoice_create', {
+          service_id: props.id,
+          invoice_id: result.id,
+          amount: result.totalAmount || 0
+        });
+
         showSnackbar('Invoice berhasil dibuat', 'success');
         hasInvoice.value = true;
         // Navigate to the invoice
@@ -1316,6 +1326,9 @@ function saveChanges() {
     return;
   }
 
+  // Track the action
+  trackServiceAction('update', { id: service.value.id });
+
   // Call the common save function
   return saveServiceChanges();
 }
@@ -1329,6 +1342,9 @@ function saveAndComplete() {
     showSnackbar('Tidak dapat menyimpan perubahan: Invoice sudah dibayar', 'error');
     return;
   }
+
+  // Track the action
+  trackServiceAction('complete', { id: service.value.id });
 
   // Set status to Selesai
   editableStatus.value = 'Selesai';

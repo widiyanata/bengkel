@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from "vue-router";
+import { trackPageView } from "../utils/analytics";
 import MainLayout from "../layouts/MainLayout.vue"; // We will create this layout component
 
 // Placeholder view components (we will create these files)
@@ -78,6 +79,12 @@ const routes = [
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL), // Use history mode
   routes,
+});
+
+// Add navigation guard to track page views
+router.afterEach((to) => {
+  // Track page view with Google Analytics
+  trackPageView(to.fullPath, to.name || 'Unknown Page');
 });
 
 export default router;

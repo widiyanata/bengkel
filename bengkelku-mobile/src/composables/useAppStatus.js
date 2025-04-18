@@ -6,6 +6,7 @@ import {
   getPurchaseCart
 } from '../stores/localStorage.js';
 import { eventBus } from '../utils/eventBus';
+import { trackEvent } from '../utils/analytics';
 
 export function useAppStatus() {
   // Reactive data
@@ -123,6 +124,9 @@ export function useAppStatus() {
   // Perform search
   function performSearch() {
     if (!searchQuery.value.trim()) return;
+
+    // Track search event
+    trackEvent('search', { search_term: searchQuery.value });
 
     // Implement search logic here
     console.log('Searching for:', searchQuery.value);
