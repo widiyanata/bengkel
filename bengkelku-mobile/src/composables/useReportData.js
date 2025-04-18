@@ -31,6 +31,22 @@ export function useReportData(dateRange = null) {
     });
   });
 
+  // Filter invoices by date range if provided
+  const filteredInvoices = computed(() => {
+    if (!filterDateRange.value || !filterDateRange.value.start || !filterDateRange.value.end) {
+      return invoices.value;
+    }
+
+    const startDate = new Date(filterDateRange.value.start);
+    const endDate = new Date(filterDateRange.value.end);
+    endDate.setHours(23, 59, 59, 999); // Include the entire end day
+
+    return invoices.value.filter(invoice => {
+      const invoiceDate = new Date(invoice.tanggalInvoice || invoice.timestamp);
+      return invoiceDate >= startDate && invoiceDate <= endDate;
+    });
+  });
+
   // Service statistics
   const totalServices = computed(() => filteredServices.value.length);
 
@@ -44,9 +60,17 @@ export function useReportData(dateRange = null) {
   });
 
   const totalRevenueCompleted = computed(() => {
-    return filteredServices.value
+    // Pendapatan dari servis yang selesai
+    const serviceRevenue = filteredServices.value
       .filter(service => service.status === 'Selesai')
       .reduce((sum, service) => sum + (Number(service.totalBiaya) || 0), 0);
+
+    // Pendapatan dari invoice langsung (walk-in) yang sudah dibayar
+    const walkInRevenue = filteredInvoices.value
+      .filter(invoice => invoice.isWalkIn && invoice.status === 'Dibayar')
+      .reduce((sum, invoice) => sum + (Number(invoice.totalAmount) || 0), 0);
+
+    return serviceRevenue + walkInRevenue;
   });
 
   // Stock statistics
@@ -63,7 +87,11 @@ export function useReportData(dateRange = null) {
   // Revenue data
 const dailyRevenueData = computed(() => {
   console.log('filteredServices.value:', filteredServices.value);
+  console.log('filteredInvoices.value:', filteredInvoices.value);
+
   const revenueByDate = {};
+
+  // Pendapatan dari servis yang selesai
   filteredServices.value
     .filter(service => service.status === 'Selesai')
     .forEach(service => {
@@ -74,15 +102,38 @@ const dailyRevenueData = computed(() => {
           console.warn(`No date found for service ${service.id}`);
           return; // Skip this service if no date is found
         }
-        
+
         // Extract date part (YYYY-MM-DD) from the date string
-        const date = typeof dateString === 'string' 
-          ? dateString.substring(0, 10) 
+        const date = typeof dateString === 'string'
+          ? dateString.substring(0, 10)
           : new Date(dateString).toISOString().substring(0, 10);
-        
+
         revenueByDate[date] = (revenueByDate[date] || 0) + (Number(service.totalBiaya) || 0);
       } catch (e) {
         console.warn(`Could not parse date for service ${service.id}:`, e);
+      }
+    });
+
+  // Pendapatan dari invoice langsung (walk-in) yang sudah dibayar
+  filteredInvoices.value
+    .filter(invoice => invoice.isWalkIn && invoice.status === 'Dibayar')
+    .forEach(invoice => {
+      try {
+        // Periksa apakah tanggalPembayaran ada, jika tidak gunakan tanggalInvoice atau timestamp
+        const dateString = invoice.tanggalPembayaran || invoice.tanggalInvoice || invoice.timestamp;
+        if (!dateString) {
+          console.warn(`No date found for invoice ${invoice.id}`);
+          return; // Skip this invoice if no date is found
+        }
+
+        // Extract date part (YYYY-MM-DD) from the date string
+        const date = typeof dateString === 'string'
+          ? dateString.substring(0, 10)
+          : new Date(dateString).toISOString().substring(0, 10);
+
+        revenueByDate[date] = (revenueByDate[date] || 0) + (Number(invoice.totalAmount) || 0);
+      } catch (e) {
+        console.warn(`Could not parse date for invoice ${invoice.id}:`, e);
       }
     });
 
@@ -136,7 +187,7 @@ const dailyRevenueData = computed(() => {
   // Invoice statistics
   const invoiceStats = computed(() => {
     console.log("Computing invoice stats with invoices:", invoices.value);
-    
+
     // Pastikan invoices.value adalah array
     if (!Array.isArray(invoices.value)) {
       console.warn("invoices.value is not an array:", invoices.value);
@@ -149,20 +200,20 @@ const dailyRevenueData = computed(() => {
         unpaidAmount: 0
       };
     }
-    
+
     const filteredInvoices = invoices.value.filter(invoice => {
       if (!invoice) return false;
-      
+
       if (!filterDateRange.value || !filterDateRange.value.start || !filterDateRange.value.end) {
         return true;
       }
-      
+
       // Pastikan invoice memiliki tanggal
       if (!invoice.tanggalInvoice) {
         console.warn("Invoice without date:", invoice);
         return false;
       }
-      
+
       try {
         const invoiceDate = new Date(invoice.tanggalInvoice);
         const startDate = new Date(filterDateRange.value.start);
@@ -174,27 +225,27 @@ const dailyRevenueData = computed(() => {
         return false;
       }
     });
-    
+
     console.log("Filtered invoices:", filteredInvoices);
-    
+
     const total = filteredInvoices.length;
     const paid = filteredInvoices.filter(inv => inv.status === 'Dibayar').length;
     const unpaid = total - paid;
-    
+
     const totalAmount = filteredInvoices.reduce((sum, inv) => {
       const amount = Number(inv.totalAmount || 0);
       return sum + (isNaN(amount) ? 0 : amount);
     }, 0);
-    
+
     const paidAmount = filteredInvoices
       .filter(inv => inv.status === 'Dibayar')
       .reduce((sum, inv) => {
         const amount = Number(inv.totalAmount || 0);
         return sum + (isNaN(amount) ? 0 : amount);
       }, 0);
-      
+
     const unpaidAmount = totalAmount - paidAmount;
-    
+
     return {
       total,
       paid,
@@ -212,7 +263,7 @@ const dailyRevenueData = computed(() => {
       const rawServices = getAllServices();
       const rawItems = getAllItems();
       const rawInvoices = getAllInvoices();
-      
+
       stockItems.value = rawItems;
       invoices.value = rawInvoices;
 
@@ -259,7 +310,9 @@ const dailyRevenueData = computed(() => {
       revenueData: dailyRevenueData.value,
       partsUsage: partsUsageData.value,
       completedServices: completedServicesList.value,
-      invoiceStats: invoiceStats.value
+      invoiceStats: invoiceStats.value,
+      // Tambahkan informasi tentang invoice langsung (walk-in)
+      walkInInvoices: filteredInvoices.value.filter(inv => inv.isWalkIn && inv.status === 'Dibayar')
     };
   }
 
