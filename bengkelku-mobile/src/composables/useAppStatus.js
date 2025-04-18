@@ -5,6 +5,7 @@ import {
   getAllItems,
   getPurchaseCart
 } from '../stores/localStorage.js';
+import { eventBus } from '../utils/eventBus';
 
 export function useAppStatus() {
   // Reactive data
@@ -15,7 +16,7 @@ export function useAppStatus() {
   const cartItemCount = ref(0);
   const searchQuery = ref('');
   const isSearchActive = ref(false);
-  const lastScrollPosition = ref(0);
+  // Removed unused variable: const lastScrollPosition = ref(0);
   const hideBottomNav = ref(false);
   const hideFab = ref(false);
   const isAtBottom = ref(false);
@@ -179,6 +180,22 @@ export function useAppStatus() {
     window.removeEventListener('resize', checkInitialScrollState);
   }
 
+  // Tambahkan fungsi untuk update notifikasi
+  function updateNotifications() {
+    // Don't call loadData() here to avoid circular updates
+    eventBus.emit('notifications-updated', {
+      pendingServices: pendingServicesCount.value,
+      lowStock: lowStockCount.value,
+      total: totalNotificationCount.value
+    })
+  }
+
+  // Watch untuk perubahan services dan items
+  watch([services, items], () => {
+    // Only emit the event, don't reload data
+    updateNotifications()
+  }, { deep: true })
+
   return {
     isLoading,
     activeServices,
@@ -198,6 +215,7 @@ export function useAppStatus() {
     toggleSearch,
     performSearch,
     loadData,
-    cleanup
+    cleanup,
+    updateNotifications
   };
 }

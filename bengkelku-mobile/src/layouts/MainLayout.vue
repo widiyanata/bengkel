@@ -244,6 +244,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { usePwaInstall } from '../composables/usePwaInstall.js';
 import { useAppStatus } from '../composables/useAppStatus.js';
 import { useCartState } from '../composables/useCartState';
+import { eventBus } from '../utils/eventBus';
 
 // Use router for navigation
 const router = useRouter();
@@ -321,6 +322,20 @@ async function triggerInstallPromptAction() {
 onMounted(() => {
   loadData();
   window.addEventListener('scroll', handleScroll);
+
+  // Listen untuk updates
+  eventBus.on('notifications-updated', (data) => {
+    // Update UI based on notification data without reloading
+    console.log('Received notification update:', data);
+
+    // Directly update the reactive properties without calling loadData()
+    // This prevents the circular dependency while still updating the UI
+    if (data && typeof data === 'object') {
+      if ('pendingServices' in data) pendingServicesCount.value = data.pendingServices;
+      if ('lowStock' in data) lowStockCount.value = data.lowStock;
+      if ('total' in data) totalNotificationCount.value = data.total;
+    }
+  });
 });
 
 onUnmounted(() => {
@@ -333,6 +348,20 @@ const { cartItemCount, updateCartCount } = useCartState();
 
 // Update cart count when component is mounted
 onMounted(() => {
+  updateCartCount();
+});
+
+// Tambahkan fungsi untuk memaksa update
+function forceUpdateNotifications() {
+  // Call loadData directly but with a flag to prevent circular updates
+  // This is a safer approach than the previous implementation
+  loadData();
+  // We don't need to emit an event here since loadData will trigger the watcher
+}
+
+// Tambahkan watch untuk route changes
+watch(() => route.path, () => {
+  forceUpdateNotifications();
   updateCartCount();
 });
 </script>

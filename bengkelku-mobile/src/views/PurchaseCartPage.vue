@@ -8,7 +8,7 @@
         </template>
         <v-card-title class="text-h5">Keranjang Pembelian</v-card-title>
         <v-card-subtitle>Kelola pembelian stok barang</v-card-subtitle>
-        
+
         <template v-slot:append>
           <v-btn variant="text" @click="goBackToStock" prepend-icon="mdi-arrow-left">
             Kembali
@@ -24,9 +24,9 @@
           <template v-slot:prepend>
             <v-icon icon="mdi-package-variant" color="primary"></v-icon>
           </template>
-          
+
           <v-list-item-title class="font-weight-medium">{{ item.nama }}</v-list-item-title>
-          
+
           <v-list-item-subtitle>
             <v-row dense align="center" class="mt-1">
               <v-col cols="4">
@@ -69,12 +69,12 @@
         </v-list-item>
 
         <v-divider class="my-2"></v-divider>
-        
+
         <v-list-item class="justify-end">
           <div class="text-h6">Total: {{ formatCurrency(cartSubtotal) }}</div>
         </v-list-item>
       </v-list>
-      
+
       <v-alert v-else type="info" variant="tonal" density="compact">
         Keranjang pembelian kosong.
       </v-alert>
@@ -188,6 +188,7 @@ import {
   recordPurchase, // Import recordPurchase to finalize
 } from "../stores/localStorage.js";
 import { useCartState } from '../composables/useCartState'
+import { useAppStatus } from '../composables/useAppStatus'
 
 const router = useRouter();
 const cartItems = ref([]);
@@ -196,6 +197,7 @@ const isSaving = ref(false);
 const showClearCartConfirmDialog = ref(false);
 
 const { updateCartCount } = useCartState()
+const { updateNotifications } = useAppStatus()
 
 // Snackbar State
 const snackbar = ref(false);
@@ -310,6 +312,8 @@ function finalizePurchase() {
     const savedPurchase = recordPurchase(dataToSave); // This function also updates stock
     console.log('Purchase recorded from cart:', savedPurchase);
     clearPurchaseCart(); // Clear the cart after successful save
+    updateCartCount(); // Update cart count badge
+    updateNotifications(); // Update notification badges for low stock
     showSnackbar('Pembelian berhasil dicatat dan stok diperbarui!', 'success');
     router.push('/stok'); // Go back to stock list
   } catch (error) {
@@ -354,7 +358,7 @@ function goBackToStock() {
   .v-card-title {
     font-size: 1.25rem !important;
   }
-  
+
   .v-card-subtitle {
     font-size: 0.875rem !important;
   }

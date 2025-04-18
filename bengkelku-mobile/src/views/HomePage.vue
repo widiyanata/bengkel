@@ -9,7 +9,7 @@
         </template>
         <v-card-title class="text-h5">{{ workshopName }}</v-card-title>
         <v-card-subtitle>{{ currentDate }}</v-card-subtitle>
-        
+
         <template v-slot:append>
           <v-btn color="primary" density="comfortable" prepend-icon="mdi-plus-circle-outline" @click="goToAddService" size="small">
             Servis Baru
@@ -24,6 +24,9 @@
     </div>
 
     <div v-else>
+      <!-- Perkiraan Pendapatan Kotor Hari Ini -->
+      <gross-income-card :gross-income="todayGrossIncome" />
+
       <!-- Ringkasan Hari Ini -->
       <div class="mb-3">
         <div class="d-flex align-center mb-2">
@@ -72,18 +75,15 @@
 
       <v-row dense>
         <!-- Kolom Utama (Full Width di Mobile) -->
-        <v-col cols="12">
+        <v-col cols="12" md="6">
           <!-- Aksi Cepat -->
           <quick-actions />
-        </v-col>
-
-        <!-- Daftar Servis Aktif -->
-        <v-col cols="12" md="8">
+          <!-- Daftar Servis Aktif -->
           <active-services-list :services="activeServices" />
         </v-col>
 
         <!-- Kolom Kanan -->
-        <v-col cols="12" md="4">
+        <v-col cols="12" md="6">
           <!-- Peringatan Stok Menipis -->
           <low-stock-alert :low-stock-items="lowStockItems" />
 
@@ -107,6 +107,7 @@ import ActiveServicesList from '../components/dashboard/ActiveServicesList.vue';
 import LowStockAlert from '../components/dashboard/LowStockAlert.vue';
 import WeeklyStats from '../components/dashboard/WeeklyStats.vue';
 import QuickActions from '../components/dashboard/QuickActions.vue';
+import GrossIncomeCard from '../components/dashboard/GrossIncomeCard.vue';
 
 const router = useRouter();
 const workshopInfo = ref({});
@@ -118,7 +119,8 @@ const {
   activeServices,
   lowStockItems,
   weeklyStats,
-  todayStats
+  todayStats,
+  todayGrossIncome
 } = useDashboardStats();
 
 // Computed properties

@@ -123,7 +123,7 @@
                       Tambah
                     </v-btn>
                   </div>
-                  
+
                   <v-table v-if="service.jasa?.length">
                     <tbody>
                       <tr v-for="(item, index) in service.jasa" :key="index">
@@ -257,7 +257,7 @@
           <v-card class="sticky-card">
             <v-card-text>
               <h3 class="text-h6 mb-4">Ringkasan Biaya</h3>
-              
+
               <div class="d-flex justify-space-between mb-2">
                 <span class="text-body-2">Total Jasa</span>
                 <span class="text-body-2">{{ formatCurrency(totalBiayaJasa) }}</span>
@@ -266,7 +266,7 @@
                 <span class="text-body-2">Total Spare Parts</span>
                 <span class="text-body-2">{{ formatCurrency(totalBiayaParts) }}</span>
               </div>
-              
+
               <div class="d-flex justify-space-between mb-6">
                 <span class="text-h6">Total</span>
                 <span class="text-h6">{{ formatCurrency(totalBiayaKeseluruhan) }}</span>
@@ -282,7 +282,21 @@
               >
                 {{ hasInvoice ? 'Lihat Invoice' : 'Buat Invoice' }}
               </v-btn>
-              
+
+              <!-- Combined Action Buttons -->
+              <v-btn
+                color="teal"
+                block
+                class="mb-2"
+                :loading="isSaving"
+                :disabled="isSaving || invoicePaid"
+                @click="saveAndComplete"
+              >                
+                <v-icon start>mdi-check-circle</v-icon>
+                Simpan & Selesaikan
+              </v-btn>
+
+              <!-- Regular Save Button -->
               <v-btn
                 color="success"
                 block
@@ -291,6 +305,7 @@
                 :disabled="isSaving || invoicePaid"
                 @click="saveChanges"
               >
+                <v-icon start>mdi-content-save</v-icon>
                 Simpan
               </v-btn>
 
@@ -301,6 +316,7 @@
                 :disabled="invoicePaid"
                 @click="showDeleteConfirmDialog = true"
               >
+                <v-icon start>mdi-delete</v-icon>
                 Hapus Servis
               </v-btn>
             </v-card-text>
@@ -676,12 +692,16 @@ import {
 } from "../stores/localStorage.js";
 
 import { generateInvoiceFromService } from "../utils/invoiceGenerator.js";
+import { useAppStatus } from "../composables/useAppStatus.js"; // Import for notifications
 
 const props = defineProps({
   id: { type: [String, Number], required: true },
 });
 
 const router = useRouter();
+
+// Get updateNotifications function from useAppStatus
+const { updateNotifications } = useAppStatus();
 const service = ref(null); // Holds the enhanced service details including jasa and parts arrays
 const editableStatus = ref('');
 const loading = ref(true);
@@ -1296,6 +1316,30 @@ function saveChanges() {
     return;
   }
 
+  // Call the common save function
+  return saveServiceChanges();
+}
+
+// --- Save & Complete ---
+function saveAndComplete() {
+  if (!service.value) return;
+
+  // Prevent saving if invoice is paid
+  if (invoicePaid.value) {
+    showSnackbar('Tidak dapat menyimpan perubahan: Invoice sudah dibayar', 'error');
+    return;
+  }
+
+  // Set status to Selesai
+  editableStatus.value = 'Selesai';
+
+  // Call the common save function
+  return saveServiceChanges();
+}
+
+// Common function to save service changes
+function saveServiceChanges() {
+
   isSaving.value = true;
   console.log(`Saving changes for service ${service.value.id}`);
 
@@ -1333,6 +1377,8 @@ function saveChanges() {
       // Deduct stock (negative quantity)
       updateItemStock(part.itemId, -part.jumlah);
       console.log(`Deducted ${part.jumlah} from stock for item ID ${part.itemId}`);
+      // Update notification badges for low stock after each stock update
+      updateNotifications();
     } catch (stockError) {
       console.error(`Error deducting stock for item ID ${part.itemId}:`, stockError);
       stockErrors.push(`Gagal mengurangi stok ${part.nama}.`);
@@ -1346,7 +1392,7 @@ function saveChanges() {
     showSnackbar(`Gagal menyimpan: Masalah stok.\n- ${stockErrors.join('\n- ')}\n\nHarap periksa kembali spare part yang digunakan dan stok saat ini.`, 'error');
     // TODO: Consider reverting any successful stock deductions if partial failure occurred (more complex)
     isSaving.value = false;
-    return;
+    return false;
   }
 
   // 3. Proceed with saving the service details if stock deduction was successful
@@ -1355,14 +1401,17 @@ function saveChanges() {
     if (updated) {
       loadServiceDetails(); // Reload to reflect saved state
       showSnackbar('Perubahan berhasil disimpan!', 'success');
+      return true; // Return success indicator
     } else {
       showSnackbar('Gagal menyimpan perubahan: Servis tidak ditemukan.', 'error');
       // TODO: Revert stock deductions if service save fails? (Needs careful implementation)
+      return false;
     }
   } catch (error) {
     console.error("Error saving service changes:", error);
     showSnackbar('Terjadi kesalahan saat menyimpan perubahan servis.', 'error');
     // TODO: Revert stock deductions if service save fails?
+    return false;
   } finally {
     isSaving.value = false;
   }

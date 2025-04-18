@@ -18,7 +18,7 @@
             :color="action.color"
             :to="action.route"
             :icon="action.icon"
-            size="small"
+            size="large"
             class="action-button"
             variant="tonal"
           >
@@ -45,8 +45,8 @@
 }
 
 .action-button {
-  width: 50px;
-  height: 50px;
+  width: 60px;
+  height: 60px;
   border-radius: 12px;
 }
 
@@ -90,25 +90,25 @@ const props = defineProps({
         title: 'Servis Baru',
         icon: 'mdi-plus-circle-outline',
         route: '/servis/baru',
-        color: 'primary'
+        color: 'success'
       },
       {
         title: 'Invoice',
         icon: 'mdi-receipt',
         route: '/invoice',
-        color: 'info'
+        color: 'primary'
       },
       {
         title: 'Stok',
         icon: 'mdi-package-variant',
         route: '/stok',
-        color: 'success'
+        color: 'primary'
       },
       {
         title: 'Laporan',
         icon: 'mdi-chart-bar',
         route: '/laporan',
-        color: 'warning'
+        color: 'primary'
       }
     ]
   }

@@ -13,7 +13,7 @@
             <v-icon size="small" color="primary" class="me-2">mdi-information-outline</v-icon>
             <span class="text-subtitle-2">Informasi Barang</span>
           </div>
-          
+
           <v-text-field
             v-model="itemData.nama"
             label="Nama Barang"
@@ -136,7 +136,7 @@
             <v-icon size="small" class="me-1">mdi-content-save</v-icon>
             Simpan
           </v-btn>
-          
+
           <v-btn
             variant="text"
             block
@@ -164,10 +164,14 @@
 import { ref, reactive, computed } from "vue";
 import { useRouter } from "vue-router";
 import { addItem, doesItemCodeExist } from "../stores/localStorage.js"; // Import functions
+import { useAppStatus } from "../composables/useAppStatus.js"; // Import for notifications
 
 const router = useRouter();
 const form = ref(null); // Reference to the form
 const isSaving = ref(false);
+
+// Get updateNotifications function from useAppStatus
+const { updateNotifications } = useAppStatus();
 
 // Snackbar State
 const snackbar = ref(false);
@@ -249,6 +253,7 @@ async function saveItem() {
     const savedItem = addItem(dataToSave);
     console.log('New item saved:', savedItem);
     showSnackbar(`Barang "${savedItem.nama}" berhasil disimpan.`, 'success');
+    updateNotifications(); // Update notification badges for low stock
     router.push('/stok'); // Go back to stock list
   } catch (error) {
     console.error("Error saving item:", error);
@@ -264,7 +269,7 @@ function goBack() {
 
 // New computed properties for margin calculation
 const showMarginInfo = computed(() => {
-  return itemData.hargaBeli && itemData.hargaJual && 
+  return itemData.hargaBeli && itemData.hargaJual &&
          Number(itemData.hargaBeli) > 0 && Number(itemData.hargaJual) > 0;
 });
 
@@ -341,7 +346,7 @@ function formatCurrency(value) {
     left: 50%;
     transform: translateX(-50%);
   }
-  
+
   .form-wrapper {
     padding: 16px;
     padding-bottom: 120px;

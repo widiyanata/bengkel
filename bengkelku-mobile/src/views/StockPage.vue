@@ -42,7 +42,7 @@
         hide-details
         class="search-field"
       ></v-text-field>
-      
+
       <div class="d-flex gap-1 mt-2">
         <v-select
           v-model="stockFilter"
@@ -56,7 +56,7 @@
           @update:model-value="onFilterChange"
           :return-object="false"
         ></v-select>
-        
+
         <v-menu>
           <template v-slot:activator="{ props }">
             <v-btn
@@ -109,7 +109,7 @@
           <!-- <v-avatar :color="getStockStatusColor(item)" size="32" class="me-2">
             <v-icon icon="mdi-package-variant" size="small" color="white"></v-icon>
           </v-avatar> -->
-          
+
           <!-- Item Info -->
           <div class="flex-grow-1 item-info">
             <div class="d-flex align-center justify-space-between">
@@ -129,7 +129,7 @@
                 <v-btn size="x-small" variant="text" @click="openDeleteItemDialog(item)" prepend-icon="mdi-delete-outline" title="Hapus" color="error"></v-btn>
               </div>
             </div>
-            
+
             <div class="d-flex align-center justify-space-between mt-1">
               <div class="d-flex align-center">
                 <span class="text-body-2 font-weight-medium">{{ Number(item.stokSaatIni || 0) }} {{ item.satuan || '' }}</span>
@@ -139,7 +139,7 @@
               <span class="text-body-2 primary--text font-weight-medium">{{ formatCurrency(item.hargaJual) }}</span>
             </div>
           </div>
-          
+
           <!-- Action Menu -->
           <!-- <v-menu location="bottom end">
             <template v-slot:activator="{ props }">
@@ -158,7 +158,7 @@
             </v-list>
           </v-menu> -->
         </div>
-        
+
         <!-- Stock Progress Bar -->
         <div v-if="item && Number(item.stokMinimal || 0) > 0" class="px-2 pb-2">
           <v-tooltip :text="`Minimal: ${Number(item.stokMinimal || 0)} ${item.satuan || ''}`">
@@ -366,6 +366,7 @@ import {
   doesItemCodeExist, // Import the checker function
 } from "../stores/localStorage.js"; // Import functions
 import { useCartState } from '../composables/useCartState'
+import { useAppStatus } from '../composables/useAppStatus'
 
 const router = useRouter();
 const searchQuery = ref('');
@@ -428,6 +429,7 @@ const itemToDelete = ref(null);
 const isDeletingItem = ref(false);
 
 const { updateCartCount } = useCartState()
+const { updateNotifications } = useAppStatus()
 
 // --- Snackbar Helper ---
 function showSnackbar(text, color = "info") {
@@ -732,6 +734,7 @@ async function executeItemUpdate() {
     if (updated) {
       showSnackbar("Data barang berhasil diperbarui.", 'success');
       loadStockItems(); // Refresh list
+      updateNotifications(); // Update notification badges
       cancelEditItem(); // Close dialog
     } else {
       showSnackbar("Gagal memperbarui data: Barang tidak ditemukan.", 'error');
@@ -763,6 +766,7 @@ function executeItemDelete() {
     if (success) {
       showSnackbar(`Barang "${itemToDelete.value.nama}" berhasil dihapus.`, 'success');
       loadStockItems(); // Refresh list
+      updateNotifications(); // Update notification badges
       cancelDeleteItem(); // Close dialog
     } else {
       showSnackbar("Gagal menghapus barang: Data tidak ditemukan.", 'error');

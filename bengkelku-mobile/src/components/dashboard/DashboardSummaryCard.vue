@@ -1,5 +1,5 @@
 <template>
-  <v-card :color="color" class="mb-2 dashboard-card">
+  <v-card :color="color" class="dashboard-card">
     <div class="d-flex align-center pa-3">
       <v-icon :icon="icon" size="medium" class="me-3"></v-icon>
       <div class="flex-grow-1">

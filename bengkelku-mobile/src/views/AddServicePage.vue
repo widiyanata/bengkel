@@ -270,7 +270,7 @@
                   </div>
                 </template>
               </v-list-item>
-              
+
               <!-- Parts Items -->
               <v-list-item
                 v-for="(part, index) in serviceData.parts"
@@ -293,7 +293,7 @@
                 </template>
               </v-list-item>
             </v-list>
-            
+
             <!-- Summary -->
             <v-card color="primary" variant="tonal" class="pa-2">
               <div class="d-flex justify-space-between align-center mb-1">
@@ -423,7 +423,7 @@
                   <v-tab value="predefined" prepend-icon="mdi-format-list-bulleted">Tersedia</v-tab>
                   <v-tab value="custom" prepend-icon="mdi-pencil">Kustom</v-tab>
                 </v-tabs>
-                
+
                 <v-window v-model="jasaInputTab">
                   <!-- Predefined Services Tab -->
                   <v-window-item value="predefined">
@@ -689,10 +689,14 @@ import {
   getAllItems,
   updateItemStock,
 } from "../stores/localStorage.js";
+import { useAppStatus } from "../composables/useAppStatus.js"; // Import for notifications
 
 const router = useRouter();
 const form = ref(null); // For form validation if needed later
 const customerForm = ref(null); // For customer form validation
+
+// Get updateNotifications function from useAppStatus
+const { updateNotifications } = useAppStatus();
 const jasaForm = ref(null); // For jasa form validation
 const searchResult = ref(null); // Stores found vehicle info before selection
 const vehicleFound = ref(false); // Flag if search yielded a result
@@ -811,7 +815,7 @@ onMounted(() => {
 // --- Computed Properties ---
 // Check if there are any items (jasa or parts)
 const hasItems = computed(() => {
-  return (serviceData.jasa && serviceData.jasa.length > 0) || 
+  return (serviceData.jasa && serviceData.jasa.length > 0) ||
          (serviceData.parts && serviceData.parts.length > 0);
 });
 
@@ -825,8 +829,8 @@ const isLainnyaSelected = computed(() => {
 const filteredPredefinedJasa = computed(() => {
   if (!jasaSearchQuery.value) return predefinedJasa;
   const query = jasaSearchQuery.value.toLowerCase();
-  return predefinedJasa.filter(jasa => 
-    jasa.deskripsi.toLowerCase().includes(query) || 
+  return predefinedJasa.filter(jasa =>
+    jasa.deskripsi.toLowerCase().includes(query) ||
     jasa.biaya.toString().includes(query)
   );
 });
@@ -834,18 +838,18 @@ const filteredPredefinedJasa = computed(() => {
 // Filter parts based on search query and category
 const filteredParts = computed(() => {
   if (!availableStockItems.value.length) return [];
-  
+
   let filtered = availableStockItems.value;
-  
+
   // Apply search filter
   if (partSearchQuery.value) {
     const query = partSearchQuery.value.toLowerCase();
-    filtered = filtered.filter(item => 
-      (item.nama && item.nama.toLowerCase().includes(query)) || 
+    filtered = filtered.filter(item =>
+      (item.nama && item.nama.toLowerCase().includes(query)) ||
       (item.kode && item.kode.toLowerCase().includes(query))
     );
   }
-  
+
   // Apply category filter
   if (partCategoryFilter.value !== 'semua') {
     // This is a simplified category filter - in a real app, you'd have proper category data
@@ -856,16 +860,16 @@ const filteredParts = computed(() => {
         case 'filter': return name.includes('filter');
         case 'busi': return name.includes('busi');
         case 'rem': return name.includes('rem');
-        case 'lainnya': 
-          return !name.includes('oli') && 
-                 !name.includes('filter') && 
-                 !name.includes('busi') && 
+        case 'lainnya':
+          return !name.includes('oli') &&
+                 !name.includes('filter') &&
+                 !name.includes('busi') &&
                  !name.includes('rem');
         default: return true;
       }
     });
   }
-  
+
   // Only show items with stock
   return filtered.filter(item => item.stokSaatIni > 0);
 });
@@ -1078,13 +1082,13 @@ function cancelAddItem() {
   newJasa.biaya = null;
   jasaInputTab.value = 'predefined';
   jasaSearchQuery.value = '';
-  
+
   selectedPart.value = null;
   newPart.jumlah = 1;
   partJumlahError.value = '';
   partSearchQuery.value = '';
   partCategoryFilter.value = 'semua';
-  
+
   itemInputTab.value = 'jasa'; // Reset to jasa tab
 }
 
@@ -1105,7 +1109,7 @@ function selectPredefinedJasa(jasa) {
 
 function addJasaToList() {
   let jasaToAdd;
-  
+
   if (jasaInputTab.value === 'predefined' && selectedPredefinedJasa.value) {
     jasaToAdd = {
       deskripsi: selectedPredefinedJasa.value.deskripsi,
@@ -1120,18 +1124,18 @@ function addJasaToList() {
     showSnackbar("Harap pilih atau isi data jasa dengan benar.", "warning");
     return;
   }
-  
+
   // Check if this jasa already exists
   const existingIndex = serviceData.jasa.findIndex(j => j.deskripsi === jasaToAdd.deskripsi);
   if (existingIndex >= 0) {
     showSnackbar(`Jasa "${jasaToAdd.deskripsi}" sudah ada dalam daftar.`, "warning");
     return;
   }
-  
+
   // Add to the list
   serviceData.jasa.push(jasaToAdd);
   showSnackbar(`Jasa "${jasaToAdd.deskripsi}" berhasil ditambahkan.`, "success");
-  
+
   // Reset and close dialog
   // cancelAddItem();
 }
@@ -1178,22 +1182,22 @@ function selectPart(part) {
 
 function validatePartJumlah() {
   partJumlahError.value = '';
-  
+
   if (!newPart.jumlah) {
     partJumlahError.value = 'Jumlah wajib diisi';
     return false;
   }
-  
+
   if (newPart.jumlah <= 0) {
     partJumlahError.value = 'Jumlah harus lebih dari 0';
     return false;
   }
-  
+
   if (selectedPart.value && newPart.jumlah > selectedPart.value.stokSaatIni) {
     partJumlahError.value = `Jumlah melebihi stok tersedia (${selectedPart.value.stokSaatIni})`;
     return false;
   }
-  
+
   return true;
 }
 
@@ -1202,23 +1206,23 @@ function addPartToList() {
     showSnackbar("Harap pilih spare part terlebih dahulu.", "warning");
     return;
   }
-  
+
   if (!validatePartJumlah()) {
     return;
   }
-  
+
   // Check if this part already exists in the list
   const existingIndex = serviceData.parts.findIndex(p => p.id === selectedPart.value.id);
   if (existingIndex >= 0) {
     // Update quantity instead of adding a new entry
     const newQuantity = serviceData.parts[existingIndex].jumlah + newPart.jumlah;
-    
+
     // Check if the new total quantity exceeds available stock
     if (newQuantity > selectedPart.value.stokSaatIni) {
       showSnackbar(`Total jumlah melebihi stok tersedia (${selectedPart.value.stokSaatIni}).`, "warning");
       return;
     }
-    
+
     serviceData.parts[existingIndex].jumlah = newQuantity;
     showSnackbar(`Jumlah "${selectedPart.value.nama}" diperbarui menjadi ${newQuantity}.`, "success");
   } else {
@@ -1232,7 +1236,7 @@ function addPartToList() {
     });
     showSnackbar(`"${selectedPart.value.nama}" berhasil ditambahkan.`, "success");
   }
-  
+
   // Reset and close dialog
   // cancelAddItem();
 }
@@ -1298,15 +1302,17 @@ function saveService() {
 
     const savedService = saveServiceToStorage(dataToSave); // Use the imported function
     console.log("Service saved:", savedService);
-    
+
     // Update stock for parts
     if (serviceData.parts && serviceData.parts.length > 0) {
       serviceData.parts.forEach(part => {
         // Reduce stock by the quantity used
         updateItemStock(part.id, -part.jumlah);
       });
+      // Update notification badges for low stock
+      updateNotifications();
     }
-    
+
     const message = "Servis berhasil disimpan!";
     showSnackbar(message, "success"); // Provide feedback
     router.push("/servis"); // Navigate to service list after saving
@@ -1450,7 +1456,7 @@ function saveService() {
   .service-type-chip {
     margin: 2px;
   }
-  
+
   .parts-grid {
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   }
