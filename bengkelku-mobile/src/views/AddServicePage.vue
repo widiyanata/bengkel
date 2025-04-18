@@ -458,7 +458,7 @@
 
       </v-card>
 
-     
+
 
       <!-- Tombol Aksi -->
       <div class="d-flex gap-2">
@@ -480,14 +480,14 @@
         </v-btn>
         <v-btn
           color="primary"
-          @click="confirmSave"
+          @click="hasItems ? showBottomSheet = true : confirmSave()"
           :loading="isSaving"
           prepend-icon="mdi-content-save"
           class="flex-grow-1 me-2"
           variant="flat"
         >
           Simpan Servis
-        </v-btn>        
+        </v-btn>
         <v-btn
           variant="tonal"
           @click="goBack"
@@ -658,6 +658,20 @@
                   <span class="text-subtitle-1 font-weight-bold">{{ formatCurrency(totalBiayaKeseluruhan) }}</span>
                 </div>
               </v-card>
+
+              <!-- Tombol Simpan di Bottom Sheet -->
+              <v-btn
+                color="primary"
+                variant="flat"
+                block
+                class="mt-4"
+                size="large"
+                @click="confirmSave"
+                :loading="isSaving"
+                prepend-icon="mdi-content-save"
+              >
+                Simpan Servis
+              </v-btn>
             </div>
             <v-alert v-else type="info" variant="tonal" class="ma-0 pa-2" density="compact">
               Belum ada jasa atau spare part yang ditambahkan. Pilih jasa atau spare part di atas untuk menambahkan.
