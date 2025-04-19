@@ -23,7 +23,7 @@
       <v-spacer></v-spacer>
 
       <!-- Global Search -->
-      <v-slide-x-transition>
+      <!-- <v-slide-x-transition>
         <v-text-field
           v-if="isSearchActive"
           v-model="searchQuery"
@@ -35,15 +35,15 @@
           class="global-search"
           @keyup.enter="performSearch"
         ></v-text-field>
-      </v-slide-x-transition>
+      </v-slide-x-transition> -->
 
-      <v-btn v-if="!isSearchActive" icon @click="toggleSearch">
+      <!-- <v-btn v-if="!isSearchActive" icon @click="toggleSearch">
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
 
       <v-btn v-if="isSearchActive" icon @click="toggleSearch">
         <v-icon>mdi-close</v-icon>
-      </v-btn>
+      </v-btn> -->
 
       <!-- Notification Button -->
       <v-btn icon class="ml-2" @click="showNotifications = !showNotifications">
@@ -139,7 +139,7 @@
         :class="{ 'bottom-nav-hidden': hideBottomNav }"
         class="bottom-nav-custom"
       >
-      <v-btn value="home" to="/">
+      <v-btn value="home" to="/" variant="flat" color="primary">
         <div class="nav-btn-content">
           <v-icon>mdi-home</v-icon>
           <span class="text-caption">Beranda</span>
