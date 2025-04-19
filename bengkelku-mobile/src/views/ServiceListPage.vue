@@ -70,7 +70,7 @@
           </div>
           <v-row dense>
             <v-col v-for="service in todayServices" :key="service.id" cols="12" md="6">
-              <v-card @click="goToServiceDetail(service.id)" class="service-card mb-3" elevation="1" variant="flat">
+              <v-card @click="goToServiceDetail(service.id)" class="service-card mb-2" elevation="1" variant="flat">
                 <v-card-item>
                   <template v-slot:prepend>
                     <v-icon :icon="getStatusIcon(service.status)" :color="getStatusColor(service.status)" class="me-2"></v-icon>
@@ -89,12 +89,12 @@
                       {{ type }}
                     </v-chip>
                   </div>
-                  <div v-if="service.keterangan" class="text-caption text-truncate mt-1">
-                    <span class="text-grey">Ket:</span> {{ service.keterangan }}
-                  </div>
                 </v-card-text>
                 <v-card-text class="py-1 bg-surface-variant">
                   <div class="d-flex justify-space-between align-center bg">
+                    <div v-if="service.keterangan" class="text-caption text-truncate mt-1">
+                      <span class="text-grey">Ket:</span> {{ service.keterangan }}
+                    </div>
                     <div class="text-caption text-grey">
                       <v-icon icon="mdi-clock-outline" size="x-small" class="me-1"></v-icon>
                       {{ formatTime(service.timestamp) }}
@@ -115,7 +115,7 @@
           </div>
           <v-row dense>
             <v-col v-for="service in olderServices" :key="service.id" cols="12" sm="6">
-              <v-card @click="goToServiceDetail(service.id)" class="service-card mb-3" elevation="1">
+              <v-card @click="goToServiceDetail(service.id)" class="service-card mb-2" elevation="1" variant="flat">
                 <v-card-item>
                   <template v-slot:prepend>
                     <v-icon :icon="getStatusIcon(service.status)" :color="getStatusColor(service.status)" class="me-2"></v-icon>
@@ -128,19 +128,21 @@
                   </v-card-title>
                   <v-card-subtitle class="pa-0 text-body-2">{{ service.namaPelanggan }}</v-card-subtitle>
                 </v-card-item>
-                <v-card-text class="pt-0">
+                <v-card-text class="pt-0 pb-1">
                   <div class="d-flex flex-wrap gap-1 service-types">
-                    <v-chip v-for="(type, index) in service.jenisServisNames" :key="index" size="x-small" variant="flat" density="comfortable" class="service-type-chip">
+                    <v-chip v-for="(type, index) in service.jenisServisNames" :key="index" size="x-small" variant="tonal" density="comfortable" class="service-type-chip">
                       {{ type }}
                     </v-chip>
                   </div>
-                  <div v-if="service.keterangan" class="text-caption text-truncate mt-1">
-                    <span class="text-grey">Ket:</span> {{ service.keterangan }}
-                  </div>
-                  <div class="d-flex justify-space-between align-center mt-2">
+                </v-card-text>
+                <v-card-text class="py-1 bg-surface-variant">
+                  <div class="d-flex justify-space-between align-center bg">
+                    <div v-if="service.keterangan" class="text-caption text-primary text-truncate mt-1">
+                      <span class="text-grey">Ket:</span> {{ service.keterangan }}
+                    </div>
                     <div class="text-caption text-grey">
-                      <v-icon icon="mdi-calendar-outline" size="x-small" class="me-1"></v-icon>
-                      {{ formatDate(service.timestamp) }}
+                      <v-icon icon="mdi-clock-outline" size="x-small" class="me-1"></v-icon>
+                      {{ formatTime(service.timestamp) }}
                     </div>
                     <v-btn variant="text" size="small" icon="mdi-chevron-right" density="comfortable"></v-btn>
                   </div>
@@ -154,7 +156,7 @@
       <!-- No date grouping -->
       <v-row v-else dense>
         <v-col v-for="service in searchedServices" :key="service.id" cols="12">
-          <v-card @click="goToServiceDetail(service.id)" class="service-card mb-3" elevation="1">
+          <v-card @click="goToServiceDetail(service.id)" class="service-card mb-2" elevation="1" variant="flat">
             <v-card-item>
               <template v-slot:prepend>
                 <v-icon :icon="getStatusIcon(service.status)" :color="getStatusColor(service.status)" class="me-2"></v-icon>
@@ -167,19 +169,21 @@
               </v-card-title>
               <v-card-subtitle class="pa-0 text-body-2">{{ service.namaPelanggan }}</v-card-subtitle>
             </v-card-item>
-            <v-card-text class="pt-0">
+            <v-card-text class="pt-0 pb-1">
               <div class="d-flex flex-wrap gap-1 service-types">
-                <v-chip v-for="(type, index) in service.jenisServisNames" :key="index" size="x-small" variant="flat" density="comfortable" class="service-type-chip">
+                <v-chip v-for="(type, index) in service.jenisServisNames" :key="index" size="x-small" variant="tonal" density="comfortable" class="service-type-chip">
                   {{ type }}
                 </v-chip>
               </div>
               <div v-if="service.keterangan" class="text-caption text-truncate mt-1">
                 <span class="text-grey">Ket:</span> {{ service.keterangan }}
               </div>
-              <div class="d-flex justify-space-between align-center mt-2">
+            </v-card-text>
+            <v-card-text class="py-1 bg-surface-variant">
+              <div class="d-flex justify-space-between align-center bg">
                 <div class="text-caption text-grey">
-                  <v-icon icon="mdi-calendar-clock" size="x-small" class="me-1"></v-icon>
-                  {{ formatTimestamp(service.timestamp) }}
+                  <v-icon icon="mdi-clock-outline" size="x-small" class="me-1"></v-icon>
+                  {{ formatTime(service.timestamp) }}
                 </div>
                 <v-btn variant="text" size="small" icon="mdi-chevron-right" density="comfortable"></v-btn>
               </div>
@@ -227,7 +231,7 @@ function loadServices() {
     const serviceNames = serviceIndices.map(index => serviceTypeMap[index] || 'Unknown'); // Map indices to names
     return {
       ...service,
-      namaPelanggan: customer ? customer.nama : 'Unknown Customer',
+      namaPelanggan: customer ? customer.nama : '',
       jenisServisNames: serviceNames, // Use a different key for mapped names
     };
   }).sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp)); // Sort by newest first
