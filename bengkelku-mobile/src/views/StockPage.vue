@@ -96,84 +96,92 @@
 
     <!-- Stock List (Compact Card View) -->
     <div v-else-if="filteredStock.length > 0" class="stock-list">
-      <v-card
-        v-for="item in filteredStock"
-        :key="item.id"
-        class="mb-2 stock-item-card"
-        :class="{'stock-low-card': Number(item.stokMinimal || 0) > 0 && Number(item.stokSaatIni || 0) <= Number(item.stokMinimal || 0)}"
-        variant="flat"
-        density="compact"
-      >
-        <div class="d-flex align-center pa-2">
-          <!-- Status Icon -->
-          <!-- <v-avatar :color="getStockStatusColor(item)" size="32" class="me-2">
-            <v-icon icon="mdi-package-variant" size="small" color="white"></v-icon>
-          </v-avatar> -->
-
-          <!-- Item Info -->
-          <div class="flex-grow-1 item-info">
-            <div class="d-flex align-center justify-space-between">
-              <div class="text-subtitle-1 font-weight-medium text-truncate">{{ item.nama }}</div>
-              <v-chip
-                v-if="Number(item.stokMinimal || 0) > 0 && Number(item.stokSaatIni || 0) <= Number(item.stokMinimal || 0)"
-                color="warning"
-                size="x-small"
-                variant="elevated"
-                class="ms-1"
-              >
-                Menipis
-              </v-chip>
-              <div class="flex-wrap ga-1 bg-surface-variant rounded">
-                <v-btn size="x-small" variant="text" color="secondary" @click="goToRecordPurchaseForItem(item)" prepend-icon="mdi-cart-plus" title="Beli"></v-btn>
-                <v-btn size="x-small" variant="text" @click="openEditItemDialog(item)" prepend-icon="mdi-pencil-outline" title="Edit"></v-btn>
-                <v-btn size="x-small" variant="text" @click="openDeleteItemDialog(item)" prepend-icon="mdi-delete-outline" title="Hapus" color="error"></v-btn>
+      <v-row dense>
+        <v-col
+          v-for="item in filteredStock"
+          :key="item.id"
+          cols="12"
+          md="4"
+          sm="6"
+        >
+          <v-card
+            class="mb-2 stock-item-card"
+            :class="{'stock-low-card': Number(item.stokMinimal || 0) > 0 && Number(item.stokSaatIni || 0) <= Number(item.stokMinimal || 0)}"
+            variant="flat"
+            density="compact"
+          >
+            <div class="d-flex align-center pa-2">
+              <!-- Status Icon -->
+              <!-- <v-avatar :color="getStockStatusColor(item)" size="32" class="me-2">
+                <v-icon icon="mdi-package-variant" size="small" color="white"></v-icon>
+              </v-avatar> -->
+    
+              <!-- Item Info -->
+              <div class="flex-grow-1 item-info">
+                <div class="d-flex align-center justify-space-between">
+                  <div class="text-subtitle-1 font-weight-medium text-truncate">{{ item.nama }}</div>
+                  <v-chip
+                    v-if="Number(item.stokMinimal || 0) > 0 && Number(item.stokSaatIni || 0) <= Number(item.stokMinimal || 0)"
+                    color="warning"
+                    size="x-small"
+                    variant="elevated"
+                    class="ms-1"
+                  >
+                    Menipis
+                  </v-chip>
+                </div>
+    
+                <div class="d-flex align-center justify-space-between mt-1">
+                  <div class="d-flex align-center">
+                    <span class="text-body-2 font-weight-medium">{{ Number(item.stokSaatIni || 0) }} {{ item.satuan || '' }}</span>
+                    <span class="text-caption text-grey mx-1">|</span>
+                    <!-- <span class="text-caption text-grey">{{ item.kode || 'No Kode' }}</span> -->
+                  </div>
+                  <div class="flex-wrap ga-1 bg-surface-variant rounded">
+                    <v-btn size="x-small" variant="text" color="secondary" @click="goToRecordPurchaseForItem(item)" prepend-icon="mdi-cart-plus" title="Beli"></v-btn>
+                    <v-btn size="x-small" variant="text" @click="openEditItemDialog(item)" prepend-icon="mdi-pencil-outline" title="Edit"></v-btn>
+                    <v-btn size="x-small" variant="text" @click="openDeleteItemDialog(item)" prepend-icon="mdi-delete-outline" title="Hapus" color="error"></v-btn>
+                  </div>
+                  <span class="text-body-2 primary--text font-weight-medium">{{ formatCurrency(item.hargaJual) }}</span>
+                </div>
               </div>
+    
+              <!-- Action Menu -->
+              <!-- <v-menu location="bottom end">
+                <template v-slot:activator="{ props }">
+                  <v-btn
+                    v-bind="props"
+                    icon="mdi-dots-vertical"
+                    variant="text"
+                    size="small"
+                    density="compact"
+                  ></v-btn>
+                </template>
+                <v-list density="compact">
+                  <v-list-item @click="goToRecordPurchaseForItem(item)" prepend-icon="mdi-cart-plus" title="Beli"></v-list-item>
+                  <v-list-item @click="openEditItemDialog(item)" prepend-icon="mdi-pencil-outline" title="Edit"></v-list-item>
+                  <v-list-item @click="openDeleteItemDialog(item)" prepend-icon="mdi-delete-outline" title="Hapus" color="error"></v-list-item>
+                </v-list>
+              </v-menu> -->
             </div>
-
-            <div class="d-flex align-center justify-space-between mt-1">
-              <div class="d-flex align-center">
-                <span class="text-body-2 font-weight-medium">{{ Number(item.stokSaatIni || 0) }} {{ item.satuan || '' }}</span>
-                <span class="text-caption text-grey mx-1">|</span>
-                <span class="text-caption text-grey">{{ item.kode || 'No Kode' }}</span>
-              </div>
-              <span class="text-body-2 primary--text font-weight-medium">{{ formatCurrency(item.hargaJual) }}</span>
+    
+            <!-- Stock Progress Bar -->
+            <div v-if="item && Number(item.stokMinimal || 0) > 0" class="px-2 pb-2">
+              <v-tooltip :text="`Minimal: ${Number(item.stokMinimal || 0)} ${item.satuan || ''}`">
+                <template v-slot:activator="{ props }">
+                  <v-progress-linear
+                    v-bind="props"
+                    :model-value="getStockPercentage(item)"
+                    :color="getStockStatusColor(item)"
+                    height="4"
+                    rounded
+                  ></v-progress-linear>
+                </template>
+              </v-tooltip>
             </div>
-          </div>
-
-          <!-- Action Menu -->
-          <!-- <v-menu location="bottom end">
-            <template v-slot:activator="{ props }">
-              <v-btn
-                v-bind="props"
-                icon="mdi-dots-vertical"
-                variant="text"
-                size="small"
-                density="compact"
-              ></v-btn>
-            </template>
-            <v-list density="compact">
-              <v-list-item @click="goToRecordPurchaseForItem(item)" prepend-icon="mdi-cart-plus" title="Beli"></v-list-item>
-              <v-list-item @click="openEditItemDialog(item)" prepend-icon="mdi-pencil-outline" title="Edit"></v-list-item>
-              <v-list-item @click="openDeleteItemDialog(item)" prepend-icon="mdi-delete-outline" title="Hapus" color="error"></v-list-item>
-            </v-list>
-          </v-menu> -->
-        </div>
-
-        <!-- Stock Progress Bar -->
-        <div v-if="item && Number(item.stokMinimal || 0) > 0" class="px-2 pb-2">
-          <v-tooltip :text="`Minimal: ${Number(item.stokMinimal || 0)} ${item.satuan || ''}`">
-            <template v-slot:activator="{ props }">
-              <v-progress-linear
-                v-bind="props"
-                :model-value="getStockPercentage(item)"
-                :color="getStockStatusColor(item)"
-                height="4"
-                rounded
-              ></v-progress-linear>
-            </template>
-          </v-tooltip>
-        </div>
-      </v-card>
+          </v-card>
+        </v-col>
+      </v-row>
     </div>
 
     <!-- Enhanced No Data Message -->
